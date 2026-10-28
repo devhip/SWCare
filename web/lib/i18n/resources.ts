@@ -4,12 +4,14 @@ import thNavigation from "@/locales/th/navigation.json";
 import thValidation from "@/locales/th/validation.json";
 import thErrors from "@/locales/th/errors.json";
 import thTicket from "@/locales/th/ticket.json";
+import thNotification from "@/locales/th/notification.json";
 import enCommon from "@/locales/en/common.json";
 import enAuth from "@/locales/en/auth.json";
 import enNavigation from "@/locales/en/navigation.json";
 import enValidation from "@/locales/en/validation.json";
 import enErrors from "@/locales/en/errors.json";
 import enTicket from "@/locales/en/ticket.json";
+import enNotification from "@/locales/en/notification.json";
 
 export const i18nResources = {
   th: {
@@ -19,6 +21,7 @@ export const i18nResources = {
     validation: thValidation,
     errors: thErrors,
     ticket: thTicket,
+    notification: thNotification,
   },
   en: {
     common: enCommon,
@@ -27,5 +30,6 @@ export const i18nResources = {
     validation: enValidation,
     errors: enErrors,
     ticket: enTicket,
+    notification: enNotification,
   },
 };

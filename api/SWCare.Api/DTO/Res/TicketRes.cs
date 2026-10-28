@@ -103,5 +103,15 @@ public sealed record TicketCountsRes(
     int ToClose,
     int ToTriage);
 
+/// <summary>One bell item. The client builds the text from Type + Data in the reader's language.</summary>
+public sealed record NotificationRes(
+    long Id,
+    NotificationType Type,
+    int? TicketId,
+    string? ActorName,
+    string? Data,
+    DateTime CreatedAt,
+    bool IsRead);
+
 /// <summary>For the download endpoint.</summary>
 public sealed record AttachmentFile(string FullPath, string FileName, string ContentType);

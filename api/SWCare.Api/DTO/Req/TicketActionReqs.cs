@@ -86,6 +86,13 @@ public sealed class TicketQueryReq : PageReq
     public int? DepartmentId { get; set; }
 }
 
+public sealed class NotificationQueryReq : PageReq
+{
+    public bool UnreadOnly { get; set; }
+}
+
+public sealed class NotificationQueryReqValidator : PageReqValidator<NotificationQueryReq>;
+
 public sealed class ReasonReqValidator : AbstractValidator<ReasonReq>
 {
     public ReasonReqValidator()

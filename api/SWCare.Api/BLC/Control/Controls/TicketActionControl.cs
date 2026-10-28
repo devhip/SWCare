@@ -13,30 +13,33 @@ public sealed class TicketActionControl(
     SWCareDbContext db,
     CurrentUser currentUser,
     ITicketControl tickets,
+    TicketNotifier notifier,
     TimeProvider clock) : ITicketActionControl
 {
     private UserContext Me => currentUser.User;
 
     public Task<TicketDetailRes> ApproveAsync(int id, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Approve, (ticket, now) =>
+        RunAsync(id, TicketAction.Approve, async (ticket, now) =>
         {
             ticket.ApproverId = Me.Id;
             ticket.ApprovedAt = now;
             Transition(ticket, TicketStatus.PendingTriage, TicketActivityType.Approved);
-            return Task.CompletedTask;
+            // The lead sees "ทำทันที" requests at once (Q22).
+            await NotifyAsync(ticket, NotificationType.TicketApproved, cancellationToken, new { RequestedPriority = ticket.RequestedPriority.ToString() });
         }, cancellationToken);
 
     public Task<TicketDetailRes> RejectAsync(int id, ReasonReq request, CancellationToken cancellationToken) =>
-        Simple(id, TicketAction.Reject, TicketStatus.Rejected, TicketActivityType.Rejected, request.Reason, cancellationToken);
+        Simple(id, TicketAction.Reject, TicketStatus.Rejected, TicketActivityType.Rejected, NotificationType.TicketRejected, request.Reason, cancellationToken);
 
     public Task<TicketDetailRes> ResubmitAsync(int id, CancellationToken cancellationToken) =>
-        Simple(id, TicketAction.Resubmit, TicketStatus.PendingApproval, TicketActivityType.Resubmitted, note: null, cancellationToken);
+        Simple(id, TicketAction.Resubmit, TicketStatus.PendingApproval, TicketActivityType.Resubmitted, NotificationType.TicketSubmitted, note: null, cancellationToken);
 
     public Task<TicketDetailRes> CancelAsync(int id, ReasonReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Cancel, (ticket, now) =>
+        RunAsync(id, TicketAction.Cancel, async (ticket, now) =>
         {
-            Finish(ticket, now, TicketStatus.Cancelled, TicketActivityType.Cancelled, request.Reason.Trim());
-            return Task.CompletedTask;
+            var reason = request.Reason.Trim();
+            Finish(ticket, now, TicketStatus.Cancelled, TicketActivityType.Cancelled, reason);
+            await NotifyAsync(ticket, NotificationType.TicketCancelled, cancellationToken, new { Reason = reason });
         }, cancellationToken);
 
     public Task<TicketDetailRes> TriageAsync(int id, TriageReq request, CancellationToken cancellationToken) =>
@@ -61,66 +64,74 @@ public sealed class TicketActionControl(
                 request.PlannedStartDate,
                 request.PlannedDueDate
             }));
+            await NotifyAsync(ticket, NotificationType.TicketTriaged, cancellationToken, new
+            {
+                Assignee = assigneeName,
+                PlannedDueDate = request.PlannedDueDate.ToString("yyyy-MM-dd")
+            });
         }, cancellationToken);
 
     public Task<TicketDetailRes> RequestInfoAsync(int id, ReasonReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.RequestInfo, (ticket, _) =>
+        RunAsync(id, TicketAction.RequestInfo, async (ticket, _) =>
         {
+            var reason = request.Reason.Trim();
             ticket.StatusBeforeWaiting = ticket.Status;
-            Transition(ticket, TicketStatus.WaitingInfo, TicketActivityType.InfoRequested, request.Reason.Trim());
-            return Task.CompletedTask;
+            Transition(ticket, TicketStatus.WaitingInfo, TicketActivityType.InfoRequested, reason);
+            await NotifyAsync(ticket, NotificationType.InfoRequested, cancellationToken, new { Reason = reason });
         }, cancellationToken);
 
     public Task<TicketDetailRes> DeclineAsync(int id, ReasonReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Decline, (ticket, now) =>
+        RunAsync(id, TicketAction.Decline, async (ticket, now) =>
         {
+            var reason = request.Reason.Trim();
             ticket.StatusBeforeWaiting = null;
-            Finish(ticket, now, TicketStatus.Declined, TicketActivityType.Declined, request.Reason.Trim());
-            return Task.CompletedTask;
+            Finish(ticket, now, TicketStatus.Declined, TicketActivityType.Declined, reason);
+            await NotifyAsync(ticket, NotificationType.TicketDeclined, cancellationToken, new { Reason = reason });
         }, cancellationToken);
 
     public Task<TicketDetailRes> StartAsync(int id, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Start, (ticket, now) =>
+        RunAsync(id, TicketAction.Start, async (ticket, now) =>
         {
             // The first start ends the reporter's right to cancel (Q40).
             ticket.StartedAt ??= now;
             Transition(ticket, TicketStatus.InProgress, TicketActivityType.Started);
-            return Task.CompletedTask;
+            await NotifyAsync(ticket, NotificationType.TicketStarted, cancellationToken);
         }, cancellationToken);
 
     public Task<TicketDetailRes> PauseAsync(int id, CancellationToken cancellationToken) =>
-        Simple(id, TicketAction.Pause, TicketStatus.Queued, TicketActivityType.Paused, note: null, cancellationToken);
+        Simple(id, TicketAction.Pause, TicketStatus.Queued, TicketActivityType.Paused, NotificationType.TicketPaused, note: null, cancellationToken);
 
     public Task<TicketDetailRes> ResolveAsync(int id, ResolveReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Resolve, (ticket, now) =>
+        RunAsync(id, TicketAction.Resolve, async (ticket, now) =>
         {
             ticket.Resolution = request.Resolution.Trim();
             ticket.ResolvedAt = now;
             Transition(ticket, TicketStatus.Resolved, TicketActivityType.Resolved);
-            return Task.CompletedTask;
+            await NotifyAsync(ticket, NotificationType.TicketResolved, cancellationToken);
         }, cancellationToken);
 
     public Task<TicketDetailRes> CloseAsync(int id, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Close, (ticket, now) =>
+        RunAsync(id, TicketAction.Close, async (ticket, now) =>
         {
             Finish(ticket, now, TicketStatus.Closed, TicketActivityType.Closed, note: null);
-            return Task.CompletedTask;
+            await NotifyAsync(ticket, NotificationType.TicketClosed, cancellationToken);
         }, cancellationToken);
 
     public Task<TicketDetailRes> SendBackAsync(int id, ReasonReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.SendBack, (ticket, _) =>
+        RunAsync(id, TicketAction.SendBack, async (ticket, _) =>
         {
+            var reason = request.Reason.Trim();
             ticket.ReturnCount++;
-            Transition(ticket, TicketStatus.InProgress, TicketActivityType.SentBack, request.Reason.Trim());
-            return Task.CompletedTask;
+            Transition(ticket, TicketStatus.InProgress, TicketActivityType.SentBack, reason);
+            await NotifyAsync(ticket, NotificationType.TicketSentBack, cancellationToken, new { Reason = reason });
         }, cancellationToken);
 
     public Task<TicketDetailRes> RescheduleAsync(int id, RescheduleReq request, CancellationToken cancellationToken) =>
-        RunAsync(id, TicketAction.Reschedule, (ticket, _) =>
+        RunAsync(id, TicketAction.Reschedule, async (ticket, _) =>
         {
             if (ticket.PlannedStartDate == request.PlannedStartDate && ticket.PlannedDueDate == request.PlannedDueDate)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             var reason = request.Reason.Trim();
@@ -150,7 +161,11 @@ public sealed class TicketActionControl(
             ticket.PlannedStartDate = request.PlannedStartDate;
             ticket.PlannedDueDate = request.PlannedDueDate;
             ticket.RescheduleCount++;
-            return Task.CompletedTask;
+            await NotifyAsync(ticket, NotificationType.TicketRescheduled, cancellationToken, new
+            {
+                NewDueDate = request.PlannedDueDate.ToString("yyyy-MM-dd"),
+                Reason = reason
+            });
         }, cancellationToken);
 
     public Task<TicketDetailRes> ReassignAsync(int id, ReassignReq request, CancellationToken cancellationToken) =>
@@ -162,7 +177,8 @@ public sealed class TicketActionControl(
             }
 
             await EnsureProgrammerAsync(request.AssigneeId, cancellationToken);
-            var oldName = ticket.AssigneeId is { } oldId ? await NameOfAsync(oldId, cancellationToken) : null;
+            var oldId = ticket.AssigneeId;
+            var oldName = oldId is { } previous ? await NameOfAsync(previous, cancellationToken) : null;
             var newName = await NameOfAsync(request.AssigneeId, cancellationToken);
 
             ticket.AssigneeId = request.AssigneeId;
@@ -173,6 +189,8 @@ public sealed class TicketActionControl(
                 ActorId = Me.Id,
                 Data = Json(new { Old = oldName, New = newName })
             });
+            await NotifyAsync(ticket, NotificationType.TicketReassigned, cancellationToken, new { Assignee = newName },
+                also: oldId is { } old ? [old] : null);
         }, cancellationToken);
 
     public Task<TicketDetailRes> AddWatcherAsync(int id, WatcherReq request, CancellationToken cancellationToken) =>
@@ -188,6 +206,7 @@ public sealed class TicketActionControl(
 
             db.TicketWatchers.Add(new TicketWatcher { TicketId = id, UserId = request.UserId });
             ticket.Activities.Add(new TicketActivity { Type = TicketActivityType.WatcherAdded, ActorId = Me.Id, Data = Json(new { User = name }) });
+            await NotifyAsync(ticket, NotificationType.WatcherAdded, cancellationToken, also: [request.UserId]);
         }, cancellationToken);
 
     public Task<TicketDetailRes> RemoveWatcherAsync(int id, int userId, CancellationToken cancellationToken) =>
@@ -228,13 +247,18 @@ public sealed class TicketActionControl(
         TicketAction action,
         TicketStatus to,
         TicketActivityType activity,
+        NotificationType notification,
         string? note,
         CancellationToken cancellationToken) =>
-        RunAsync(id, action, (ticket, _) =>
+        RunAsync(id, action, async (ticket, _) =>
         {
-            Transition(ticket, to, activity, note?.Trim());
-            return Task.CompletedTask;
+            var text = note?.Trim();
+            Transition(ticket, to, activity, text);
+            await NotifyAsync(ticket, notification, cancellationToken, text is null ? null : new { Reason = text });
         }, cancellationToken);
+
+    private Task NotifyAsync(Ticket ticket, NotificationType type, CancellationToken cancellationToken, object? extra = null, IEnumerable<int>? also = null) =>
+        notifier.NotifyAsync(ticket, type, Me.Id, cancellationToken, extra, also);
 
     private void Transition(Ticket ticket, TicketStatus to, TicketActivityType activity, string? note = null, string? data = null)
     {

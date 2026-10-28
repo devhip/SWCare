@@ -67,6 +67,10 @@ builder.Services.AddScoped<IDeviceModelControl, DeviceModelControl>();
 builder.Services.AddScoped<ISettingControl, SettingControl>();
 builder.Services.AddScoped<ITicketControl, TicketControl>();
 builder.Services.AddScoped<ITicketActionControl, TicketActionControl>();
+builder.Services.AddScoped<INotificationControl, NotificationControl>();
+builder.Services.AddScoped<TicketNotifier>();
+builder.Services.AddScoped<DailyTicketJob>();
+builder.Services.AddHostedService<DailyTicketJobRunner>();
 builder.Services.AddSingleton<AttachmentStorage>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: false);

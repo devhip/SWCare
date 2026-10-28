@@ -15,6 +15,7 @@ public sealed partial class TicketControl(
     CurrentUser currentUser,
     AttachmentStorage storage,
     ISettingControl settings,
+    TicketNotifier notifier,
     TimeProvider clock) : ITicketControl
 {
     public async Task<TicketDetailRes> CreateAsync(SaveTicketReq request, IReadOnlyCollection<IFormFile> files, CancellationToken cancellationToken)
@@ -66,6 +67,14 @@ public sealed partial class TicketControl(
         {
             ticket.TicketNo = await NextTicketNoAsync(cancellationToken);
             db.Tickets.Add(ticket);
+
+            // The head is told (Q14); a head's own ticket goes straight to the lead.
+            await notifier.NotifyAsync(
+                ticket,
+                me.IsDepartmentHead ? NotificationType.TicketApproved : NotificationType.TicketSubmitted,
+                me.Id,
+                cancellationToken,
+                new { RequestedPriority = ticket.RequestedPriority.ToString() });
             await db.SaveChangesAsync(cancellationToken);
 
             await StoreFilesAsync(ticket.Id, commentId: null, files, me.Id, saved, cancellationToken);
@@ -252,7 +261,10 @@ public sealed partial class TicketControl(
                 ToStatus = previous,
                 ActorId = me.Id
             });
+            await notifier.NotifyAsync(ticket, NotificationType.InfoProvided, me.Id, cancellationToken);
         }
+
+        await notifier.NotifyAsync(ticket, NotificationType.CommentAdded, me.Id, cancellationToken);
 
         var saved = new List<StoredFile>();
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);

@@ -21,6 +21,9 @@ public static class AppSettingKeys
 
     /// <summary>Headings put into "สิ่งที่ทดสอบแล้ว" for the reporter to fill in (Q56).</summary>
     public const string TestedDetailsTemplate = "Ticket.TestedDetailsTemplate";
+
+    /// <summary>"yyyy-MM-dd" (Thai date) of the last morning job, so it runs once a day. Not shown to the Admin.</summary>
+    public const string MorningJobLastRun = "Job.MorningLastRun";
 }
 
 /// <summary>Values written by DbSeeder on the first start (plan 6.2).</summary>

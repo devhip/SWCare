@@ -31,6 +31,7 @@ import { MENU, type MenuEntry } from "@/lib/menu";
 import { hasAnyRole, type AppRole } from "@/lib/roles";
 import { color, layout, nav, radiusPx, typeScale } from "@/theme/tokens";
 import LanguageSwitch from "./LanguageSwitch";
+import NotificationBell from "./NotificationBell";
 import Link from "./Link";
 import RoleGuard from "./RoleGuard";
 
@@ -159,6 +160,7 @@ export default function AppShell({ roles, children }: { roles?: AppRole[]; child
           </IconButton>
           <Brand />
           <Box sx={{ flex: 1 }} />
+          <NotificationBell />
           <LanguageSwitch />
           <UserMenu />
         </Box>
