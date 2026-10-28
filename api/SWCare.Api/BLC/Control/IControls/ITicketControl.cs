@@ -21,6 +21,11 @@ public interface ITicketControl
 
     Task<AttachmentFile> OpenAttachmentAsync(int id, long attachmentId, CancellationToken cancellationToken);
 
+    /// <summary>Tickets the caller can see, in one of the web's lists.</summary>
+    Task<PagedRes<TicketListItemRes>> ListAsync(TicketQueryReq request, CancellationToken cancellationToken);
+
+    Task<TicketCountsRes> CountsAsync(CancellationToken cancellationToken);
+
     /// <summary>Customer names used before, for suggestions (Q42).</summary>
     Task<List<string>> CustomerNamesAsync(string? search, CancellationToken cancellationToken);
 }

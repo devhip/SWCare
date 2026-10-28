@@ -1,4 +1,7 @@
 {
   "myTasks": "My tasks",
-  "newTicket": "New ticket"
+  "newTicket": "New ticket",
+  "approvals": "To approve",
+  "triage": "To triage",
+  "allTickets": "All tickets"
 }

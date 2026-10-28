@@ -45,7 +45,8 @@ cd api/SWCare.Api && dotnet ef migrations add <Name> -o Data/Migrations   # ค�
 - route เป็น PascalCase ลงท้าย `/` (static export, `trailingSlash`) · เพิ่มเมนูที่ `lib/menu.ts` เมื่อหน้าพร้อมแล้ว
 - ข้อความบนจอทุกจุดผ่าน i18n (`locales/th`, `locales/en`) — แปลเฉพาะข้อความของระบบ ไม่แปลข้อมูลที่ผู้ใช้พิมพ์
 - `lib/http.ts` ต่อ token ด้วย refresh token เมื่อเจอ 401 (refresh token ใช้ได้ครั้งเดียว) และแสดง toast error จาก `Code`
-- style ใช้ token จาก `theme/tokens.ts` (ชุดเดียวกับ Easy Next)
+- style ใช้ token จาก `theme/tokens.ts` (ชุดเดียวกับ Easy Next) · **theme ตั้ง breakpoint `sm` = 0 และ `spacing` = 4px** — ใช้ `md` เป็นจุดแบ่งมือถือ/จอใหญ่ และอย่าใช้ `Dialog maxWidth="sm"` (จะกว้าง 0)
+- หลังเปลี่ยนสถานะงาน ให้ `invalidateQueries({ queryKey: TICKET_LISTS_KEY })` เพื่อให้รายการและตัวนับอัปเดต
 - ปลายทาง API อ่านจาก `public/config.json` ตอนรัน (build เดียวใช้ได้ทุก server)
 
 ```bash

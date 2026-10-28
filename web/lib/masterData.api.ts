@@ -16,3 +16,7 @@ export function settingsApi() {
 export function userLookupApi(search?: string) {
   return apiGet<UserLookup[]>("api/Users/Lookup", { search });
 }
+
+export function programmersApi() {
+  return apiGet<UserLookup[]>("api/Users/Programmers");
+}

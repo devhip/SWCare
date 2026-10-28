@@ -17,6 +17,11 @@ import Typography from "@mui/material/Typography";
 import MenuRounded from "@mui/icons-material/MenuRounded";
 import AssignmentIndRounded from "@mui/icons-material/AssignmentIndRounded";
 import AddCircleOutlineRounded from "@mui/icons-material/AddCircleOutlineRounded";
+import FactCheckRounded from "@mui/icons-material/FactCheckRounded";
+import PlaylistAddCheckRounded from "@mui/icons-material/PlaylistAddCheckRounded";
+import ListAltRounded from "@mui/icons-material/ListAltRounded";
+import Chip from "@mui/material/Chip";
+import { useTicketCountsQuery } from "@/queries/ticket.query";
 import AccountCircleRounded from "@mui/icons-material/AccountCircleRounded";
 import KeyRounded from "@mui/icons-material/KeyRounded";
 import LogoutRounded from "@mui/icons-material/LogoutRounded";
@@ -32,6 +37,9 @@ import RoleGuard from "./RoleGuard";
 const ICONS: Record<MenuEntry["icon"], typeof AssignmentIndRounded> = {
   myTasks: AssignmentIndRounded,
   newTicket: AddCircleOutlineRounded,
+  approvals: FactCheckRounded,
+  triage: PlaylistAddCheckRounded,
+  allTickets: ListAltRounded,
 };
 
 function Brand() {
@@ -48,12 +56,14 @@ function SideMenu({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation("navigation");
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
+  const counts = useTicketCountsQuery();
 
   return (
     <Stack spacing={`${nav.gap}px`} sx={{ p: 2 }}>
       {MENU.filter((entry) => hasAnyRole(user, entry.roles)).map((entry) => {
         const Icon = ICONS[entry.icon];
         const selected = pathname === entry.route;
+        const badge = entry.badge ? (counts.data?.[entry.badge] ?? 0) : 0;
         return (
           <ListItemButton
             key={entry.route}
@@ -71,6 +81,7 @@ function SideMenu({ onNavigate }: { onNavigate?: () => void }) {
               <Icon />
             </ListItemIcon>
             <ListItemText primary={t(entry.labelKey)} slotProps={{ primary: { sx: typeScale.bodyStrong16 } }} />
+            {badge > 0 ? <Chip label={badge} size="small" color="primary" sx={{ height: 22, minWidth: 28 }} /> : null}
           </ListItemButton>
         );
       })}

@@ -1,5 +1,36 @@
-import { apiGet, apiPostForm, apiPut, http } from "./http";
-import type { SaveTicket, TicketDetail } from "@/types/ticket";
+import { apiDelete, apiGet, apiPost, apiPostForm, apiPut, http } from "./http";
+import type { ApiListResponse } from "@/types/api";
+import type { SaveTicket, TicketAction, TicketCounts, TicketDetail, TicketListItem, TicketListParams } from "@/types/ticket";
+
+/** Statuses go as repeated query keys (Statuses=A&Statuses=B), as ASP.NET binds lists. */
+export async function listTicketsApi(params: TicketListParams): Promise<ApiListResponse<TicketListItem>> {
+  const query = new URLSearchParams();
+  if (params.Scope) query.set("Scope", params.Scope);
+  params.Statuses?.forEach((status) => query.append("Statuses", status));
+  if (params.Search) query.set("Search", params.Search);
+  if (params.ProductId) query.set("ProductId", String(params.ProductId));
+  query.set("PageNumber", String(params.PageNumber ?? 1));
+  query.set("PageLimit", String(params.PageLimit ?? 20));
+  const res = await http.get<ApiListResponse<TicketListItem>>(`api/Tickets?${query.toString()}`);
+  return res.data;
+}
+
+export function ticketCountsApi() {
+  return apiGet<TicketCounts>("api/Tickets/Counts");
+}
+
+/** One endpoint per status change: POST api/Tickets/{id}/{action} (plan 4.3). */
+export function ticketActionApi(id: number, action: TicketAction, body?: unknown) {
+  return apiPost<TicketDetail>(`api/Tickets/${id}/${action}`, body ?? {});
+}
+
+export function addWatcherApi(id: number, userId: number) {
+  return apiPost<TicketDetail>(`api/Tickets/${id}/Watchers`, { UserId: userId });
+}
+
+export function removeWatcherApi(id: number, userId: number) {
+  return apiDelete<TicketDetail>(`api/Tickets/${id}/Watchers/${userId}`);
+}
 
 /** Multipart: the ticket as JSON plus its files, in one request. */
 export function createTicketApi(ticket: SaveTicket, files: File[]) {

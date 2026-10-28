@@ -18,6 +18,17 @@ export function formatDateTime(iso: string | null | undefined, lang: string): st
   }).format(new Date(iso));
 }
 
+/** Today in Thai time as "yyyy-MM-dd" (the API's DateOnly). */
+export function thaiToday(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(new Date());
+}
+
+export function addDays(date: string, days: number): string {
+  const value = new Date(`${date}T00:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+}
+
 /** DateOnly from the API ("2026-11-03"): no time zone shift. */
 export function formatDate(date: string | null | undefined, lang: string): string {
   if (!date) return "-";

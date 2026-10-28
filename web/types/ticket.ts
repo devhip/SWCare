@@ -34,7 +34,63 @@ export type TicketAction =
   | "Reschedule"
   | "Reassign"
   | "Comment"
-  | "AddAttachment";
+  | "AddAttachment"
+  | "ManageWatchers";
+
+/** Same names as TicketScope in the API. */
+export type TicketScope = "All" | "Reported" | "Following" | "ToDo" | "ToApprove" | "ToClose" | "ToTriage";
+
+/** Not over yet: what the งานของฉัน tabs show by default. */
+export const OPEN_STATUSES: TicketStatus[] = ["PendingApproval", "Rejected", "PendingTriage", "WaitingInfo", "Queued", "InProgress", "Resolved"];
+export const ALL_STATUSES: TicketStatus[] = [...OPEN_STATUSES, "Closed", "Cancelled", "Declined"];
+
+export type TicketListItem = {
+  Id: number;
+  TicketNo: string;
+  Title: string;
+  Type: TicketType;
+  ProductName: string;
+  Status: TicketStatus;
+  RequestedPriority: TicketPriority;
+  ActualPriority: TicketPriority | null;
+  Reporter: UserBrief;
+  Requester: UserBrief | null;
+  Assignee: UserBrief | null;
+  DepartmentName: string;
+  CustomerName: string | null;
+  ReportedAt: string;
+  PlannedDueDate: string | null;
+  IsOverdue: boolean;
+};
+
+export type TicketCounts = {
+  Reported: number;
+  Following: number;
+  ToDo: number;
+  ToApprove: number;
+  ToClose: number;
+  ToTriage: number;
+};
+
+export type TicketListParams = {
+  Scope?: TicketScope;
+  Statuses?: TicketStatus[];
+  Search?: string;
+  ProductId?: number;
+  PageNumber?: number;
+  PageLimit?: number;
+};
+
+export type TriageBody = {
+  ActualPriority: TicketPriority;
+  AssigneeId: number;
+  PlannedStartDate: string;
+  PlannedDueDate: string;
+  ProductId: number;
+  Type: TicketType;
+  DeviceModelIds: number[];
+  CustomerName: string | null;
+};
 
 export type TicketActivityType =
   | "Created"

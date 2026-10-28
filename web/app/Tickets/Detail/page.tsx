@@ -14,8 +14,8 @@ import EditRounded from "@mui/icons-material/EditRounded";
 import AppShell from "@/app/components/AppShell";
 import Link from "@/app/components/Link";
 import { addTicketFilesApi } from "@/lib/ticket.api";
-import { formatDate, formatDateTime } from "@/lib/format";
-import { ticketKey, useTicketQuery } from "@/queries/ticket.query";
+import { formatDate, formatDateTime, thaiToday } from "@/lib/format";
+import { TICKET_LISTS_KEY, ticketKey, useTicketQuery } from "@/queries/ticket.query";
 import { useAuthStore } from "@/stores/auth.store";
 import type { TicketDetail } from "@/types/ticket";
 import { color, radiusPx, typeScale } from "@/theme/tokens";
@@ -23,7 +23,15 @@ import AttachmentList from "../_components/AttachmentList";
 import Comments from "../_components/Comments";
 import FilePicker from "../_components/FilePicker";
 import { PriorityChip, StatusChip } from "../_components/StatusChip";
+import TicketActions from "../_components/TicketActions";
 import Timeline from "../_components/Timeline";
+import Watchers from "../_components/Watchers";
+
+/** Same rule as IsOverdue in the API lists. */
+function overdue(ticket: TicketDetail) {
+  const active = ticket.Status === "Queued" || ticket.Status === "InProgress" || ticket.Status === "WaitingInfo";
+  return active && !!ticket.PlannedDueDate && ticket.PlannedDueDate < thaiToday();
+}
 
 function Card({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
@@ -104,7 +112,11 @@ function TicketView() {
 
   const ticket = query.data;
   const lang = i18n.language;
-  const onChanged = (next: TicketDetail) => queryClient.setQueryData(ticketKey(next.Id), next);
+  const onChanged = (next: TicketDetail) => {
+    queryClient.setQueryData(ticketKey(next.Id), next);
+    // A comment can move a WaitingInfo ticket back (Q32): lists and badges change too.
+    void queryClient.invalidateQueries({ queryKey: TICKET_LISTS_KEY });
+  };
   const person = (name: string | undefined, legacy: string | null) => name ?? legacy ?? t("none");
 
   return (
@@ -129,7 +141,9 @@ function TicketView() {
           <PriorityChip priority={ticket.ActualPriority ?? ticket.RequestedPriority} />
           <Chip size="small" label={t(`type.${ticket.Type}`)} />
           {ticket.NeedsLegacyReview ? <Chip size="small" color="warning" label={t("legacyReview")} /> : null}
+          {ticket.PlannedDueDate && overdue(ticket) ? <Chip size="small" color="error" label={t("list.overdue")} /> : null}
         </Stack>
+        <TicketActions ticket={ticket} onChanged={onChanged} />
       </Stack>
 
       <Box sx={{ display: "grid", gap: 3, gridTemplateColumns: { xs: "1fr", lg: "minmax(0, 2fr) minmax(0, 1fr)" }, alignItems: "start" }}>
@@ -168,8 +182,10 @@ function TicketView() {
               <Field label={t("field.requester")}>{person(ticket.Requester?.DisplayName, ticket.LegacyRequesterName)}</Field>
               <Field label={t("field.approver")}>{person(ticket.Approver?.DisplayName, ticket.LegacyApproverName)}</Field>
               <Field label={t("field.assignee")}>{person(ticket.Assignee?.DisplayName, ticket.LegacyAssigneeName)}</Field>
-              <Field label={t("field.watchers")}>{ticket.Watchers.map((w) => w.DisplayName).join(", ") || t("none")}</Field>
             </Box>
+            <Field label={t("field.watchers")}>
+              <Watchers ticket={ticket} onChanged={onChanged} />
+            </Field>
           </Card>
 
           <Card title={t("section.dates")}>

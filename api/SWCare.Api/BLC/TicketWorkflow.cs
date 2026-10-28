@@ -44,7 +44,10 @@ public enum TicketAction
     Comment,
 
     /// <summary>Attach files to the ticket itself (comments carry their own files).</summary>
-    AddAttachment
+    AddAttachment,
+
+    /// <summary>Add or remove ผู้ติดตาม (Q39).</summary>
+    ManageWatchers
 }
 
 /// <summary>The fields of a ticket the rules look at.</summary>
@@ -91,6 +94,9 @@ public static class TicketWorkflow
 
         // Planned dates exist once the lead has triaged it.
         var isTriaged = ticket.AssigneeId is not null;
+
+        // The reporter, their department head and the programmer lead add watchers (Q39).
+        AddIf(allowed, isReporter || isApprover || isLead, TicketAction.ManageWatchers);
 
         switch (ticket.Status)
         {

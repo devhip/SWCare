@@ -17,4 +17,7 @@ public interface IUserControl
 
     /// <summary>Active users for pickers, at most 50.</summary>
     Task<List<UserLookupRes>> LookupAsync(string? search, CancellationToken cancellationToken);
+
+    /// <summary>Active members of the Software department.</summary>
+    Task<List<UserLookupRes>> ProgrammersAsync(CancellationToken cancellationToken);
 }

@@ -69,6 +69,7 @@
   },
 
   "status": {
+    "open": "Not finished",
     "PendingApproval": "Waiting for approval",
     "Rejected": "Rejected",
     "PendingTriage": "Waiting for triage",
@@ -145,6 +146,78 @@
     "none": "No attachments",
     "remove": "Remove",
     "uploaded": "Files attached"
+  },
+
+  "action": {
+    "Approve": "Approve",
+    "Reject": "Reject",
+    "Resubmit": "Resubmit",
+    "Cancel": "Cancel ticket",
+    "Triage": "Triage",
+    "RequestInfo": "Ask for information",
+    "Decline": "Decline",
+    "Start": "Start",
+    "Pause": "Pause",
+    "Resolve": "Finish",
+    "Close": "Close",
+    "SendBack": "Send back to the programmer",
+    "Reschedule": "Reschedule",
+    "Reassign": "Change assignee",
+    "done": "Saved",
+    "confirm": "Confirm",
+    "closeConfirm": "Confirm you have checked with the customer and close this ticket"
+  },
+
+  "dialog": {
+    "reason": {
+      "Reject": "Why it is rejected",
+      "Cancel": "Why it is cancelled",
+      "Decline": "Why it is declined (e.g. not a program problem, fixable on site)",
+      "SendBack": "The problem that is still there",
+      "RequestInfo": "What information is needed",
+      "Reschedule": "Why the dates move"
+    },
+    "resolution": "Fix (what was changed and how)",
+    "triageHint": "Set the real priority, assignee and dates. Correct the classification if the reporter picked wrongly.",
+    "classification": "Classification",
+    "requested": "Requested: {{priority}}"
+  },
+
+  "watchers": {
+    "add": "Add watcher",
+    "remove": "Remove",
+    "none": "No watchers yet"
+  },
+
+  "list": {
+    "no": "No.",
+    "title": "Title",
+    "status": "Status",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "due": "Expected finish",
+    "reportedAt": "Reported",
+    "reporter": "Reporter",
+    "overdue": "Overdue",
+    "empty": "No tickets",
+    "search": "Search number, title, description, fix, customer",
+    "allStatuses": "All statuses",
+    "allProducts": "All systems / programs",
+    "total": "{{count}} tickets"
+  },
+
+  "tab": {
+    "ToDo": "To do",
+    "ToApprove": "To approve",
+    "ToClose": "To close",
+    "Reported": "Reported by me",
+    "Following": "Requested / watching"
+  },
+
+  "page": {
+    "approvalsHint": "Tickets from your department, waiting for your approval before they reach the programmers.",
+    "triageHint": "Approved tickets waiting for you to queue them. \"Immediate\" requests come first.",
+    "allHint": "Every ticket you are allowed to see."
   },
 
   "legacyReview": "Old data to check",

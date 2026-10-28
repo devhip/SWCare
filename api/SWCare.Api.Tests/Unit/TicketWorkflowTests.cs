@@ -65,7 +65,7 @@ public sealed class TicketWorkflowTests
         Assert.Contains(TicketAction.Edit, allowed);
         Assert.Contains(TicketAction.Resubmit, allowed);
         Assert.Contains(TicketAction.Cancel, allowed);
-        Assert.Equal(new[] { TicketAction.Comment }, Allowed(Ticket(TicketStatus.Rejected), SaleHead));
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers }, Allowed(Ticket(TicketStatus.Rejected), SaleHead).Order());
     }
 
     [Fact]
@@ -153,6 +153,20 @@ public sealed class TicketWorkflowTests
         foreach (var user in new[] { Reporter, SaleHead, Lead, Assignee, Admin })
         {
             Assert.Equal(new[] { TicketAction.Comment }, Allowed(ticket, user));
+        }
+    }
+
+    [Fact]
+    public void Reporter_their_head_and_the_lead_manage_watchers()
+    {
+        foreach (var status in new[] { TicketStatus.PendingApproval, TicketStatus.Queued, TicketStatus.Resolved })
+        {
+            var ticket = Ticket(status, Assignee.Id);
+            Assert.Contains(TicketAction.ManageWatchers, Allowed(ticket, Reporter));
+            Assert.Contains(TicketAction.ManageWatchers, Allowed(ticket, SaleHead));
+            Assert.Contains(TicketAction.ManageWatchers, Allowed(ticket, Lead));
+            Assert.DoesNotContain(TicketAction.ManageWatchers, Allowed(ticket, Assignee));
+            Assert.DoesNotContain(TicketAction.ManageWatchers, Allowed(ticket, SupportHead));
         }
     }
 

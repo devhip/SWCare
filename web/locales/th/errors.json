@@ -33,5 +33,6 @@
   "EMPTY_COMMENT": "กรุณาเขียนข้อความหรือแนบไฟล์",
   "TOO_MANY_FILES": "แนบได้ครั้งละไม่เกิน 10 ไฟล์",
   "FILE_TOO_LARGE": "ไฟล์ใหญ่เกิน 20 MB",
-  "FILE_TYPE_NOT_ALLOWED": "ไม่รองรับไฟล์ชนิดนี้"
+  "FILE_TYPE_NOT_ALLOWED": "ไม่รองรับไฟล์ชนิดนี้",
+  "ASSIGNEE_NOT_PROGRAMMER": "คนทำต้องเป็นโปรแกรมเมอร์ที่ยังใช้งานอยู่"
 }

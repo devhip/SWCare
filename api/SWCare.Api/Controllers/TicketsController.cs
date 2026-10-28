@@ -15,9 +15,20 @@ namespace SWCare.Api.Controllers;
 [Tags("Tickets")]
 public sealed class TicketsController(
     ITicketControl control,
+    ITicketActionControl actions,
     IValidator<SaveTicketReq> validator,
     IOptions<JsonOptions> jsonOptions) : ControllerBase
 {
+    /// <summary>Tickets the caller can see. Scope picks a list: Reported, Following, ToDo, ToApprove, ToClose, ToTriage.</summary>
+    [HttpGet]
+    public async Task<ResultsViewModel<TicketListItemRes>> List([FromQuery] TicketQueryReq request, CancellationToken cancellationToken) =>
+        ApiResult.OkPage(await control.ListAsync(request, cancellationToken), request);
+
+    /// <summary>Open tickets per list, for the badges.</summary>
+    [HttpGet("Counts")]
+    public async Task<ResultViewModel<TicketCountsRes>> Counts(CancellationToken cancellationToken) =>
+        ApiResult.Ok(await control.CountsAsync(cancellationToken));
+
     /// <summary>
     /// multipart/form-data: "Ticket" = SaveTicketReq as JSON, "Files" = up to 10 files of 20 MB.
     /// 422 TESTED_DETAILS_REQUIRED, NO_DEPARTMENT_HEAD, FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED ...
@@ -66,6 +77,73 @@ public sealed class TicketsController(
     [RequestFormLimits(MultipartBodyLengthLimit = AttachmentRules.MaxRequestBytes)]
     public async Task<ResultViewModel<TicketDetailRes>> AddComment(int id, [FromForm] AddCommentForm form, CancellationToken cancellationToken) =>
         ApiResult.Ok(await control.AddCommentAsync(id, form, cancellationToken));
+
+    // Status changes (plan 4.3). 403 ACTION_NOT_ALLOWED when the caller may not do it in the current status.
+
+    [HttpPost("{id:int}/Approve")]
+    public async Task<ResultViewModel<TicketDetailRes>> Approve(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.ApproveAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/Reject")]
+    public async Task<ResultViewModel<TicketDetailRes>> Reject(int id, ReasonReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.RejectAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Resubmit")]
+    public async Task<ResultViewModel<TicketDetailRes>> Resubmit(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.ResubmitAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/Cancel")]
+    public async Task<ResultViewModel<TicketDetailRes>> Cancel(int id, ReasonReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.CancelAsync(id, request, cancellationToken));
+
+    /// <summary>422 ASSIGNEE_NOT_PROGRAMMER, INACTIVE_PRODUCT, INACTIVE_DEVICE_MODEL.</summary>
+    [HttpPost("{id:int}/Triage")]
+    public async Task<ResultViewModel<TicketDetailRes>> Triage(int id, TriageReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.TriageAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/RequestInfo")]
+    public async Task<ResultViewModel<TicketDetailRes>> RequestInfo(int id, ReasonReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.RequestInfoAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Decline")]
+    public async Task<ResultViewModel<TicketDetailRes>> Decline(int id, ReasonReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.DeclineAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Start")]
+    public async Task<ResultViewModel<TicketDetailRes>> Start(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.StartAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/Pause")]
+    public async Task<ResultViewModel<TicketDetailRes>> Pause(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.PauseAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/Resolve")]
+    public async Task<ResultViewModel<TicketDetailRes>> Resolve(int id, ResolveReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.ResolveAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Close")]
+    public async Task<ResultViewModel<TicketDetailRes>> Close(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.CloseAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/SendBack")]
+    public async Task<ResultViewModel<TicketDetailRes>> SendBack(int id, ReasonReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.SendBackAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Reschedule")]
+    public async Task<ResultViewModel<TicketDetailRes>> Reschedule(int id, RescheduleReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.RescheduleAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Reassign")]
+    public async Task<ResultViewModel<TicketDetailRes>> Reassign(int id, ReassignReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.ReassignAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/Watchers")]
+    public async Task<ResultViewModel<TicketDetailRes>> AddWatcher(int id, WatcherReq request, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.AddWatcherAsync(id, request, cancellationToken));
+
+    [HttpDelete("{id:int}/Watchers/{userId:int}")]
+    public async Task<ResultViewModel<TicketDetailRes>> RemoveWatcher(int id, int userId, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.RemoveWatcherAsync(id, userId, cancellationToken));
 
     /// <summary>Customer names used on tickets the caller can see.</summary>
     [HttpGet("CustomerNames")]

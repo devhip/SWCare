@@ -33,5 +33,6 @@
   "EMPTY_COMMENT": "Write something or attach a file.",
   "TOO_MANY_FILES": "At most 10 files at a time.",
   "FILE_TOO_LARGE": "A file is larger than 20 MB.",
-  "FILE_TYPE_NOT_ALLOWED": "This file type is not allowed."
+  "FILE_TYPE_NOT_ALLOWED": "This file type is not allowed.",
+  "ASSIGNEE_NOT_PROGRAMMER": "The assignee must be an active programmer."
 }

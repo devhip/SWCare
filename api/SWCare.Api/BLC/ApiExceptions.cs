@@ -74,4 +74,5 @@ public static class ErrorCodes
     public const string TooManyFiles = "TOO_MANY_FILES";
     public const string FileTooLarge = "FILE_TOO_LARGE";
     public const string FileTypeNotAllowed = "FILE_TYPE_NOT_ALLOWED";
+    public const string AssigneeNotProgrammer = "ASSIGNEE_NOT_PROGRAMMER";
 }

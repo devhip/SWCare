@@ -75,5 +75,33 @@ public sealed record TicketDetailRes(
     List<ActivityRes> Activities,
     List<TicketAction> AllowedActions);
 
+/// <summary>One row of a ticket list.</summary>
+public sealed record TicketListItemRes(
+    int Id,
+    string TicketNo,
+    string Title,
+    TicketType Type,
+    string ProductName,
+    TicketStatus Status,
+    TicketPriority RequestedPriority,
+    TicketPriority? ActualPriority,
+    UserBriefRes Reporter,
+    UserBriefRes? Requester,
+    UserBriefRes? Assignee,
+    string DepartmentName,
+    string? CustomerName,
+    DateTime ReportedAt,
+    DateOnly? PlannedDueDate,
+    bool IsOverdue);
+
+/// <summary>Badges on the งานของฉัน tabs and the menu.</summary>
+public sealed record TicketCountsRes(
+    int Reported,
+    int Following,
+    int ToDo,
+    int ToApprove,
+    int ToClose,
+    int ToTriage);
+
 /// <summary>For the download endpoint.</summary>
 public sealed record AttachmentFile(string FullPath, string FileName, string ContentType);

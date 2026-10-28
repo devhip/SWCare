@@ -66,6 +66,7 @@ builder.Services.AddScoped<IProductControl, ProductControl>();
 builder.Services.AddScoped<IDeviceModelControl, DeviceModelControl>();
 builder.Services.AddScoped<ISettingControl, SettingControl>();
 builder.Services.AddScoped<ITicketControl, TicketControl>();
+builder.Services.AddScoped<ITicketActionControl, TicketActionControl>();
 builder.Services.AddSingleton<AttachmentStorage>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: false);

@@ -95,6 +95,11 @@ export async function apiGet<T>(path: string, params?: Record<string, string | n
   return afterEnvelope(res.data);
 }
 
+export async function apiDelete<T>(path: string): Promise<ApiResponse<T>> {
+  const res = await http.delete<ApiResponse<T>>(path.replace(/^\//, ""));
+  return afterEnvelope(res.data);
+}
+
 export async function apiPut<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   const res = await http.put<ApiResponse<T>>(path.replace(/^\//, ""), body ?? {});
   return afterEnvelope(res.data);

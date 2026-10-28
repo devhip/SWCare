@@ -1,4 +1,7 @@
 {
   "myTasks": "งานของฉัน",
-  "newTicket": "สร้างงาน"
+  "newTicket": "สร้างงาน",
+  "approvals": "รออนุมัติ",
+  "triage": "รอจัดคิว",
+  "allTickets": "รายการงานทั้งหมด"
 }

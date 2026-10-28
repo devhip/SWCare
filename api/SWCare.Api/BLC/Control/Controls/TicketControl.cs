@@ -289,6 +289,107 @@ public sealed partial class TicketControl(
         return new AttachmentFile(path, attachment.FileName, attachment.ContentType);
     }
 
+    public async Task<PagedRes<TicketListItemRes>> ListAsync(TicketQueryReq request, CancellationToken cancellationToken)
+    {
+        var me = currentUser.User;
+        var query = db.Tickets.AsNoTracking().VisibleTo(me).InScope(request.Scope, me);
+
+        if (request.Statuses.Count > 0)
+        {
+            var statuses = request.Statuses;
+            query = query.Where(t => statuses.Contains(t.Status));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var text = request.Search.Trim();
+            query = query.Where(t => t.TicketNo.Contains(text)
+                                     || (t.LegacyRef != null && t.LegacyRef.Contains(text))
+                                     || t.Title.Contains(text)
+                                     || t.Description.Contains(text)
+                                     || (t.Resolution != null && t.Resolution.Contains(text))
+                                     || (t.CustomerName != null && t.CustomerName.Contains(text)));
+        }
+
+        if (request.ProductId is { } productId)
+        {
+            query = query.Where(t => t.ProductId == productId);
+        }
+
+        if (request.AssigneeId is { } assigneeId)
+        {
+            query = query.Where(t => t.AssigneeId == assigneeId);
+        }
+
+        if (request.DepartmentId is { } departmentId)
+        {
+            query = query.Where(t => t.DepartmentId == departmentId);
+        }
+
+        var ordered = request.Scope switch
+        {
+            // "ทำทันที" first (Q22), then the oldest.
+            TicketScope.ToTriage => query
+                .OrderBy(t => t.RequestedPriority == TicketPriority.Immediate ? 0 : t.RequestedPriority == TicketPriority.Urgent ? 1 : 2)
+                .ThenBy(t => t.ReportedAt),
+
+            // What I am on, then my queue in the lead's order.
+            TicketScope.ToDo => query
+                .OrderBy(t => t.Status == TicketStatus.InProgress ? 0 : 1)
+                .ThenBy(t => t.QueueOrder)
+                .ThenBy(t => t.PlannedDueDate),
+
+            TicketScope.ToApprove or TicketScope.ToClose => query.OrderBy(t => t.ReportedAt),
+            _ => query.OrderByDescending(t => t.ReportedAt).ThenByDescending(t => t.Id)
+        };
+
+        var total = await query.CountAsync(cancellationToken);
+        var today = DateOnly.FromDateTime(ThaiTime.Now(clock));
+        var items = await ordered
+            .Skip(request.Skip)
+            .Take(request.PageLimit)
+            .Select(t => new TicketListItemRes(
+                t.Id,
+                t.TicketNo,
+                t.Title,
+                t.Type,
+                t.Product.Name,
+                t.Status,
+                t.RequestedPriority,
+                t.ActualPriority,
+                new UserBriefRes(t.Reporter.Id, t.Reporter.DisplayName),
+                t.Requester == null ? null : new UserBriefRes(t.Requester.Id, t.Requester.DisplayName),
+                t.Assignee == null ? null : new UserBriefRes(t.Assignee.Id, t.Assignee.DisplayName),
+                t.Department.Name,
+                t.CustomerName,
+                t.ReportedAt,
+                t.PlannedDueDate,
+                t.PlannedDueDate != null && t.PlannedDueDate < today
+                && (t.Status == TicketStatus.Queued || t.Status == TicketStatus.InProgress || t.Status == TicketStatus.WaitingInfo)))
+            .ToListAsync(cancellationToken);
+
+        return new PagedRes<TicketListItemRes>(items, total);
+    }
+
+    public async Task<TicketCountsRes> CountsAsync(CancellationToken cancellationToken)
+    {
+        var me = currentUser.User;
+        var visible = db.Tickets.AsNoTracking().VisibleTo(me);
+
+        // Open work only: "ที่ฉันแจ้ง" counts what is not over yet.
+        Task<int> Count(TicketScope scope) => visible.InScope(scope, me)
+            .Where(t => t.Status != TicketStatus.Closed && t.Status != TicketStatus.Cancelled && t.Status != TicketStatus.Declined)
+            .CountAsync(cancellationToken);
+
+        return new TicketCountsRes(
+            await Count(TicketScope.Reported),
+            await Count(TicketScope.Following),
+            await Count(TicketScope.ToDo),
+            await Count(TicketScope.ToApprove),
+            await Count(TicketScope.ToClose),
+            await Count(TicketScope.ToTriage));
+    }
+
     public async Task<List<string>> CustomerNamesAsync(string? search, CancellationToken cancellationToken)
     {
         var query = db.Tickets.AsNoTracking().VisibleTo(currentUser.User).Where(t => t.CustomerName != null);

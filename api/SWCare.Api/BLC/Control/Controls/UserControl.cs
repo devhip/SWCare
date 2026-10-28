@@ -181,6 +181,13 @@ public sealed class UserControl(SWCareDbContext db, CurrentUser currentUser, Tim
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<UserLookupRes>> ProgrammersAsync(CancellationToken cancellationToken) =>
+        db.Users.AsNoTracking()
+            .Where(u => u.IsActive && u.Department.Kind == DepartmentKind.Software)
+            .OrderBy(u => u.DisplayName)
+            .Select(u => new UserLookupRes(u.Id, u.DisplayName, u.DepartmentId, u.Department.Name))
+            .ToListAsync(cancellationToken);
+
     private static string? NormalizeEmail(string? email) =>
         string.IsNullOrWhiteSpace(email) ? null : email.Trim().ToLowerInvariant();
 

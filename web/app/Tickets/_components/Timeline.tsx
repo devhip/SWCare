@@ -1,21 +1,58 @@
 "use client";
 
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { formatDateTime } from "@/lib/format";
-import type { Activity } from "@/types/ticket";
+import { formatDate, formatDateTime } from "@/lib/format";
+import type { Activity, TicketPriority } from "@/types/ticket";
 import { color, typeScale } from "@/theme/tokens";
 
-type Change = { Field: string; Old?: string | null; New?: string | null };
+type Data = {
+  Changes?: { Field: string }[];
+  ActualPriority?: TicketPriority;
+  Assignee?: string;
+  PlannedDueDate?: string;
+  Old?: string | null;
+  New?: string | null;
+  OldDueDate?: string | null;
+  NewDueDate?: string;
+  User?: string;
+};
 
-function changedFields(data: string | null): string[] {
-  if (!data) return [];
+function parse(data: string | null): Data {
+  if (!data) return {};
   try {
-    return ((JSON.parse(data) as { Changes?: Change[] }).Changes ?? []).map((change) => change.Field);
+    return JSON.parse(data) as Data;
   } catch {
-    return [];
+    return {};
+  }
+}
+
+/** One line under the activity name, from the JSON the API stored with it. */
+function detail(activity: Activity, data: Data, t: TFunction, lang: string): string | null {
+  switch (activity.Type) {
+    case "Edited":
+    case "ClassificationChanged":
+      return data.Changes?.length ? t("activity.changed", { fields: data.Changes.map((c) => t(`changeField.${c.Field}`)).join(", ") }) : null;
+    case "Triaged":
+      return [
+        data.ActualPriority ? t(`priority.${data.ActualPriority}`) : null,
+        data.Assignee ? `${t("field.assignee")} ${data.Assignee}` : null,
+        data.PlannedDueDate ? `${t("field.plannedDueDate")} ${formatDate(data.PlannedDueDate, lang)}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+    case "Rescheduled":
+      return `${t("field.plannedDueDate")} ${formatDate(data.OldDueDate, lang)} → ${formatDate(data.NewDueDate, lang)}`;
+    case "Reassigned":
+      return `${data.Old ?? "-"} → ${data.New ?? "-"}`;
+    case "WatcherAdded":
+    case "WatcherRemoved":
+      return data.User ?? null;
+    default:
+      return null;
   }
 }
 
@@ -26,7 +63,7 @@ export default function Timeline({ activities }: { activities: Activity[] }) {
   return (
     <Stack spacing={0}>
       {activities.map((activity, index) => {
-        const fields = changedFields(activity.Data);
+        const line = detail(activity, parse(activity.Data), t, i18n.language);
         return (
           <Stack key={activity.Id} direction="row" spacing={1.5}>
             <Stack sx={{ alignItems: "center", pt: 0.75 }}>
@@ -35,13 +72,9 @@ export default function Timeline({ activities }: { activities: Activity[] }) {
             </Stack>
             <Stack sx={{ pb: 2, minWidth: 0 }}>
               <Typography sx={{ ...typeScale.bodyStrong16, color: color.text.primary }}>{t(`activity.${activity.Type}`)}</Typography>
-              {fields.length ? (
-                <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>
-                  {t("activity.changed", { fields: fields.map((field) => t(`changeField.${field}`)).join(", ") })}
-                </Typography>
-              ) : null}
+              {line ? <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{line}</Typography> : null}
               {activity.Note ? (
-                <Typography sx={{ ...typeScale.bodySm14, color: color.text.primary, whiteSpace: "pre-wrap" }}>{activity.Note}</Typography>
+                <Typography sx={{ ...typeScale.bodySm14, color: color.text.primary, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{activity.Note}</Typography>
               ) : null}
               <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>
                 {activity.Actor?.DisplayName ?? t("activity.system")} · {formatDateTime(activity.CreatedAt, i18n.language)}

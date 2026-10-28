@@ -22,6 +22,11 @@ public sealed class UsersController(IUserControl control) : ControllerBase
     public async Task<ResultsViewModel<UserLookupRes>> Lookup([FromQuery] string? search, CancellationToken cancellationToken) =>
         ApiResult.OkList(await control.LookupAsync(search, cancellationToken));
 
+    /// <summary>Active programmers, for picking an assignee.</summary>
+    [HttpGet("Programmers")]
+    public async Task<ResultsViewModel<UserLookupRes>> Programmers(CancellationToken cancellationToken) =>
+        ApiResult.OkList(await control.ProgrammersAsync(cancellationToken));
+
     [HttpGet("{id:int}")]
     [RequireRoles(AppRole.Admin)]
     public async Task<ResultViewModel<UserRes>> Get(int id, CancellationToken cancellationToken) =>
