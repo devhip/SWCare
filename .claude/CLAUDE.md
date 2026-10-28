@@ -2,6 +2,8 @@
 
 ระบบแจ้งงานโปรแกรมเมอร์ (เว็บ + แอปมือถือ) แทน Google Sheet Tab "แจ้งงาน"
 
+**ความคืบหน้าอยู่ที่ `docs/SWCare-Progress.md`** — ดูว่าทำถึงไหนก่อนเริ่ม และติ๊ก / เพิ่มรายการทุกครั้งที่ทำเสร็จ
+
 **อ่าน `docs/SWCare-Plan.md` ก่อนทำงานทุกครั้ง** — requirement ทั้งหมดตกลงกับผู้ใช้แล้ว (Q1–Q57) ห้ามเปลี่ยนการตัดสินใจหรือถามซ้ำเรื่องที่ตกลงแล้ว ถ้าต้องตัดสินใจเรื่องใหม่ให้ถามผู้ใช้ แล้วเพิ่มลงข้อ 18 ของแผน
 
 ## โครงสร้าง
@@ -20,11 +22,14 @@
 - error: `throw` คลาสใน `BLC/ApiExceptions.cs` พร้อม code จาก `ErrorCodes` → `ApiExceptionHandler` แปลงเป็น envelope **เพิ่ม code ใหม่แล้วต้องเพิ่มข้อความใน `web/locales/{th,en}/errors.json` ด้วย**
 - ทุก endpoint ต้อง login (FallbackPolicy) ยกเว้น `[AllowAnonymous]` · จำกัดบทบาทด้วย `[RequireRoles(AppRole.X)]`
 - บทบาทไม่ได้เก็บใน token: `CurrentUserFilter` โหลดผู้ใช้จาก DB ทุก request → ใช้ `CurrentUser.User` (`UserContext`) · โปรแกรมเมอร์ = ฝ่าย Kind Software, หัวหน้าโปรแกรมเมอร์ = หัวหน้าฝ่าย Software, หัวหน้า Support = หัวหน้าฝ่าย Kind Support, Admin = `User.IsAdmin`
+- **กฎสถานะของงานทั้งหมดอยู่ที่ `BLC/TicketWorkflow.cs`** — endpoint ที่เปลี่ยนสถานะต้องเรียก `TicketWorkflow.Ensure(...)` และเว็บแสดงปุ่มจาก `AllowedActions` เท่านั้น แก้กฎแล้วต้องเพิ่ม unit test · ดึงงานผ่าน `.VisibleTo(user)` เสมอ (งานที่มองไม่เห็นตอบ 404)
+- ไฟล์แนบเก็บที่ `Storage:AttachmentsPath` (ค่าเริ่มต้น `App_Data/attachments`) ดาวน์โหลดผ่าน API เท่านั้น
 - ไม่มีการลบข้อมูล (Q54): ข้อมูลหลักใช้ `IsActive`, งานจบด้วยสถานะสุดท้าย · FK ทั้งหมดเป็น Restrict
 - เวลาเก็บเป็น UTC · enum เก็บเป็น string
 
 ```bash
 cd api && dotnet build SWCare.slnx
+cd api && dotnet test SWCare.slnx                   # unit test (กฎสถานะของงาน)
 cd api/SWCare.Api && dotnet run                     # http://localhost:5300 — Scalar ที่ /scalar, Swagger ที่ /swagger
 cd api/SWCare.Api && dotnet ef migrations add <Name> -o Data/Migrations   # ครั้งแรกรัน dotnet tool restore
 ```
@@ -48,6 +53,10 @@ cd web && npm install
 cd web && npm run dev        # http://localhost:3020
 cd web && npx tsc --noEmit && npx eslint . && npm run build   # ผลอยู่ที่ web/out
 ```
+
+## Git
+
+- ทำงานเสร็จและทดสอบแล้วทุกครั้ง: อัปเดต `docs/SWCare-Progress.md` → `git commit` → `git push origin main` ได้เลยไม่ต้องถาม (ผู้ใช้กำหนด) · commit กับ push แยกคำสั่งกัน
 
 ## ภาษา
 

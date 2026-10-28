@@ -63,4 +63,15 @@ public static class ErrorCodes
     public const string DepartmentHasMembers = "DEPARTMENT_HAS_MEMBERS";
     public const string DepartmentKindLocked = "DEPARTMENT_KIND_LOCKED";
     public const string OwnerNotProgrammer = "OWNER_NOT_PROGRAMMER";
+
+    public const string ActionNotAllowed = "ACTION_NOT_ALLOWED";
+    public const string NoDepartmentHead = "NO_DEPARTMENT_HEAD";
+    public const string TestedDetailsRequired = "TESTED_DETAILS_REQUIRED";
+    public const string InactiveProduct = "INACTIVE_PRODUCT";
+    public const string InactiveDeviceModel = "INACTIVE_DEVICE_MODEL";
+    public const string InactiveUser = "INACTIVE_USER";
+    public const string EmptyComment = "EMPTY_COMMENT";
+    public const string TooManyFiles = "TOO_MANY_FILES";
+    public const string FileTooLarge = "FILE_TOO_LARGE";
+    public const string FileTypeNotAllowed = "FILE_TYPE_NOT_ALLOWED";
 }

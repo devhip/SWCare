@@ -23,5 +23,15 @@
   "HEAD_NOT_MEMBER": "The head must be an active member of this department.",
   "DEPARTMENT_HAS_MEMBERS": "This department still has users. Move or disable them first.",
   "DEPARTMENT_KIND_LOCKED": "Customer Support and Software cannot be switched off.",
-  "OWNER_NOT_PROGRAMMER": "The owner must be an active programmer."
+  "OWNER_NOT_PROGRAMMER": "The owner must be an active programmer.",
+  "ACTION_NOT_ALLOWED": "You cannot do this in the ticket's current status. Please reload the page.",
+  "NO_DEPARTMENT_HEAD": "Your department has no head to approve tickets. Please contact the Admin.",
+  "TESTED_DETAILS_REQUIRED": "Please fill in what has been tested.",
+  "INACTIVE_PRODUCT": "This system / program is switched off.",
+  "INACTIVE_DEVICE_MODEL": "A device model is unknown or switched off.",
+  "INACTIVE_USER": "The selected user is unknown or disabled.",
+  "EMPTY_COMMENT": "Write something or attach a file.",
+  "TOO_MANY_FILES": "At most 10 files at a time.",
+  "FILE_TOO_LARGE": "A file is larger than 20 MB.",
+  "FILE_TYPE_NOT_ALLOWED": "This file type is not allowed."
 }

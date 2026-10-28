@@ -16,6 +16,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import MenuRounded from "@mui/icons-material/MenuRounded";
 import AssignmentIndRounded from "@mui/icons-material/AssignmentIndRounded";
+import AddCircleOutlineRounded from "@mui/icons-material/AddCircleOutlineRounded";
 import AccountCircleRounded from "@mui/icons-material/AccountCircleRounded";
 import KeyRounded from "@mui/icons-material/KeyRounded";
 import LogoutRounded from "@mui/icons-material/LogoutRounded";
@@ -30,6 +31,7 @@ import RoleGuard from "./RoleGuard";
 
 const ICONS: Record<MenuEntry["icon"], typeof AssignmentIndRounded> = {
   myTasks: AssignmentIndRounded,
+  newTicket: AddCircleOutlineRounded,
 };
 
 function Brand() {
