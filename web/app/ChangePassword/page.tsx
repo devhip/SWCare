@@ -12,7 +12,7 @@ import AuthCard from "@/app/components/AuthCard";
 import PasswordField from "@/app/components/PasswordField";
 import RoleGuard from "@/app/components/RoleGuard";
 import { changePasswordApi } from "@/lib/auth.api";
-import { HOME_ROUTE } from "@/lib/menu";
+import { homeRoute } from "@/lib/menu";
 import { useAuthStore } from "@/stores/auth.store";
 
 /** Same limits as PasswordRules in the API. */
@@ -62,7 +62,7 @@ function ChangePasswordForm() {
       const res = await changePasswordApi({ CurrentPassword: form.currentPassword, NewPassword: form.newPassword });
       useAuthStore.getState().setSession(res.Result);
       toast.success(t("passwordChanged"));
-      router.replace(HOME_ROUTE);
+      router.replace(homeRoute(res.Result.User));
     } catch {
       // The error toast is shown by lib/http.
     }

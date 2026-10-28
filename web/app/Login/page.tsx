@@ -14,7 +14,7 @@ import AuthCard from "@/app/components/AuthCard";
 import PasswordField from "@/app/components/PasswordField";
 import { loginApi } from "@/lib/auth.api";
 import { isAppLang } from "@/lib/i18n";
-import { HOME_ROUTE } from "@/lib/menu";
+import { homeRoute } from "@/lib/menu";
 import { useAuthStore } from "@/stores/auth.store";
 import { useLangStore } from "@/stores/lang.store";
 import { color, typeScale } from "@/theme/tokens";
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
   // Already logged in (or just logged in): go on.
   useEffect(() => {
-    if (token) router.replace(mustChangePassword ? "/ChangePassword/" : HOME_ROUTE);
+    if (token) router.replace(mustChangePassword ? "/ChangePassword/" : homeRoute(useAuthStore.getState().user));
   }, [token, mustChangePassword, router]);
 
   const onSubmit = handleSubmit(async (form) => {

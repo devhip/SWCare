@@ -21,6 +21,7 @@ import FactCheckRounded from "@mui/icons-material/FactCheckRounded";
 import PlaylistAddCheckRounded from "@mui/icons-material/PlaylistAddCheckRounded";
 import ListAltRounded from "@mui/icons-material/ListAltRounded";
 import ViewKanbanRounded from "@mui/icons-material/ViewKanbanRounded";
+import InsightsRounded from "@mui/icons-material/InsightsRounded";
 import GroupRounded from "@mui/icons-material/GroupRounded";
 import ApartmentRounded from "@mui/icons-material/ApartmentRounded";
 import TuneRounded from "@mui/icons-material/TuneRounded";
@@ -40,6 +41,7 @@ import Link from "./Link";
 import RoleGuard from "./RoleGuard";
 
 const ICONS: Record<MenuEntry["icon"], typeof AssignmentIndRounded> = {
+  dashboard: InsightsRounded,
   myTasks: AssignmentIndRounded,
   newTicket: AddCircleOutlineRounded,
   approvals: FactCheckRounded,

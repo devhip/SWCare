@@ -23,7 +23,7 @@
 - **ทุก response เป็น envelope** `{ Success, Message, Result, Code }` JSON แบบ PascalCase — คืน `ApiResult.Ok(...)` / `ApiResult.OkPage(...)`
 - error: `throw` คลาสใน `BLC/ApiExceptions.cs` พร้อม code จาก `ErrorCodes` → `ApiExceptionHandler` แปลงเป็น envelope **เพิ่ม code ใหม่แล้วต้องเพิ่มข้อความใน `web/locales/{th,en}/errors.json` ด้วย**
 - ทุก endpoint ต้อง login (FallbackPolicy) ยกเว้น `[AllowAnonymous]` · จำกัดบทบาทด้วย `[RequireRoles(AppRole.X)]`
-- บทบาทไม่ได้เก็บใน token: `CurrentUserFilter` โหลดผู้ใช้จาก DB ทุก request → ใช้ `CurrentUser.User` (`UserContext`) · โปรแกรมเมอร์ = ฝ่าย Kind Software, หัวหน้าโปรแกรมเมอร์ = หัวหน้าฝ่าย Software, หัวหน้า Support = หัวหน้าฝ่าย Kind Support, Admin = `User.IsAdmin`
+- บทบาทไม่ได้เก็บใน token: `CurrentUserFilter` โหลดผู้ใช้จาก DB ทุก request → ใช้ `CurrentUser.User` (`UserContext`) · โปรแกรมเมอร์ = ฝ่าย Kind Software, หัวหน้าโปรแกรมเมอร์ = หัวหน้าฝ่าย Software, หัวหน้า Support = หัวหน้าฝ่าย Kind Support, Admin = `User.IsAdmin`, ผู้บริหาร = `User.IsExecutive` (เห็นทุกงานแต่ไม่มีปุ่มทำรายการ ยกเว้นงานที่ตัวเองแจ้ง — `UserContext.IsExecutiveOnly`)
 - **กฎสถานะของงานทั้งหมดอยู่ที่ `BLC/TicketWorkflow.cs`** — endpoint ที่เปลี่ยนสถานะต้องเรียก `TicketWorkflow.Ensure(...)` และเว็บแสดงปุ่มจาก `AllowedActions` เท่านั้น แก้กฎแล้วต้องเพิ่ม unit test · ดึงงานผ่าน `.VisibleTo(user)` เสมอ (งานที่มองไม่เห็นตอบ 404)
 - ไฟล์แนบเก็บที่ `Storage:AttachmentsPath` (ค่าเริ่มต้น `App_Data/attachments`) ดาวน์โหลดผ่าน API เท่านั้น
 - ไม่มีการลบข้อมูล (Q54): ข้อมูลหลักใช้ `IsActive`, งานจบด้วยสถานะสุดท้าย · FK ทั้งหมดเป็น Restrict
@@ -47,7 +47,9 @@ cd api/SWCare.Api && dotnet ef migrations add <Name> -o Data/Migrations   # ค�
 - route เป็น PascalCase ลงท้าย `/` (static export, `trailingSlash`) · เพิ่มเมนูที่ `lib/menu.ts` เมื่อหน้าพร้อมแล้ว
 - ข้อความบนจอทุกจุดผ่าน i18n (`locales/th`, `locales/en`) — แปลเฉพาะข้อความของระบบ ไม่แปลข้อมูลที่ผู้ใช้พิมพ์
 - `lib/http.ts` ต่อ token ด้วย refresh token เมื่อเจอ 401 (refresh token ใช้ได้ครั้งเดียว) และแสดง toast error จาก `Code`
-- style ใช้ token จาก `theme/tokens.ts` (ชุดเดียวกับ Easy Next) · **theme ตั้ง breakpoint `sm` = 0 และ `spacing` = 4px** — ใช้ `md` เป็นจุดแบ่งมือถือ/จอใหญ่ และอย่าใช้ `Dialog maxWidth="sm"` (จะกว้าง 0)
+- หน้าตาตาม HIPHR (D9): ฟอนต์ Prompt (`public/fonts`), สีจาก `hiphr`/semantic ใน `theme/tokens.ts`, การ์ดใช้ `sx={{ ...card }}` · **ขนาดตัวอักษรใช้ `typeScale` ตามหน้าที่เท่านั้น**: pageTitle (หัวหน้า) · sectionTitle (หัวการ์ด) · body · small · label (ชื่อช่อง/หัวตาราง) · caption · kpi
+- กราฟใน Dashboard ใช้สีจาก `VIZ` ใน `app/Dashboard/_components/Charts.tsx` (ผ่าน dataviz validator แล้ว) — เพิ่มสีใหม่ต้องรัน validator ก่อน
+- style ใช้ token จาก `theme/tokens.ts` · **theme ตั้ง breakpoint `sm` = 0 และ `spacing` = 4px** — ใช้ `md` เป็นจุดแบ่งมือถือ/จอใหญ่ และอย่าใช้ `Dialog maxWidth="sm"` (จะกว้าง 0)
 - หลังเปลี่ยนสถานะงาน ให้ `invalidateQueries({ queryKey: TICKET_LISTS_KEY })` เพื่อให้รายการและตัวนับอัปเดต
 - ปลายทาง API อ่านจาก `public/config.json` ตอนรัน (build เดียวใช้ได้ทุก server)
 

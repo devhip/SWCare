@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/stores/auth.store";
 import { hasAnyRole, type AppRole } from "@/lib/roles";
-import { HOME_ROUTE } from "@/lib/menu";
+import { homeRoute } from "@/lib/menu";
 import { color, typeScale } from "@/theme/tokens";
 import Link from "./Link";
 
@@ -57,7 +57,7 @@ export default function RoleGuard({ roles, children }: { roles?: AppRole[]; chil
       <Centered>
         <Typography sx={{ ...typeScale.sectionTitle, color: color.text.primary }}>{t("accessDeniedTitle")}</Typography>
         <Typography sx={{ ...typeScale.body, color: color.text.secondary }}>{t("accessDeniedDesc")}</Typography>
-        <Button component={Link} href={HOME_ROUTE} variant="contained">
+        <Button component={Link} href={homeRoute(user)} variant="contained">
           {t("backHome")}
         </Button>
       </Centered>

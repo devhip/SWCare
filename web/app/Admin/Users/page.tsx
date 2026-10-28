@@ -40,6 +40,7 @@ function UserChips({ user }: { user: AdminUser }) {
     <Stack direction="row" sx={{ gap: 0.5, flexWrap: "wrap" }}>
       {user.IsDepartmentHead ? <Chip size="small" color="primary" variant="outlined" label={t("users.head")} /> : null}
       {user.IsAdmin ? <Chip size="small" color="secondary" variant="outlined" label={t("users.admin")} /> : null}
+      {user.IsExecutive ? <Chip size="small" color="info" variant="outlined" label={t("users.executive")} /> : null}
       {!user.IsActive ? <Chip size="small" color="error" variant="outlined" label={t("users.disabled")} /> : null}
       {user.IsActive && user.MustChangePassword ? <Chip size="small" color="warning" variant="outlined" label={t("users.mustChange")} /> : null}
     </Stack>
@@ -55,6 +56,7 @@ function UserDialog({ user, departments, onClose }: { user: AdminUser | null; de
   const [email, setEmail] = useState(user?.Email ?? "");
   const [departmentId, setDepartmentId] = useState<number | "">(user?.DepartmentId ?? "");
   const [isAdmin, setIsAdmin] = useState(user?.IsAdmin ?? false);
+  const [isExecutive, setIsExecutive] = useState(user?.IsExecutive ?? false);
   const [isActive, setIsActive] = useState(user?.IsActive ?? true);
   const [password, setPassword] = useState("");
   const [resetting, setResetting] = useState(false);
@@ -73,10 +75,10 @@ function UserDialog({ user, departments, onClose }: { user: AdminUser | null; de
         await resetPasswordApi(user.Id, password);
         toast.success(t("users.passwordReset"));
       } else if (user) {
-        await updateUserApi(user.Id, { DisplayName: displayName.trim(), Email: email.trim() || null, DepartmentId: Number(departmentId), IsAdmin: isAdmin, IsActive: isActive });
+        await updateUserApi(user.Id, { DisplayName: displayName.trim(), Email: email.trim() || null, DepartmentId: Number(departmentId), IsAdmin: isAdmin, IsExecutive: isExecutive, IsActive: isActive });
         toast.success(t("saved"));
       } else {
-        await createUserApi({ Username: username.trim(), DisplayName: displayName.trim(), Email: email.trim() || null, DepartmentId: Number(departmentId), IsAdmin: isAdmin, Password: password });
+        await createUserApi({ Username: username.trim(), DisplayName: displayName.trim(), Email: email.trim() || null, DepartmentId: Number(departmentId), IsAdmin: isAdmin, IsExecutive: isExecutive, Password: password });
         toast.success(t("saved"));
       }
       refresh();
@@ -126,6 +128,7 @@ function UserDialog({ user, departments, onClose }: { user: AdminUser | null; de
       ) : null}
       <Stack direction="row" sx={{ flexWrap: "wrap", gap: 2 }}>
         <FormControlLabel control={<Switch checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />} label={t("users.isAdmin")} />
+        <FormControlLabel control={<Switch checked={isExecutive} onChange={(e) => setIsExecutive(e.target.checked)} />} label={t("users.isExecutive")} />
         {user ? <FormControlLabel control={<Switch checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />} label={t("users.isActive")} /> : null}
       </Stack>
       {user ? (

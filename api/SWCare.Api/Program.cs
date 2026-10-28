@@ -99,7 +99,9 @@ var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<st
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
     .WithOrigins(corsOrigins)
     .AllowAnyHeader()
-    .AllowAnyMethod()));
+    .AllowAnyMethod()
+    // the web reads the Excel file name (api/Dashboard/Export)
+    .WithExposedHeaders("Content-Disposition")));
 
 var app = builder.Build();
 

@@ -33,6 +33,8 @@ export type MeResult = {
   IsSupportHead: boolean;
   IsProgrammer: boolean;
   IsProgrammerLead: boolean;
+  /** ผู้บริหาร: Dashboard + every ticket, read-only (D10) */
+  IsExecutive: boolean;
   MustChangePassword: boolean;
   Language: string;
 };
