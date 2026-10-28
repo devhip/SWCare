@@ -5,7 +5,7 @@
 | เอกสาร | แผนระบบแจ้งงาน/แจ้งปัญหาโปรแกรม แทน Google Sheet Tab "แจ้งงาน" |
 | เวอร์ชัน | 0.2 — สรุปจากการสัมภาษณ์ requirement 7 รอบ (Q1–Q57) |
 | วันที่ | 28/10/2026 |
-| สถานะ | วางแผนเสร็จ ยังไม่เริ่มเขียนโค้ด |
+| สถานะ | กำลังพัฒนา — วันที่ 1 เสร็จ (28/10/2026): โครง API + เว็บ, ฐานข้อมูลทั้งหมด, Login / ผู้ใช้ / ฝ่าย / ข้อมูลหลัก |
 | อ้างอิง | Google Sheet "แจ้งงาน" (71 รายการ, ม.ค. 2025 – ต.ค. 2026) · `E:\API_Dotnet\HR\HIPHRPlatform\HIPHR.Api` (โครง API) · `E:\API_Dotnet\hip-easy-next` (โครงเว็บและแอป) |
 
 ---
@@ -289,13 +289,12 @@
 ### 6.3 ตาราง
 
 ```text
-Department (HeadUserId)      Product (OwnerUserId)       DeviceModel
-User ─┬─ UserRole            AppSetting                  TicketSequence (ออกเลขต่อปี)
-      ├─ RefreshToken
+Department (Kind, HeadUserId)  Product (OwnerUserId)       DeviceModel
+User ─┬─ RefreshToken          AppSetting                  TicketSequence (ออกเลขต่อปี)
       ├─ Notification
       └─ DeviceToken (FCM, สัปดาห์ที่ 2–4)
 
-Ticket ─┬─ TicketStatusHistory   (Timeline: สถานะ + การแก้ข้อมูล)
+Ticket ─┬─ TicketActivity        (Timeline: สถานะ + การแก้ข้อมูล)
         ├─ TicketScheduleChange  (ประวัติการเลื่อนวัน)
         ├─ TicketComment ── TicketAttachment
         ├─ TicketWatcher
@@ -304,6 +303,8 @@ Ticket ─┬─ TicketStatusHistory   (Timeline: สถานะ + การแ
 ```
 
 ทุกตารางใช้ BaseEntity (CreatedAt/By, UpdatedAt/By) แบบ HIPHR.Api ส่วน Ticket เก็บลำดับคิว (QueueOrder) ไว้ใช้กับการลากเรียง
+
+**บทบาทไม่มีตารางแยก** — คิดจากฝ่ายทุกครั้งที่เรียก API: `Department.Kind` เป็น General / Support / Software (Support และ Software มีได้อย่างละฝ่ายเดียว), โปรแกรมเมอร์ = คนในฝ่าย Software, หัวหน้าโปรแกรมเมอร์ = หัวหน้าฝ่าย Software, หัวหน้า Support = หัวหน้าฝ่าย Support, Admin = `User.IsAdmin` เปลี่ยนหัวหน้าฝ่ายหรือปิดบัญชีแล้วมีผลทันทีโดยไม่ต้อง login ใหม่
 
 ---
 
@@ -395,7 +396,7 @@ Ticket ─┬─ TicketStatusHistory   (Timeline: สถานะ + การแ
 | ส่วน | เทคโนโลยี | ใช้โครงจาก |
 |---|---|---|
 | API | ASP.NET Core (.NET 10) Web API แบบ Controllers, EF Core + SQL Server, FluentValidation, Serilog, OpenAPI (Scalar), BackgroundService สำหรับ Job (ปิดอัตโนมัติ, แจ้งเตือนรอบเช้า) | `HIPHR.Api` / EasyPark |
-| Web | Next.js 16 + React 19 + MUI + TanStack Query + TypeScript, static export, `public/config.json`, i18n th/en, RoleGuard, ลาก Kanban ด้วย dnd-kit | `hip-easy-next/web` |
+| Web | Next.js 16 + React 19 + MUI + TanStack Query + zustand + react-hook-form/yup + TypeScript, static export, `public/config.json`, i18n th/en, RoleGuard, ลาก Kanban ด้วย dnd-kit, ติดตั้งด้วย npm | `hip-easy-next/web` |
 | Mobile | Flutter (Riverpod, go_router, dio, firebase_messaging, image_picker) | `hip-easy-next/mobile/easy-next-app` |
 | Database | SQL Server | |
 | Push | Firebase Cloud Messaging — project `hip-notification-6d592` (ตัวเดียวกับ Easy Next) | |
@@ -408,11 +409,13 @@ Ticket ─┬─ TicketStatusHistory   (Timeline: สถานะ + การแ
 
 ```text
 SWCare/
-├── SWCare.Api/          # Controllers, BLC (IControls / Controls), DTO/Req, DTO/Res, Models, Data, Services, Jobs
-├── SWCare.Api.Tests/
-├── web/                 # Next.js (โครงแบบ hip-easy-next/web)
-├── mobile/              # Flutter (สัปดาห์ที่ 2–4)
-├── tools/SheetImport/   # ตัวนำเข้าข้อมูลจากชีต (ใช้ครั้งเดียว)
+├── api/
+│   ├── SWCare.slnx
+│   ├── SWCare.Api/        # Controllers, BLC (IControls / Controls), DTO/Req, DTO/Res, Models, Data, Services, Jobs  — port 5300
+│   └── SWCare.Api.Tests/  # เริ่มพร้อมกฎสถานะของงาน (วันที่ 2)
+├── web/                   # Next.js (โครงแบบ hip-easy-next/web) — port 3020
+├── mobile/                # Flutter (สัปดาห์ที่ 2–4)
+├── tools/SheetImport/     # ตัวนำเข้าข้อมูลจากชีต (ใช้ครั้งเดียว)
 └── docs/
 ```
 
@@ -621,3 +624,14 @@ SWCare/
 | Q55 | บังคับกรอก "สิ่งที่ทดสอบแล้ว" | เมื่อคนแจ้งอยู่ฝ่าย Customer Support และประเภทเป็น Bug หรือขอเพิ่มฟีเจอร์-รุ่นเครื่อง |
 | Q56 | รูปแบบ "สิ่งที่ทดสอบแล้ว" | ช่องข้อความพร้อมหัวข้อให้เติม Admin แก้หัวข้อได้ เช็คลิสต์ไว้ทีหลัง |
 | Q57 | ข้อตีความ | คนแจ้ง (หรือหัวหน้าฝ่ายของคนแจ้ง) เป็นคนปิดงาน, หัวหน้า Support ได้แจ้งเตือนทุกการเปลี่ยนสถานะ ไม่รวมคอมเมนต์, โปรแกรมเมอร์พักงานกลับเข้าคิวได้, ผู้ร้องขอไม่บังคับ |
+
+**ระหว่างพัฒนา**
+
+| # | วันที่ | การตัดสินใจ |
+|---|---|---|
+| D1 | 28/10/2026 | Repo `github.com/devhip/SWCare` แยกโฟลเดอร์ `api/`, `web/`, `mobile/` (ผู้ใช้กำหนด) |
+| D2 | 28/10/2026 | บทบาทคิดจากฝ่าย (`Department.Kind` + หัวหน้าฝ่าย) และ `User.IsAdmin` ไม่มีตาราง UserRole |
+| D3 | 28/10/2026 | รหัสผ่าน 8–64 ตัวอักษร ห้ามตรงกับชื่อผู้ใช้ · access token 60 นาที, refresh token 14 วัน ใช้ได้ครั้งเดียว · เปลี่ยนรหัสผ่าน / Admin ตั้งรหัสใหม่ / ปิดบัญชี = session อื่นของคนนั้นหลุดทั้งหมด |
+| D4 | 28/10/2026 | บัญชี `admin` ตัวแรกสร้างตอนเริ่ม API ครั้งแรก รหัสจาก `Seed:AdminPassword` และต้องเปลี่ยนตอน login ครั้งแรก |
+| D5 | 28/10/2026 | หัวหน้าฝ่ายต้องเป็นสมาชิกของฝ่าย · ย้ายฝ่ายหรือปิดบัญชีหัวหน้าฝ่ายไม่ได้จนกว่าจะตั้งหัวหน้าใหม่ · ผู้รับผิดชอบหลักของระบบต้องเป็นโปรแกรมเมอร์ · ปิดฝ่าย Support / Software ไม่ได้ |
+| D6 | 28/10/2026 | Next.js 16.4.3 (16.4.0 ของ Easy Next มีช่องโหว่ critical ตาม npm audit) · MUI pin 9.3.1 ตาม Easy Next |
