@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <AuthCard title={t("notFoundPageTitle")}>
       <Stack spacing={3}>
-        <Typography sx={{ ...typeScale.body16, color: color.text.secondary }}>{t("notFoundPageDesc")}</Typography>
+        <Typography sx={{ ...typeScale.body, color: color.text.secondary }}>{t("notFoundPageDesc")}</Typography>
         <Button component={Link} href="/" variant="contained">
           {t("notFoundPageHome")}
         </Button>

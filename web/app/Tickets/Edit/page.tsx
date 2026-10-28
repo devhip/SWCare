@@ -33,7 +33,7 @@ function EditTicket() {
 
   return (
     <Stack spacing={2}>
-      <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>
+      <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>
         {ticket.data.TicketNo} · {ticket.data.Title}
       </Typography>
       <TicketForm
@@ -63,8 +63,8 @@ export default function EditTicketPage() {
   const { t } = useTranslation("ticket");
   return (
     <AppShell>
-      <Stack spacing={3}>
-        <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+      <Stack spacing={5}>
+        <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
           {t("editTitle")}
         </Typography>
         <Suspense>

@@ -57,7 +57,7 @@ export default function Watchers({ ticket, onChanged }: { ticket: TicketDetail; 
           ))}
         </Stack>
       ) : (
-        <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("watchers.none")}</Typography>
+        <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("watchers.none")}</Typography>
       )}
       {canManage ? (
         <Autocomplete<UserLookup>

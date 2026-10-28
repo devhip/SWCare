@@ -14,16 +14,16 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { color, radiusPx, typeScale } from "@/theme/tokens";
+import { card, color, typeScale } from "@/theme/tokens";
 
 export function PageTitle({ title, hint, action }: { title: string; hint?: string; action?: React.ReactNode }) {
   return (
     <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ justifyContent: "space-between", alignItems: { md: "flex-start" } }}>
       <Stack spacing={0.5}>
-        <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+        <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
           {title}
         </Typography>
-        {hint ? <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{hint}</Typography> : null}
+        {hint ? <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{hint}</Typography> : null}
       </Stack>
       {action}
     </Stack>
@@ -39,7 +39,7 @@ export function DataTable<T>({ columns, rows, rowKey, onRow }: {
 }) {
   const { t } = useTranslation("common");
   return (
-    <Box sx={{ bgcolor: color.surface.card, border: `1px solid ${color.border.subtle}`, borderRadius: radiusPx.md, overflowX: "auto" }}>
+    <Box sx={{ ...card, overflowX: "auto" }}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -54,7 +54,7 @@ export function DataTable<T>({ columns, rows, rowKey, onRow }: {
           {(rows ?? []).map((row) => (
             <TableRow key={rowKey(row)} hover={!!onRow} onClick={onRow ? () => onRow(row) : undefined} sx={{ cursor: onRow ? "pointer" : undefined }}>
               {columns.map((column, index) => (
-                <TableCell key={index} sx={{ ...typeScale.bodySm14, ...(column.wide ? { display: { xs: "none", md: "table-cell" } } : {}) }}>
+                <TableCell key={index} sx={{ ...typeScale.small, ...(column.wide ? { display: { xs: "none", md: "table-cell" } } : {}) }}>
                   {column.render(row)}
                 </TableCell>
               ))}
@@ -88,7 +88,7 @@ export function FormDialog({ title, busy, canSave, onClose, onSave, children }: 
     <Dialog open onClose={busy ? undefined : onClose} maxWidth={false} slotProps={{ paper: { sx: { width: "100%", maxWidth: 560 } } }}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ pt: 1 }}>
+        <Stack spacing={4} sx={{ pt: 1 }}>
           {children}
         </Stack>
       </DialogContent>

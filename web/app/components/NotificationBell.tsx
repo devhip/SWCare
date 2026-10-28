@@ -108,7 +108,7 @@ export default function NotificationBell() {
         slotProps={{ paper: { sx: { width: 380, maxWidth: "calc(100vw - 32px)", borderRadius: radiusPx.md } } }}
       >
         <Stack direction="row" sx={{ px: 4, py: 3, alignItems: "center", justifyContent: "space-between" }}>
-          <Typography sx={{ ...typeScale.bodyStrong16 }}>{t("title")}</Typography>
+          <Typography sx={{ ...typeScale.bodyStrong }}>{t("title")}</Typography>
           <Button
             size="small"
             variant="text"
@@ -121,7 +121,7 @@ export default function NotificationBell() {
         <Divider />
         <Box sx={{ maxHeight: 420, overflowY: "auto" }}>
           {list.data?.length === 0 ? (
-            <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary, p: 4, textAlign: "center" }}>{t("empty")}</Typography>
+            <Typography sx={{ ...typeScale.small, color: color.text.secondary, p: 4, textAlign: "center" }}>{t("empty")}</Typography>
           ) : null}
           {(list.data ?? []).map((item) => {
             const data = parse(item.Data);
@@ -138,16 +138,16 @@ export default function NotificationBell() {
                   "&:hover": { bgcolor: color.surface.sunken },
                 }}
               >
-                <Typography sx={{ ...typeScale.bodySm14, color: color.text.primary, fontWeight: item.IsRead ? 400 : 600 }}>
+                <Typography sx={{ ...typeScale.small, color: color.text.primary, fontWeight: item.IsRead ? 400 : 600 }}>
                   {text(item)}
                   {data.RequestedPriority === "Immediate" ? ` · ${t("immediate")}` : ""}
                 </Typography>
                 {data.Title ? (
-                  <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }} noWrap>
+                  <Typography sx={{ ...typeScale.caption, color: color.text.secondary }} noWrap>
                     {data.Title}
                   </Typography>
                 ) : null}
-                <Typography sx={{ ...typeScale.caption12, color: color.text.tertiary }}>{formatDateTime(item.CreatedAt, i18n.language)}</Typography>
+                <Typography sx={{ ...typeScale.caption, color: color.text.tertiary }}>{formatDateTime(item.CreatedAt, i18n.language)}</Typography>
               </Box>
             );
           })}

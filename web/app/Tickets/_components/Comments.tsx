@@ -49,16 +49,16 @@ export default function Comments({
   return (
     <Stack spacing={2}>
       {ticket.Comments.length === 0 ? (
-        <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("comment.empty")}</Typography>
+        <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("comment.empty")}</Typography>
       ) : (
         <Stack spacing={2} divider={<Divider flexItem />}>
           {ticket.Comments.map((comment) => (
             <Stack key={comment.Id} spacing={0.5}>
-              <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>
+              <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>
                 <strong>{comment.Author.DisplayName}</strong> · {formatDateTime(comment.CreatedAt, i18n.language)}
               </Typography>
               {comment.Body ? (
-                <Typography sx={{ ...typeScale.body16, color: color.text.primary, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{comment.Body}</Typography>
+                <Typography sx={{ ...typeScale.body, color: color.text.primary, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{comment.Body}</Typography>
               ) : null}
               <AttachmentList ticketId={ticket.Id} attachments={comment.Attachments} />
             </Stack>

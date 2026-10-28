@@ -79,7 +79,7 @@ function Departments() {
   const departments = useDepartmentsQuery();
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={5}>
       <PageTitle
         title={t("departments.title")}
         hint={t("departments.hint")}
@@ -107,7 +107,7 @@ function Departments() {
           {
             label: t("departments.head"),
             render: (department) =>
-              department.HeadUserName ?? <span style={{ ...typeScale.bodySm14, color: color.semantic.warning.text }}>{t("departments.noHead")}</span>,
+              department.HeadUserName ?? <span style={{ ...typeScale.small, color: color.semantic.warning.text }}>{t("departments.noHead")}</span>,
           },
           { label: t("departments.members"), render: (department) => department.MemberCount, wide: true },
         ]}

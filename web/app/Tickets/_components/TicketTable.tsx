@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { formatDate, formatDateTime } from "@/lib/format";
 import type { PageInfo } from "@/types/api";
 import type { TicketListItem } from "@/types/ticket";
-import { color, radiusPx, typeScale } from "@/theme/tokens";
+import { card, color, typeScale } from "@/theme/tokens";
 import { PriorityChip, StatusChip } from "./StatusChip";
 
 const wide = { display: { xs: "none", md: "table-cell" } } as const;
@@ -34,7 +34,7 @@ export default function TicketTable({ items, pageInfo, loading, onPage }: Props)
 
   return (
     <Stack spacing={2}>
-      <Box sx={{ bgcolor: color.surface.card, border: `1px solid ${color.border.subtle}`, borderRadius: radiusPx.md, overflowX: "auto" }}>
+      <Box sx={{ ...card, overflowX: "auto" }}>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -50,10 +50,10 @@ export default function TicketTable({ items, pageInfo, loading, onPage }: Props)
           <TableBody>
             {(items ?? []).map((item) => (
               <TableRow key={item.Id} hover onClick={() => router.push(`/Tickets/Detail/?id=${item.Id}`)} sx={{ cursor: "pointer" }}>
-                <TableCell sx={{ whiteSpace: "nowrap", ...typeScale.bodySm14 }}>{item.TicketNo}</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap", ...typeScale.small }}>{item.TicketNo}</TableCell>
                 <TableCell sx={{ minWidth: 200 }}>
-                  <Typography sx={{ ...typeScale.bodySm14, fontWeight: 600, color: color.text.primary }}>{item.Title}</Typography>
-                  <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>
+                  <Typography sx={{ ...typeScale.small, fontWeight: 600, color: color.text.primary }}>{item.Title}</Typography>
+                  <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>
                     {[item.ProductName, item.CustomerName, `${t("list.reporter")} ${item.Reporter.DisplayName}`].filter(Boolean).join(" · ")}
                   </Typography>
                 </TableCell>
@@ -63,12 +63,12 @@ export default function TicketTable({ items, pageInfo, loading, onPage }: Props)
                 <TableCell sx={wide}>
                   <PriorityChip priority={item.ActualPriority ?? item.RequestedPriority} />
                 </TableCell>
-                <TableCell sx={{ ...wide, ...typeScale.bodySm14 }}>{item.Assignee?.DisplayName ?? "-"}</TableCell>
-                <TableCell sx={{ ...wide, ...typeScale.bodySm14, whiteSpace: "nowrap", color: item.IsOverdue ? color.semantic.error.text : undefined, fontWeight: item.IsOverdue ? 600 : undefined }}>
+                <TableCell sx={{ ...wide, ...typeScale.small }}>{item.Assignee?.DisplayName ?? "-"}</TableCell>
+                <TableCell sx={{ ...wide, ...typeScale.small, whiteSpace: "nowrap", color: item.IsOverdue ? color.semantic.error.text : undefined, fontWeight: item.IsOverdue ? 600 : undefined }}>
                   {formatDate(item.PlannedDueDate, i18n.language)}
                   {item.IsOverdue ? ` · ${t("list.overdue")}` : ""}
                 </TableCell>
-                <TableCell sx={{ ...wide, ...typeScale.bodySm14, whiteSpace: "nowrap" }}>{formatDateTime(item.ReportedAt, i18n.language)}</TableCell>
+                <TableCell sx={{ ...wide, ...typeScale.small, whiteSpace: "nowrap" }}>{formatDateTime(item.ReportedAt, i18n.language)}</TableCell>
               </TableRow>
             ))}
             {!loading && items?.length === 0 ? (
@@ -90,7 +90,7 @@ export default function TicketTable({ items, pageInfo, loading, onPage }: Props)
       </Box>
       {pageInfo && onPage ? (
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
-          <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("list.total", { count: pageInfo.TotalRecords })}</Typography>
+          <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("list.total", { count: pageInfo.TotalRecords })}</Typography>
           {pageInfo.TotalPages > 1 ? <Pagination count={pageInfo.TotalPages} page={pageInfo.PageNumber} onChange={(_, page) => onPage(page)} /> : null}
         </Stack>
       ) : null}

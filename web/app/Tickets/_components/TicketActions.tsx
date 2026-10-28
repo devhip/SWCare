@@ -98,7 +98,7 @@ function DialogFrame({ title, busy, onClose, onSubmit, canSubmit, children }: Di
     <Dialog open onClose={busy ? undefined : onClose} maxWidth={false} slotProps={{ paper: { sx: { width: "100%", maxWidth: 640 } } }}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ pt: 1 }}>
+        <Stack spacing={4} sx={{ pt: 1 }}>
           {children}
         </Stack>
       </DialogContent>
@@ -136,7 +136,7 @@ function CloseDialog({ busy, onClose, onSubmit }: DialogProps & { onSubmit: () =
   const { t } = useTranslation("ticket");
   return (
     <DialogFrame title={t("action.Close")} busy={busy} onClose={onClose} canSubmit onSubmit={onSubmit}>
-      <Typography sx={{ ...typeScale.body16, color: color.text.primary }}>{t("action.closeConfirm")}</Typography>
+      <Typography sx={{ ...typeScale.body, color: color.text.primary }}>{t("action.closeConfirm")}</Typography>
     </DialogFrame>
   );
 }
@@ -144,7 +144,7 @@ function CloseDialog({ busy, onClose, onSubmit }: DialogProps & { onSubmit: () =
 function DateFields({ start, due, onStart, onDue }: { start: string; due: string; onStart: (v: string) => void; onDue: (v: string) => void }) {
   const { t } = useTranslation("ticket");
   return (
-    <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+    <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
       <TextField type="date" label={t("field.plannedStartDate")} value={start} onChange={(e) => onStart(e.target.value)} fullWidth slotProps={{ inputLabel: { shrink: true } }} />
       <TextField
         type="date"
@@ -215,9 +215,9 @@ export function TriageDialog({
         })
       }
     >
-      <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("dialog.triageHint")}</Typography>
+      <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("dialog.triageHint")}</Typography>
       <Stack spacing={1}>
-        <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>
+        <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>
           {t("field.actualPriority")} · {t("dialog.requested", { priority: t(`priority.${ticket.RequestedPriority}`) })}
         </Typography>
         <ToggleButtonGroup
@@ -241,8 +241,8 @@ export function TriageDialog({
       <ProgrammerSelect value={effectiveAssignee} onChange={setAssigneeId} />
       <DateFields start={start} due={due} onStart={setStart} onDue={setDue} />
 
-      <Typography sx={{ ...typeScale.bodyStrong16, color: color.text.primary, pt: 1 }}>{t("dialog.classification")}</Typography>
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+      <Typography sx={{ ...typeScale.bodyStrong, color: color.text.primary, pt: 1 }}>{t("dialog.classification")}</Typography>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
         <TextField select label={t("field.type")} fullWidth value={type} onChange={(e) => setType(e.target.value as TicketType)}>
           {TICKET_TYPES.map((value) => (
             <MenuItem key={value} value={value}>

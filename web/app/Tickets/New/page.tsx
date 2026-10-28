@@ -46,8 +46,8 @@ export default function NewTicketPage() {
   const { t } = useTranslation("ticket");
   return (
     <AppShell>
-      <Stack spacing={3}>
-        <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+      <Stack spacing={5}>
+        <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
           {t("newTitle")}
         </Typography>
         <NewTicket />

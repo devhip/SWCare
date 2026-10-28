@@ -33,7 +33,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { logoutApi } from "@/lib/auth.api";
 import { MENU, type MenuEntry } from "@/lib/menu";
 import { hasAnyRole, type AppRole } from "@/lib/roles";
-import { color, layout, nav, radiusPx, typeScale } from "@/theme/tokens";
+import { color, hiphr, layout, nav, typeScale } from "@/theme/tokens";
 import LanguageSwitch from "./LanguageSwitch";
 import NotificationBell from "./NotificationBell";
 import Link from "./Link";
@@ -51,12 +51,35 @@ const ICONS: Record<MenuEntry["icon"], typeof AssignmentIndRounded> = {
   adminMasterData: TuneRounded,
 };
 
-function Brand() {
+/** Logo tile + name, like the HIPHR header. onHeader = white text on the orange gradient. */
+function Brand({ onHeader = false }: { onHeader?: boolean }) {
   const { t } = useTranslation("common");
   return (
-    <Stack sx={{ px: 1 }}>
-      <Typography sx={{ ...typeScale.h3_20, color: color.text.brand }}>{t("appName")}</Typography>
-      <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>{t("appTagline")}</Typography>
+    <Stack direction="row" spacing={3} sx={{ alignItems: "center", px: 1, minWidth: 0 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          flexShrink: 0,
+          borderRadius: "13px",
+          display: "grid",
+          placeItems: "center",
+          fontWeight: 700,
+          fontSize: 15,
+          letterSpacing: ".5px",
+          color: onHeader ? "#fff" : hiphr.orange600,
+          bgcolor: onHeader ? "rgba(255, 255, 255, .22)" : hiphr.orange100,
+          boxShadow: onHeader ? "inset 0 0 0 2px rgba(255, 255, 255, .35)" : "none",
+        }}
+      >
+        SW
+      </Box>
+      <Stack sx={{ minWidth: 0 }}>
+        <Typography sx={{ fontSize: 18, lineHeight: "24px", fontWeight: 700, color: onHeader ? "#fff" : color.text.primary }}>{t("appName")}</Typography>
+        <Typography noWrap sx={{ ...typeScale.caption, color: onHeader ? "rgba(255, 255, 255, .9)" : color.text.secondary }}>
+          {t("appTagline")}
+        </Typography>
+      </Stack>
     </Stack>
   );
 }
@@ -68,7 +91,7 @@ function SideMenu({ onNavigate }: { onNavigate?: () => void }) {
   const counts = useTicketCountsQuery();
 
   return (
-    <Stack spacing={`${nav.gap}px`} sx={{ p: 2 }}>
+    <Stack spacing={`${nav.gap}px`} sx={{ p: 3 }}>
       {MENU.filter((entry) => hasAnyRole(user, entry.roles)).map((entry, index, entries) => {
         const Icon = ICONS[entry.icon];
         const startsAdmin = entry.section === "admin" && entries[index - 1]?.section !== "admin";
@@ -77,26 +100,16 @@ function SideMenu({ onNavigate }: { onNavigate?: () => void }) {
         return (
           <Fragment key={entry.route}>
             {startsAdmin ? (
-              <Typography sx={{ ...typeScale.caption12, color: color.text.tertiary, px: 2, pt: 3, pb: 1, textTransform: "uppercase" }}>
+              <Typography sx={{ ...typeScale.label, color: color.text.tertiary, px: 3, pt: 4, pb: 1, letterSpacing: ".6px", textTransform: "uppercase" }}>
                 {t("adminSection")}
               </Typography>
             ) : null}
-            <ListItemButton
-              component={Link}
-              href={entry.route}
-              selected={selected}
-              onClick={onNavigate}
-              sx={{
-                minHeight: nav.mainHeight,
-                borderRadius: `${nav.radius}px`,
-                "&.Mui-selected": { bgcolor: color.surface.brandSubtle, color: color.text.brand },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40, color: selected ? color.text.brand : color.text.secondary }}>
+            <ListItemButton component={Link} href={entry.route} selected={selected} onClick={onNavigate} sx={{ px: 3 }}>
+              <ListItemIcon sx={{ minWidth: 34, color: "inherit", "& svg": { fontSize: 20 } }}>
                 <Icon />
               </ListItemIcon>
-              <ListItemText primary={t(entry.labelKey)} slotProps={{ primary: { sx: typeScale.bodyStrong16 } }} />
-              {badge > 0 ? <Chip label={badge} size="small" color="primary" sx={{ height: 22, minWidth: 28 }} /> : null}
+              <ListItemText primary={t(entry.labelKey)} slotProps={{ primary: { sx: { ...typeScale.body, fontWeight: selected ? 600 : 500 } } }} />
+              {badge > 0 ? <Chip label={badge} size="small" color="primary" sx={{ minWidth: 26, fontWeight: 700 }} /> : null}
             </ListItemButton>
           </Fragment>
         );
@@ -126,8 +139,8 @@ function UserMenu() {
       </IconButton>
       <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>
         <Box sx={{ px: 2, py: 1 }}>
-          <Typography sx={typeScale.bodyStrong16}>{user?.DisplayName}</Typography>
-          <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>{user?.DepartmentName}</Typography>
+          <Typography sx={typeScale.bodyStrong}>{user?.DisplayName}</Typography>
+          <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>{user?.DepartmentName}</Typography>
         </Box>
         <Divider />
         <MenuItem component={Link} href="/ChangePassword/" onClick={() => setAnchor(null)}>
@@ -161,29 +174,50 @@ export default function AppShell({ roles, children }: { roles?: AppRole[]; child
             position: "sticky",
             top: 0,
             zIndex: 10,
-            height: { xs: 64, md: layout.headerHeight },
+            height: layout.headerHeight,
             display: "flex",
             alignItems: "center",
-            gap: 1,
-            px: 2,
-            bgcolor: color.surface.card,
-            borderBottom: `1px solid ${color.border.subtle}`,
+            gap: 2,
+            px: { xs: 2, md: 5 },
+            background: hiphr.headerGradient,
+            color: "#fff",
+            overflow: "hidden",
+            boxShadow: "0 4px 16px rgba(240, 100, 0, .18)",
+            // the soft circle of the HIPHR header
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              right: -80,
+              top: -150,
+              width: 300,
+              height: 300,
+              borderRadius: "50%",
+              bgcolor: "rgba(255, 255, 255, .14)",
+              pointerEvents: "none",
+            },
+            "& > *": { position: "relative", zIndex: 1 },
+            "& .MuiIconButton-root": { color: "#fff", "&:hover": { bgcolor: "rgba(255, 255, 255, .18)", color: "#fff" } },
           }}
         >
           <IconButton sx={{ display: { md: "none" } }} onClick={() => setDrawerOpen(true)} aria-label={t("openMenu")}>
             <MenuRounded />
           </IconButton>
-          <Brand />
+          <Brand onHeader />
           <Box sx={{ flex: 1 }} />
           <NotificationBell />
-          <LanguageSwitch />
+          <Box sx={{ display: { xs: "none", md: "block" } }}>
+            <LanguageSwitch onHeader />
+          </Box>
           <UserMenu />
         </Box>
 
         <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ display: { md: "none" } }}>
-          <Box sx={{ width: layout.sidebarWidth, pt: 2 }}>
-            <Box sx={{ px: 2 }}>
+          <Box sx={{ width: layout.sidebarWidth, pt: 4 }}>
+            <Box sx={{ px: 3 }}>
               <Brand />
+            </Box>
+            <Box sx={{ px: 4, pt: 4 }}>
+              <LanguageSwitch />
             </Box>
             <SideMenu onNavigate={() => setDrawerOpen(false)} />
           </Box>
@@ -197,14 +231,16 @@ export default function AppShell({ roles, children }: { roles?: AppRole[]; child
               width: layout.sidebarWidth,
               flexShrink: 0,
               bgcolor: color.surface.card,
-              borderRight: `1px solid ${color.border.subtle}`,
+              boxShadow: "1px 0 0 " + color.border.subtle,
               minHeight: `calc(100vh - ${layout.headerHeight}px)`,
             }}
           >
-            <SideMenu />
+            <Box sx={{ position: "sticky", top: layout.headerHeight }}>
+              <SideMenu />
+            </Box>
           </Box>
-          <Box component="main" sx={{ flex: 1, minWidth: 0, p: { xs: 2, md: 3 } }}>
-            <Box sx={{ maxWidth: layout.contentMax, mx: "auto", borderRadius: radiusPx.md }}>{children}</Box>
+          <Box component="main" sx={{ flex: 1, minWidth: 0, px: { xs: 4, md: 7 }, py: { xs: 5, md: 6 } }}>
+            <Box sx={{ maxWidth: layout.contentMax, mx: "auto" }}>{children}</Box>
           </Box>
         </Box>
       </Box>

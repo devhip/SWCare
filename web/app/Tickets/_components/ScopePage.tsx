@@ -18,12 +18,12 @@ export default function ScopePage({ scope, roles, titleKey, hintKey }: { scope: 
 
   return (
     <AppShell roles={roles}>
-      <Stack spacing={3}>
+      <Stack spacing={5}>
         <Stack spacing={0.5}>
-          <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+          <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
             {t(titleKey)}
           </Typography>
-          <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{tt(hintKey)}</Typography>
+          <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{tt(hintKey)}</Typography>
         </Stack>
         <ScopeList scope={scope} />
       </Stack>

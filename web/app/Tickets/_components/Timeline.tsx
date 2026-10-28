@@ -71,12 +71,12 @@ export default function Timeline({ activities }: { activities: Activity[] }) {
               {index < activities.length - 1 ? <Box sx={{ width: 2, flex: 1, bgcolor: color.border.subtle, my: 0.5 }} /> : null}
             </Stack>
             <Stack sx={{ pb: 2, minWidth: 0 }}>
-              <Typography sx={{ ...typeScale.bodyStrong16, color: color.text.primary }}>{t(`activity.${activity.Type}`)}</Typography>
-              {line ? <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{line}</Typography> : null}
+              <Typography sx={{ ...typeScale.bodyStrong, color: color.text.primary }}>{t(`activity.${activity.Type}`)}</Typography>
+              {line ? <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{line}</Typography> : null}
               {activity.Note ? (
-                <Typography sx={{ ...typeScale.bodySm14, color: color.text.primary, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{activity.Note}</Typography>
+                <Typography sx={{ ...typeScale.small, color: color.text.primary, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{activity.Note}</Typography>
               ) : null}
-              <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>
+              <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>
                 {activity.Actor?.DisplayName ?? t("activity.system")} · {formatDateTime(activity.CreatedAt, i18n.language)}
               </Typography>
             </Stack>

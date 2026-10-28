@@ -19,7 +19,7 @@ import { saveDeviceModelApi, saveProductApi, updateSettingsApi } from "@/lib/adm
 import { useAdminDeviceModelsQuery, useAdminProductsQuery, useAdminRefresh, useAdminSettingsQuery } from "@/queries/admin.query";
 import { useProgrammersQuery } from "@/queries/ticket.query";
 import type { DeviceModel, Product, Settings } from "@/types/ticket";
-import { color, radiusPx } from "@/theme/tokens";
+import { card } from "@/theme/tokens";
 import { DataTable, FormDialog, PageTitle } from "../_components/AdminUi";
 
 type MasterTab = "products" | "deviceModels" | "settings";
@@ -158,7 +158,7 @@ function SettingsForm({ settings }: { settings: Settings }) {
   };
 
   return (
-    <Stack spacing={2} sx={{ maxWidth: 640, p: 3, bgcolor: color.surface.card, border: `1px solid ${color.border.subtle}`, borderRadius: radiusPx.md }}>
+    <Stack spacing={4} sx={{ maxWidth: 640, p: { xs: 4, md: 6 }, ...card }}>
       <TextField label={t("master.autoCloseDays")} type="number" value={days} onChange={(e) => setDays(e.target.value)} error={!daysOk} slotProps={{ htmlInput: { min: 1, max: 30 } }} />
       <TextField label={t("master.reminderTime")} type="time" value={time} onChange={(e) => setTime(e.target.value)} error={!timeOk} slotProps={{ inputLabel: { shrink: true } }} />
       <TextField label={t("master.testedTemplate")} value={template} onChange={(e) => setTemplate(e.target.value)} multiline minRows={5} slotProps={{ htmlInput: { maxLength: 4000 } }} />
@@ -181,7 +181,7 @@ function MasterData() {
   const { t } = useTranslation("admin");
   const [tab, setTab] = useState<MasterTab>("products");
   return (
-    <Stack spacing={3}>
+    <Stack spacing={5}>
       <PageTitle title={t("master.title")} />
       <Tabs value={tab} onChange={(_, value: MasterTab) => setTab(value)} variant="scrollable" allowScrollButtonsMobile>
         <Tab value="products" label={t("master.products")} />

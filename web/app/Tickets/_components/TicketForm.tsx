@@ -29,7 +29,7 @@ import {
   type TicketType,
   type UserLookup,
 } from "@/types/ticket";
-import { color, radiusPx, typeScale } from "@/theme/tokens";
+import { card, color, typeScale } from "@/theme/tokens";
 import FilePicker from "./FilePicker";
 
 const normalize = (text: string) => text.replace(/\s+/g, " ").trim();
@@ -145,14 +145,14 @@ export default function TicketForm({ products, deviceModels, testedTemplate, ini
   return (
     <Stack
       component="form"
-      spacing={2.5}
+      spacing={4.5}
       onSubmit={submit}
       noValidate
-      sx={{ p: { xs: 2, md: 3 }, bgcolor: color.surface.card, border: `1px solid ${color.border.subtle}`, borderRadius: radiusPx.md }}
+      sx={{ p: { xs: 4, md: 6 }, ...card }}
     >
       <TextField label={t("field.title")} required fullWidth {...register("title")} error={!!errors.title} helperText={message(errors.title?.message)} />
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
         <Controller
           control={control}
           name="type"
@@ -190,7 +190,7 @@ export default function TicketForm({ products, deviceModels, testedTemplate, ini
         />
       </Stack>
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
         <TextField label={t("field.version")} fullWidth {...register("version")} />
         <Controller
           control={control}
@@ -249,7 +249,7 @@ export default function TicketForm({ products, deviceModels, testedTemplate, ini
       />
 
       <Stack spacing={1}>
-        <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("field.requestedPriority")}</Typography>
+        <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("field.requestedPriority")}</Typography>
         <Controller
           control={control}
           name="requestedPriority"
@@ -280,7 +280,7 @@ export default function TicketForm({ products, deviceModels, testedTemplate, ini
               <li {...props} key={option.Id}>
                 <Stack>
                   <span>{option.DisplayName}</span>
-                  <Typography component="span" sx={{ ...typeScale.caption12, color: color.text.secondary }}>
+                  <Typography component="span" sx={{ ...typeScale.caption, color: color.text.secondary }}>
                     {option.DepartmentName}
                   </Typography>
                 </Stack>

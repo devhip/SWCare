@@ -45,7 +45,7 @@ export default function RoleGuard({ roles, children }: { roles?: AppRole[]; chil
   if (!hasHydrated || !token || mustChangePassword) {
     return (
       <Centered>
-        <Typography sx={{ ...typeScale.body16, color: color.text.secondary }}>
+        <Typography sx={{ ...typeScale.body, color: color.text.secondary }}>
           {hasHydrated && !token ? t("redirectingLogin") : t("loading")}
         </Typography>
       </Centered>
@@ -55,8 +55,8 @@ export default function RoleGuard({ roles, children }: { roles?: AppRole[]; chil
   if (!hasAnyRole(user, roles)) {
     return (
       <Centered>
-        <Typography sx={{ ...typeScale.h3_20, color: color.text.primary }}>{t("accessDeniedTitle")}</Typography>
-        <Typography sx={{ ...typeScale.body16, color: color.text.secondary }}>{t("accessDeniedDesc")}</Typography>
+        <Typography sx={{ ...typeScale.sectionTitle, color: color.text.primary }}>{t("accessDeniedTitle")}</Typography>
+        <Typography sx={{ ...typeScale.body, color: color.text.secondary }}>{t("accessDeniedDesc")}</Typography>
         <Button component={Link} href={HOME_ROUTE} variant="contained">
           {t("backHome")}
         </Button>

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { color, elevation, radiusPx, typeScale } from "@/theme/tokens";
+import { card, color, typeScale } from "@/theme/tokens";
 import LanguageSwitch from "./LanguageSwitch";
 
 /** Centered card for the login and forced password-change pages. */
@@ -22,20 +22,17 @@ export default function AuthCard({ title, subtitle, children }: { title: string;
           sx={{
             width: "100%",
             maxWidth: 440,
-            bgcolor: color.surface.card,
-            border: `1px solid ${color.border.subtle}`,
-            borderRadius: radiusPx.lg,
-            boxShadow: elevation[2],
+            ...card,
             px: { xs: 3, md: 5 },
             py: { xs: 4, md: 5 },
           }}
         >
           <Stack spacing={0.5}>
-            <Typography sx={{ ...typeScale.h3_20, color: color.text.brand }}>{t("appName")}</Typography>
-            <Typography component="h1" sx={{ ...typeScale.h1_28, color: color.text.primary }}>
+            <Typography sx={{ ...typeScale.sectionTitle, color: color.text.brand }}>{t("appName")}</Typography>
+            <Typography component="h1" sx={{ ...typeScale.display, color: color.text.primary }}>
               {title}
             </Typography>
-            {subtitle ? <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{subtitle}</Typography> : null}
+            {subtitle ? <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{subtitle}</Typography> : null}
           </Stack>
           {children}
         </Stack>

@@ -76,7 +76,7 @@ export default function LoginPage() {
         <Button type="submit" variant="contained" size="large" disabled={isSubmitting}>
           {isSubmitting ? t("loggingIn") : t("login")}
         </Button>
-        <Typography sx={{ ...typeScale.caption12, color: color.text.secondary, textAlign: "center" }}>{t("forgotPasswordHint")}</Typography>
+        <Typography sx={{ ...typeScale.caption, color: color.text.secondary, textAlign: "center" }}>{t("forgotPasswordHint")}</Typography>
       </Stack>
     </AuthCard>
   );

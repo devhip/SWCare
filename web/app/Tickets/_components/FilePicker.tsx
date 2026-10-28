@@ -45,7 +45,7 @@ export default function FilePicker({ files, onChange, disabled }: { files: File[
           />
         ))}
       </Stack>
-      <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>{t("hint.files", { max: MAX_FILES })}</Typography>
+      <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>{t("hint.files", { max: MAX_FILES })}</Typography>
       <input
         ref={input}
         type="file"

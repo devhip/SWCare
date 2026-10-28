@@ -14,7 +14,7 @@ export default function AttachmentList({ ticketId, attachments, showEmpty }: { t
   const { t } = useTranslation("ticket");
 
   if (!attachments.length) {
-    return showEmpty ? <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("files.none")}</Typography> : null;
+    return showEmpty ? <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("files.none")}</Typography> : null;
   }
 
   return (
@@ -27,11 +27,11 @@ export default function AttachmentList({ ticketId, attachments, showEmpty }: { t
             type="button"
             underline="hover"
             onClick={() => void downloadAttachment(ticketId, file.Id, file.FileName).catch(() => undefined)}
-            sx={{ ...typeScale.bodySm14, textAlign: "left", wordBreak: "break-all" }}
+            sx={{ ...typeScale.small, textAlign: "left", wordBreak: "break-all" }}
           >
             {file.FileName}
           </Link>
-          <Typography sx={{ ...typeScale.caption12, color: color.text.secondary, flexShrink: 0 }}>{formatBytes(file.SizeBytes)}</Typography>
+          <Typography sx={{ ...typeScale.caption, color: color.text.secondary, flexShrink: 0 }}>{formatBytes(file.SizeBytes)}</Typography>
         </Stack>
       ))}
     </Stack>

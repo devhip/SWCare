@@ -44,7 +44,7 @@ export default function AppProviders({ children }: { children: React.ReactNode }
           children
         ) : (
           <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", bgcolor: color.surface.page }}>
-            <Typography sx={{ ...typeScale.body16, color: color.text.secondary }}>กำลังโหลด…</Typography>
+            <Typography sx={{ ...typeScale.body, color: color.text.secondary }}>กำลังโหลด…</Typography>
           </Box>
         )}
         <ToastContainer position="top-right" autoClose={5000} newestOnTop closeOnClick pauseOnHover limit={3} theme="light" />

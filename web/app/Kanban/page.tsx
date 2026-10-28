@@ -56,24 +56,24 @@ function CardView({ card, dragging }: { card: BoardCard; dragging?: boolean }) {
     <Stack
       spacing={1}
       sx={{
-        p: 2.5,
+        p: 3,
         bgcolor: color.surface.card,
-        border: `1px solid ${card.IsOverdue ? color.semantic.error.border : color.border.subtle}`,
-        borderRadius: radiusPx.sm,
-        boxShadow: dragging ? "0 8px 24px rgba(28,25,23,.18)" : undefined,
+        border: `1px solid ${card.IsOverdue ? color.semantic.error.border : "transparent"}`,
+        borderRadius: "12px",
+        boxShadow: dragging ? "0 12px 28px rgba(240, 100, 0, .22)" : "0 2px 8px rgba(43, 26, 14, .07)",
       }}
     >
-      <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>{card.TicketNo}</Typography>
-      <Typography sx={{ ...typeScale.bodySm14, fontWeight: 600, color: color.text.primary, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+      <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>{card.TicketNo}</Typography>
+      <Typography sx={{ ...typeScale.small, fontWeight: 600, color: color.text.primary, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
         {card.Title}
       </Typography>
-      <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }} noWrap>
+      <Typography sx={{ ...typeScale.caption, color: color.text.secondary }} noWrap>
         {[card.ProductName, card.CustomerName].filter(Boolean).join(" · ")}
       </Typography>
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", gap: 1 }}>
         <PriorityChip priority={card.ActualPriority ?? card.RequestedPriority} />
         {card.PlannedDueDate ? (
-          <Typography sx={{ ...typeScale.caption12, color: card.IsOverdue ? color.semantic.error.text : color.text.secondary, fontWeight: card.IsOverdue ? 600 : 400 }}>
+          <Typography sx={{ ...typeScale.caption, color: card.IsOverdue ? color.semantic.error.text : color.text.secondary, fontWeight: card.IsOverdue ? 600 : 400 }}>
             {formatDate(card.PlannedDueDate, i18n.language)}
           </Typography>
         ) : null}
@@ -117,8 +117,10 @@ function Cell({ lane, status, children }: { lane: Lane; status: TicketStatus; ch
       sx={{
         p: 2,
         minHeight: 96,
-        bgcolor: isOver ? color.surface.brandSubtle : color.surface.sunken,
-        borderRadius: radiusPx.md,
+        // a visible lane on the cream page (HIPHR inline-form tint)
+        bgcolor: isOver ? color.surface.brandSubtle : "#FCEFE3",
+        borderRadius: radiusPx.card,
+        outline: isOver ? `2px dashed ${color.brand[300]}` : "none",
       }}
     >
       {children}
@@ -222,13 +224,13 @@ function KanbanBoard() {
           <Box sx={{ display: "grid", gridTemplateColumns: `140px repeat(${COLUMNS.length}, minmax(220px, 1fr))`, gap: 2, minWidth: 140 + COLUMNS.length * 228 }}>
             <Box />
             {COLUMNS.map((status) => (
-              <Typography key={status} sx={{ ...typeScale.bodyStrong16, color: color.text.primary, px: 1 }}>
+              <Typography key={status} sx={{ ...typeScale.bodyStrong, color: color.text.primary, px: 1 }}>
                 {t(`status.${status}`)}
               </Typography>
             ))}
             {lanes.map((lane) => (
               <Box key={lane.id ?? "none"} sx={{ display: "contents" }}>
-                <Typography sx={{ ...typeScale.bodyStrong16, color: color.text.secondary, pt: 2, wordBreak: "break-word" }}>{lane.name}</Typography>
+                <Typography sx={{ ...typeScale.bodyStrong, color: color.text.secondary, pt: 2, wordBreak: "break-word" }}>{lane.name}</Typography>
                 {COLUMNS.map((status) => (
                   <Cell key={status} lane={lane.id} status={status}>
                     {cardsIn(lane.id, status).map((card) => (
@@ -272,12 +274,12 @@ export default function KanbanPage() {
   const { t: tt } = useTranslation("ticket");
   return (
     <AppShell roles={["Programmer"]}>
-      <Stack spacing={3}>
+      <Stack spacing={5}>
         <Stack spacing={0.5}>
-          <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+          <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
             {t("kanban")}
           </Typography>
-          <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{tt("kanban.hint")}</Typography>
+          <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{tt("kanban.hint")}</Typography>
         </Stack>
         <KanbanBoard />
       </Stack>

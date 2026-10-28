@@ -88,12 +88,12 @@ export default function AllTicketsPage() {
   const { t: tt } = useTranslation("ticket");
   return (
     <AppShell>
-      <Stack spacing={3}>
+      <Stack spacing={5}>
         <Stack spacing={0.5}>
-          <Typography component="h1" sx={{ ...typeScale.h2_24, color: color.text.primary }}>
+          <Typography component="h1" sx={{ ...typeScale.pageTitle, color: color.text.primary }}>
             {t("allTickets")}
           </Typography>
-          <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{tt("page.allHint")}</Typography>
+          <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{tt("page.allHint")}</Typography>
         </Stack>
         <AllTickets />
       </Stack>

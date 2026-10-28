@@ -93,7 +93,7 @@ function UserDialog({ user, departments, onClose }: { user: AdminUser | null; de
   if (resetting && user) {
     return (
       <FormDialog title={`${t("users.resetPassword")} — ${user.Username}`} busy={busy} canSave={canSave} onClose={onClose} onSave={() => void save()}>
-        <Typography sx={{ ...typeScale.bodySm14, color: color.text.secondary }}>{t("users.resetHint")}</Typography>
+        <Typography sx={{ ...typeScale.small, color: color.text.secondary }}>{t("users.resetHint")}</Typography>
         <PasswordField label={t("users.newPassword")} value={password} onChange={(e) => setPassword(e.target.value)} error={!!pwError} helperText={pwHelper} autoComplete="new-password" />
       </FormDialog>
     );
@@ -130,7 +130,7 @@ function UserDialog({ user, departments, onClose }: { user: AdminUser | null; de
       </Stack>
       {user ? (
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-          <Typography sx={{ ...typeScale.caption12, color: color.text.secondary }}>
+          <Typography sx={{ ...typeScale.caption, color: color.text.secondary }}>
             {t("users.lastLogin")}: {formatDateTime(user.LastLoginAt, i18n.language) || t("none")}
           </Typography>
           <Button variant="outlined" onClick={() => setResetting(true)} disabled={!user.IsActive}>
@@ -154,7 +154,7 @@ function Users() {
   const pageInfo = users.data?.PageInfo;
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={5}>
       <PageTitle
         title={t("users.title")}
         hint={t("users.hint")}
@@ -164,7 +164,7 @@ function Users() {
           </Button>
         }
       />
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
         <TextField
           placeholder={t("users.search")}
           value={search}

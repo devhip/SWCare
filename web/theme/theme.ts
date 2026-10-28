@@ -6,6 +6,7 @@ import {
   color,
   colorDark,
   colorLight,
+  hiphr,
   radius,
   layout,
   buttonSize,
@@ -36,8 +37,10 @@ declare module '@mui/material/styles' {
   }
 }
 
-const FONT = 'var(--font-noto-sans-thai), -apple-system, "Segoe UI", sans-serif';
+/** Prompt — same files as HIPHR (app/globals.css @font-face) */
+const FONT = '"Prompt", "Segoe UI", "Leelawadee UI", Tahoma, sans-serif';
 
+/** Look of HIPHR.Api/wwwroot (D9): gradient orange buttons, white cards on cream, compact controls. */
 export const theme = createTheme({
   cssVariables: true,
 
@@ -57,9 +60,9 @@ export const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: color.brand[500],
-      dark: color.brand[600],
-      light: color.brand[50],
+      main: hiphr.orange600,
+      dark: '#D45700',
+      light: hiphr.orange100,
       contrastText: color.text.onBrand,
     },
     error:   { main: color.semantic.error.base,   dark: color.semantic.error.text,   light: color.semantic.error.bg },
@@ -74,14 +77,15 @@ export const theme = createTheme({
   typography: {
     fontFamily: FONT,
     // ห้ามลด lineHeight — ภาษาไทยมีสระบนและวรรณยุกต์ซ้อน 2 ชั้น
-    h1: { ...typeScale.h1_28, fontFamily: FONT },
-    h2: { ...typeScale.h2_24, fontFamily: FONT },
-    h3: { ...typeScale.h3_20, fontFamily: FONT },
-    body1: { ...typeScale.body16, fontFamily: FONT },
-    body2: { ...typeScale.bodySm14, fontFamily: FONT },
-    subtitle1: { ...typeScale.bodyStrong16, fontFamily: FONT },
-    caption: { ...typeScale.caption12, fontFamily: FONT },
-    button: { ...typeScale.button16, fontFamily: FONT, textTransform: 'none' },
+    h1: { ...typeScale.display, fontFamily: FONT },
+    h2: { ...typeScale.pageTitle, fontFamily: FONT },
+    h3: { ...typeScale.sectionTitle, fontFamily: FONT },
+    body1: { ...typeScale.body, fontFamily: FONT },
+    body2: { ...typeScale.small, fontFamily: FONT },
+    subtitle1: { ...typeScale.bodyStrong, fontFamily: FONT },
+    subtitle2: { ...typeScale.label, fontFamily: FONT },
+    caption: { ...typeScale.caption, fontFamily: FONT },
+    button: { ...typeScale.button, fontFamily: FONT, textTransform: 'none' },
   },
 
   hip: {
@@ -104,6 +108,7 @@ export const theme = createTheme({
         body: {
           backgroundColor: 'var(--color-surface-page)',
           color: 'var(--color-text-primary)',
+          ...typeScale.body,
         },
         'td, th, .tabular': { fontVariantNumeric: 'tabular-nums' },
         ':focus-visible': {
@@ -116,46 +121,43 @@ export const theme = createTheme({
     MuiButton: {
       defaultProps: { variant: 'contained', disableElevation: true },
       styleOverrides: {
-        root: { borderRadius: radius.lg, minHeight: buttonSize.lg, paddingInline: 24 },
-        sizeLarge: { minHeight: buttonSize.lg, paddingInline: 28 },
-        sizeMedium: { minHeight: buttonSize.lg, paddingInline: 24 },
-        // sm สูง 40 แต่พื้นที่กดต้อง >= 48 → ขยายด้วย pseudo element
-        sizeSmall: {
-          minHeight: buttonSize.sm,
-          paddingInline: 16,
-          fontSize: typeScale.bodySm14.fontSize,
-          position: 'relative',
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            insetInline: 0,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            height: layout.minTouch,
-          },
+        root: {
+          borderRadius: radius.md,
+          minHeight: buttonSize.md,
+          paddingInline: 18,
+          transition: `transform 80ms, filter ${motion.fast}ms, background-color ${motion.fast}ms`,
+          '&:active': { transform: 'translateY(1px)' },
         },
+        sizeLarge: { minHeight: buttonSize.lg, paddingInline: 24, fontSize: 15 },
+        sizeMedium: { minHeight: buttonSize.md, paddingInline: 18 },
+        sizeSmall: { minHeight: buttonSize.sm, paddingInline: 12, borderRadius: 9, ...typeScale.small, fontWeight: 600 },
         contained: {
-          backgroundColor: color.brand[500],
+          background: hiphr.buttonGradient,
           color: color.text.onBrand,
-          '&:hover': { backgroundColor: color.brand[600] },
-          '&:active': { backgroundColor: color.brand[800] },
-          '&.Mui-disabled': { backgroundColor: color.surface.sunken, color: color.text.disabled },
+          boxShadow: hiphr.buttonShadow,
+          '&:hover': { background: hiphr.buttonGradient, filter: 'brightness(1.05)', boxShadow: hiphr.buttonShadow },
+          '&.Mui-disabled': { background: color.surface.sunken, color: color.text.disabled, boxShadow: 'none' },
+          '&.MuiButton-containedError': {
+            background: 'linear-gradient(135deg, #F0646A, #E5484D)',
+            boxShadow: '0 4px 12px rgba(229, 72, 77, .25)',
+          },
         },
         outlined: {
           backgroundColor: color.surface.card,
-          borderColor: color.border.default,
-          color: color.text.brand,
-          '&:hover': { backgroundColor: color.surface.sunken, borderColor: color.border.strong },
-          '&.Mui-disabled': { borderColor: color.border.subtle, color: color.text.disabled },
+          border: 'none',
+          boxShadow: `inset 0 0 0 1.5px ${hiphr.orange200}`,
+          color: hiphr.orange600,
+          '&:hover': { backgroundColor: hiphr.orange50, border: 'none' },
+          '&.Mui-disabled': { border: 'none', boxShadow: `inset 0 0 0 1.5px ${color.border.subtle}`, color: color.text.disabled },
           '&.MuiButton-outlinedError': {
             color: color.semantic.error.text,
-            borderColor: color.semantic.error.border,
-            '&:hover': { backgroundColor: color.semantic.error.bg, borderColor: color.semantic.error.base },
+            boxShadow: `inset 0 0 0 1.5px ${color.semantic.error.border}`,
+            '&:hover': { backgroundColor: color.semantic.error.bg },
           },
         },
         text: {
-          color: color.text.secondary,
-          '&:hover': { backgroundColor: color.surface.sunken, color: color.text.primary },
+          color: hiphr.orange600,
+          '&:hover': { backgroundColor: hiphr.orange50 },
         },
       },
     },
@@ -167,8 +169,9 @@ export const theme = createTheme({
           height: layout.minTouch,
           borderRadius: radius.pill,
           color: color.text.secondary,
-          '&:hover': { backgroundColor: color.surface.sunken },
+          '&:hover': { backgroundColor: hiphr.orange50, color: hiphr.orange600 },
         },
+        sizeSmall: { width: 32, height: 32 },
       },
     },
 
@@ -177,89 +180,69 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: color.surface.card,
-          border: `1px solid ${color.border.subtle}`,
-          borderRadius: radius.md,
-          boxShadow: elevation[1],
+          borderRadius: radius.card,
+          boxShadow: hiphr.cardShadow,
         },
       },
     },
-    MuiPaper: { styleOverrides: { rounded: { borderRadius: radius.md } } },
+    MuiPaper: { styleOverrides: { rounded: { borderRadius: radius.card } } },
+
+    MuiDialog: {
+      styleOverrides: {
+        paper: { borderRadius: 22, boxShadow: '0 30px 80px rgba(43, 26, 14, .28), 0 8px 24px rgba(240, 100, 0, .12)' },
+      },
+    },
+    MuiDialogTitle: { styleOverrides: { root: { ...typeScale.sectionTitle, paddingTop: 20 } } },
+    MuiBackdrop: { styleOverrides: { root: { '&:not(.MuiBackdrop-invisible)': { backgroundColor: 'rgba(43, 26, 14, .38)' } } } },
 
     MuiTextField: {
       defaultProps: { variant: 'outlined', slotProps: { inputLabel: { shrink: true } } },
     },
-    // Dropdown / Field + Text input — Figma 118:38 · Design System
-    // filled · พื้น surface/page ไม่มีขอบ · Focus/Error เท่านั้นที่ขอบสี · label เหนือช่อง
+    // ช่องกรอกแบบ HIPHR: พื้นขาว ขอบ 1.5px สีครีมเข้ม โฟกัสขอบส้ม + เงา · label อยู่เหนือช่อง
     MuiOutlinedInput: {
       defaultProps: { notched: false },
       styleOverrides: {
         root: {
-          backgroundColor: color.surface.page,
+          backgroundColor: color.surface.card,
           borderRadius: radius.md,
-          minHeight: 56,
-          transition: `background-color ${motion.fast}ms ease, box-shadow ${motion.fast}ms ease`,
+          minHeight: 42,
+          transition: `box-shadow ${motion.fast}ms ease`,
           '& .MuiOutlinedInput-notchedOutline': {
-            border: 'none',
+            border: `1.5px solid ${hiphr.line}`,
             '& legend': { display: 'none' },
           },
-          '&:hover:not(.Mui-disabled):not(.Mui-focused):not(.Mui-error)': {
-            backgroundColor: color.neutral[200],
+          '&:hover:not(.Mui-disabled):not(.Mui-focused):not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
+            borderColor: hiphr.orange200,
           },
           '&.Mui-focused': {
-            backgroundColor: color.surface.card,
             boxShadow: color.focusRingGlow,
-            '& .MuiOutlinedInput-notchedOutline': {
-              border: `2px solid ${color.brand[500]}`,
-              '& legend': { display: 'none' },
-            },
+            '& .MuiOutlinedInput-notchedOutline': { border: `1.5px solid ${hiphr.orange400}` },
           },
-          '&.Mui-error': {
-            backgroundColor: color.surface.card,
-            '& .MuiOutlinedInput-notchedOutline': {
-              border: `1.5px solid ${color.semantic.error.base}`,
-              '& legend': { display: 'none' },
-            },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': { border: `1.5px solid ${color.semantic.error.base}` },
+          '&.Mui-disabled': {
+            backgroundColor: color.surface.sunken,
+            color: color.text.disabled,
+            '& .MuiOutlinedInput-notchedOutline': { borderColor: color.border.subtle },
           },
-          '&.MuiInputBase-colorSuccess': {
-            backgroundColor: color.surface.card,
-            '& .MuiOutlinedInput-notchedOutline': { border: `1.5px solid ${color.semantic.success.base}` },
-          },
-          '&.Mui-disabled': { backgroundColor: color.surface.page, color: color.text.disabled },
-          // sm 48 — แถบกรอง / header (Figma DropdownField h=48)
-          '&.MuiInputBase-sizeSmall': {
-            minHeight: 48,
-          },
-          '&.MuiInputBase-sizeSmall .MuiOutlinedInput-input': {
-            paddingBlock: 11,
-            paddingInline: 20,
-          },
+          '&.MuiInputBase-sizeSmall': { minHeight: 36 },
+          '&.MuiInputBase-sizeSmall .MuiOutlinedInput-input': { paddingBlock: 7, paddingInline: 12 },
         },
         input: {
-          paddingInline: 20,
-          ...typeScale.body16,
+          paddingBlock: 9.5,
+          paddingInline: 14,
+          ...typeScale.body,
           color: color.text.primary,
           '&::placeholder': { color: color.text.tertiary, opacity: 1 },
         },
-        notchedOutline: {
-          '& legend': { display: 'none' },
-        },
+        multiline: { padding: 0 },
+        notchedOutline: { '& legend': { display: 'none' } },
       },
     },
     MuiSelect: {
       styleOverrides: {
-        select: {
-          ...typeScale.body16,
-          color: color.text.primary,
-        },
-        icon: {
-          right: 14,
-          color: color.text.tertiary,
-          fontSize: 20,
-          transition: `transform ${motion.fast}ms ease`,
-        },
-        iconOpen: {
-          color: color.brand[500],
-        },
+        select: { ...typeScale.body, color: color.text.primary },
+        icon: { right: 10, color: color.text.tertiary, fontSize: 20, transition: `transform ${motion.fast}ms ease` },
+        iconOpen: { color: hiphr.orange600 },
       },
     },
     MuiInputLabel: {
@@ -268,69 +251,69 @@ export const theme = createTheme({
         root: {
           position: 'static',
           transform: 'none',
-          marginBottom: 8,
-          ...typeScale.bodyStrong16,
-          color: color.text.primary,
+          marginBottom: 6,
+          ...typeScale.label,
+          color: color.text.secondary,
           '&.Mui-disabled': { color: color.text.disabled },
-          '&.Mui-focused': { color: color.text.primary },
-          '&.Mui-error': { color: color.text.primary },
+          '&.Mui-focused': { color: hiphr.orange600 },
+          '&.Mui-error': { color: color.semantic.error.text },
         },
-        // ห้ามตัดขอบ outlined (floating notch)
-        outlined: {
-          position: 'static',
-          transform: 'none',
-          maxWidth: 'none',
-        },
-        sizeSmall: {
-          ...typeScale.bodyStrong16,
-          marginBottom: 8,
-        },
+        outlined: { position: 'static', transform: 'none', maxWidth: 'none' },
+        sizeSmall: { ...typeScale.label, marginBottom: 6 },
       },
     },
+    MuiFormLabel: { styleOverrides: { root: { ...typeScale.label, color: color.text.secondary } } },
     MuiFormHelperText: {
-      styleOverrides: { root: { marginInline: 0, marginTop: 8, ...typeScale.caption12 } },
+      styleOverrides: { root: { marginInline: 0, marginTop: 6, ...typeScale.caption } },
     },
+    MuiFormControlLabel: { styleOverrides: { label: { ...typeScale.body } } },
+    MuiSwitch: {
+      styleOverrides: {
+        switchBase: { '&.Mui-checked': { color: hiphr.orange500 }, '&.Mui-checked + .MuiSwitch-track': { backgroundColor: hiphr.orange400 } },
+      },
+    },
+    MuiCheckbox: { styleOverrides: { root: { '&.Mui-checked': { color: hiphr.orange500 } } } },
+    MuiRadio: { styleOverrides: { root: { '&.Mui-checked': { color: hiphr.orange500 } } } },
 
     MuiMenu: {
       styleOverrides: {
-        paper: {
-          borderRadius: radius.md,
-          border: `1px solid ${color.border.subtle}`,
-          boxShadow: elevation[2],
-          padding: 8,
-        },
+        paper: { borderRadius: 14, boxShadow: hiphr.cardShadow, padding: 6 },
         list: { padding: 0 },
+      },
+    },
+    MuiPopover: { styleOverrides: { paper: { borderRadius: 14, boxShadow: hiphr.cardShadow } } },
+    // Autocomplete adds its own padding around the input: keep it as tall as the other fields (42)
+    MuiAutocomplete: {
+      styleOverrides: {
+        paper: { borderRadius: 14, boxShadow: hiphr.cardShadow },
+        option: { ...typeScale.small },
+        inputRoot: { '&.MuiOutlinedInput-root': { paddingBlock: 3, paddingLeft: 6 } },
+        input: { '&.MuiOutlinedInput-input': { paddingBlock: 6.5 } },
+        tag: { margin: 2 },
       },
     },
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          minHeight: 44,
-          borderRadius: radius.sm,
-          ...typeScale.bodySm14,
+          minHeight: 38,
+          borderRadius: 9,
+          ...typeScale.small,
           display: 'flex',
           alignItems: 'center',
           gap: 8,
-          '&:hover': { backgroundColor: color.surface.sunken },
+          '&:hover': { backgroundColor: hiphr.orange50 },
           '&.Mui-selected': {
-            backgroundColor: color.surface.brandSubtle,
-            color: color.text.brand,
+            backgroundColor: hiphr.orange100,
+            color: hiphr.orange600,
             fontWeight: 600,
-            '&:hover': { backgroundColor: color.surface.brandSubtle },
-            // ✓ ขวา — Design System dropdown menu
-            '&::after': {
-              content: '"✓"',
-              marginLeft: 'auto',
-              fontSize: 14,
-              fontWeight: 700,
-              color: color.brand[700],
-            },
+            '&:hover': { backgroundColor: hiphr.orange100 },
+            '&::after': { content: '"✓"', marginLeft: 'auto', fontSize: 13, fontWeight: 700, color: hiphr.orange600 },
           },
         },
       },
     },
 
-    // เมนู sidebar: main 48 / sub 44 / radius 12 / gap 4
+    // เมนูด้านข้าง
     MuiListItemButton: {
       styleOverrides: {
         root: {
@@ -338,13 +321,30 @@ export const theme = createTheme({
           borderRadius: nav.radius,
           marginBottom: nav.gap,
           color: color.text.secondary,
-          '&:hover': { backgroundColor: color.surface.sunken },
+          '&:hover': { backgroundColor: hiphr.orange50, color: hiphr.orange600 },
           '&.Mui-selected': {
-            backgroundColor: color.surface.brandSubtle,
-            color: color.text.brand,
-            fontWeight: 600,
-            '&:hover': { backgroundColor: color.surface.brandSubtle },
+            backgroundColor: hiphr.orange100,
+            color: hiphr.orange600,
+            '&:hover': { backgroundColor: hiphr.orange100 },
           },
+        },
+      },
+    },
+
+    MuiTabs: {
+      styleOverrides: {
+        root: { minHeight: 44 },
+        indicator: { height: 3, borderRadius: 3, backgroundColor: hiphr.orange600 },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: 44,
+          paddingInline: 14,
+          ...typeScale.bodyStrong,
+          color: color.text.secondary,
+          '&.Mui-selected': { color: hiphr.orange600 },
         },
       },
     },
@@ -352,101 +352,60 @@ export const theme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
-          color: color.text.brand,
+          color: hiphr.orange600,
           textUnderlineOffset: 3,
-          '&:hover': { color: color.brand[800], textDecoration: 'underline' },
+          '&:hover': { textDecoration: 'underline' },
         },
       },
     },
 
-    MuiChip: { styleOverrides: { root: { height: 32, borderRadius: radius.pill, ...typeScale.caption12 } } },
-
-    // ตารางตาม Figma รายการ (ผู้ใช้ระบบ): การ์ด radius/lg 16 · หัวตารางแถบ sunken radius/sm 8
-    MuiTable: {
+    // ป้ายสถานะแบบ badge ของ HIPHR: เม็ดยา ตัวหนา
+    MuiChip: {
       styleOverrides: {
-        root: {
-          borderCollapse: 'separate',
-          borderSpacing: 0,
-        },
+        root: { height: 26, borderRadius: radius.pill, ...typeScale.label },
+        label: { paddingInline: 10 },
+        sizeSmall: { height: 22, fontSize: 12, '& .MuiChip-label': { paddingInline: 8 } },
       },
     },
+
+    MuiAlert: { styleOverrides: { root: { borderRadius: 14, ...typeScale.small } } },
+
+    // ตารางแบบ HIPHR: หัวตารางตัวเล็กสีน้ำตาลอ่อน เส้นแบ่งแถวจางๆ แถว hover สีครีม
+    MuiTable: { styleOverrides: { root: { borderCollapse: 'separate', borderSpacing: 0 } } },
     MuiTableContainer: {
       styleOverrides: {
         root: {
-          borderRadius: radius.lg,
+          borderRadius: radius.card,
           overflow: 'hidden',
           backgroundColor: color.surface.card,
-          border: `1px solid ${color.border.subtle}`,
-          padding: 24,
-        },
-      },
-    },
-    MuiTableHead: {
-      styleOverrides: {
-        root: {
-          '& .MuiTableCell-head': {
-            ...typeScale.bodySm14,
-            backgroundColor: color.surface.sunken,
-            borderBottom: 'none',
-            color: color.text.primary,
-          },
-          '& .MuiTableRow-root:first-of-type .MuiTableCell-head:first-of-type': {
-            borderTopLeftRadius: radius.sm,
-            borderBottomLeftRadius: radius.sm,
-          },
-          '& .MuiTableRow-root:first-of-type .MuiTableCell-head:last-of-type': {
-            borderTopRightRadius: radius.sm,
-            borderBottomRightRadius: radius.sm,
-          },
+          boxShadow: hiphr.cardShadow,
+          padding: 16,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        root: { ...typeScale.bodySm14, borderBottomColor: color.border.subtle },
-        head: { ...typeScale.bodySm14, color: color.text.primary },
+        root: { ...typeScale.small, paddingBlock: 10, paddingInline: 12, borderBottom: `1px solid ${color.border.subtle}` },
+        head: {
+          ...typeScale.label,
+          color: color.text.secondary,
+          backgroundColor: color.surface.card,
+          borderBottom: `1px solid ${hiphr.line}`,
+          whiteSpace: 'nowrap',
+        },
       },
     },
-    MuiTableRow: { styleOverrides: { root: { height: 50 } } },
-    // Table footer — rows-per-page เป็น Select แบบ standard (ไม่ใช่ OutlinedInput ของฟอร์ม)
-    MuiTablePagination: {
+    MuiTableRow: {
       styleOverrides: {
-        selectRoot: {
-          marginLeft: 8,
-          marginRight: 16,
-          minWidth: 80,
-          '&::before, &::after': { display: 'none' },
-        },
-        select: {
-          ...typeScale.bodySm14,
-          color: color.text.primary,
-          backgroundColor: color.surface.page,
-          borderRadius: radius.md,
-          border: `1px solid ${color.border.subtle}`,
-          paddingTop: 10,
-          paddingBottom: 10,
-          paddingLeft: 16,
-          // ช่องว่างระหว่างตัวเลขกับลูกศร (ไอคอน absolute ใน selectRoot)
-          paddingRight: '52px !important',
-          minWidth: 56,
-          boxSizing: 'border-box',
-          textAlign: 'left',
-          '&:focus': {
-            backgroundColor: color.surface.card,
-            borderColor: color.brand[500],
-            borderRadius: radius.md,
-          },
-        },
-        selectIcon: {
-          color: color.text.tertiary,
-          right: 16,
-          top: 'calc(50% - 12px)',
-          fontSize: 20,
-          pointerEvents: 'none',
+        root: {
+          '&.MuiTableRow-hover:hover > td': { backgroundColor: hiphr.orange50 },
+          '&:last-of-type > td': { borderBottom: 'none' },
         },
       },
     },
-    MuiTooltip: { styleOverrides: { tooltip: { borderRadius: radius.sm, ...typeScale.caption12 } } },
+    MuiPagination: { defaultProps: { color: 'primary', shape: 'rounded' } },
+    MuiTooltip: { styleOverrides: { tooltip: { borderRadius: 8, ...typeScale.caption, backgroundColor: hiphr.ink } } },
+    MuiDivider: { styleOverrides: { root: { borderColor: color.border.subtle } } },
   },
 });
 

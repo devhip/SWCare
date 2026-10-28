@@ -41,6 +41,35 @@ export const neutral = {
   950: '#121110',
 } as const;
 
+/** HIPHR.Api/wwwroot/css/theme.css (D9): ส้ม พื้นครีม ตัวอักษรน้ำตาลเข้ม — semantic Light ใช้ชุดนี้ */
+export const hiphr = {
+  orange600: '#F06400',
+  orange500: '#FF7A1A',
+  orange400: '#FF9A3C',
+  orange200: '#FFD3AD',
+  orange100: '#FFEBDA',
+  orange50: '#FFF6EE',
+  cream: '#FFF8F1',
+  ink: '#2B1A0E',
+  muted: '#8A6A55',
+  mutedLight: '#B39A88',
+  disabled: '#C9B8AB',
+  line: '#F3DCC8',
+  lineSoft: '#F6E4D4',
+  lineStrong: '#D9BCA5',
+  headerGradient: 'linear-gradient(120deg, #FF6A00 0%, #FF8A2A 45%, #FFB15C 100%)',
+  buttonGradient: 'linear-gradient(135deg, #FF7A1A, #F06400)',
+  cardShadow: '0 8px 28px rgba(240, 100, 0, .08), 0 2px 6px rgba(43, 26, 14, .05)',
+  buttonShadow: '0 4px 12px rgba(240, 100, 0, .25)',
+} as const;
+
+/** การ์ดขาวมุมโค้งเงาส้มจางของ HIPHR — ใช้ใน sx: `sx={{ ...card, p: 4 }}` */
+export const card = {
+  backgroundColor: '#FFFFFF',
+  borderRadius: '18px',
+  boxShadow: hiphr.cardShadow,
+} as const;
+
 /** Ramp ซ่อน — ใช้ภายใน semantic */
 export const green = {
   50: '#E9F7EF',
@@ -147,24 +176,24 @@ type SemanticPalette = {
 /** Semantic — Light (ค่าเริ่มต้นที่โค้ด JS/sx ใช้อยู่) */
 export const colorLight: SemanticPalette = {
   surface: {
-    page: neutral[50],
+    page: hiphr.cream,
     card: neutral[0],
-    sunken: neutral[100],
-    brandSubtle: brand[50],
+    sunken: hiphr.orange50,
+    brandSubtle: hiphr.orange100,
   },
   border: {
-    subtle: neutral[200],
-    default: neutral[300],
-    strong: neutral[400],
+    subtle: hiphr.lineSoft,
+    default: hiphr.line,
+    strong: hiphr.lineStrong,
   },
   text: {
-    primary: neutral[800],
-    secondary: neutral[500],
-    tertiary: neutral[400],
-    disabled: neutral[350],
+    primary: hiphr.ink,
+    secondary: hiphr.muted,
+    tertiary: hiphr.mutedLight,
+    disabled: hiphr.disabled,
     onBrand: neutral[0],
-    onBrandSubtle: neutral[900],
-    brand: brand[700],
+    onBrandSubtle: hiphr.ink,
+    brand: hiphr.orange600,
   },
   semantic: {
     success: { bg: green[50], base: green[500], text: green[600], border: green[100] },
@@ -183,11 +212,11 @@ export const colorLight: SemanticPalette = {
     pinkBg: pink[50],
     amber: amber[600],
     amberBg: amber[50],
-    brand: brand[500],
+    brand: hiphr.orange500,
   },
-  focusRing: brand[700],
-  /** วงโฟกัส 3px @22% ตาม Figma — ใช้กับ input focus */
-  focusRingGlow: '0 0 0 3px rgb(179 84 0 / .22)',
+  focusRing: hiphr.orange400,
+  /** วงโฟกัส 3px เหมือนช่องกรอกของ HIPHR */
+  focusRingGlow: '0 0 0 3px rgba(255, 154, 60, .22)',
 };
 
 /** Semantic — Dark (`data-theme="dark"` / prefers-color-scheme) */
@@ -255,7 +284,8 @@ export const color = {
 /** ระยะห่างใช้ได้เฉพาะค่าเหล่านี้ — ห้าม 10 / 14 / 18 */
 export const space = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64] as const;
 
-export const radius = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, pill: 999 } as const;
+/** card 18 = การ์ดของ HIPHR · md 11 = ปุ่มและช่องกรอก */
+export const radius = { xs: 4, sm: 8, md: 11, lg: 16, card: 18, xl: 24, pill: 999 } as const;
 
 /** ใช้ใน `sx` — ตัวเลขดิบจะถูก MUI คูณ `shape.borderRadius` */
 export const radiusPx = {
@@ -263,27 +293,28 @@ export const radiusPx = {
   sm: `${radius.sm}px`,
   md: `${radius.md}px`,
   lg: `${radius.lg}px`,
+  card: `${radius.card}px`,
   xl: `${radius.xl}px`,
   pill: `${radius.pill}px`,
 } as const;
 
 export const layout = {
-  headerHeight: 72,
+  headerHeight: 64,
   iconRail: 72,
-  sidebarWidth: 240,
+  sidebarWidth: 232,
   sidebarCollapsedWidth: 72,
-  contentMax: 1200,
+  contentMax: 1320,
   gutter: 24,
-  minTouch: 48,
+  minTouch: 40,
 } as const;
 
-/** ปุ่ม: sm 40 ได้เฉพาะเมื่อพื้นที่กดจริงยังคง >= minTouch */
-export const buttonSize = { lg: 56, md: 48, sm: 40 } as const;
+/** ปุ่มขนาดเท่า HIPHR */
+export const buttonSize = { lg: 44, md: 40, sm: 34 } as const;
 
-/** เมนู: main 48 / sub 44 / radius 12 ทุกชั้น / ระยะห่าง 4 */
+/** เมนูด้านข้าง: main 42 / sub 38 / radius 11 / ระยะห่าง 4 */
 export const nav = {
-  mainHeight: 48,
-  subHeight: 44,
+  mainHeight: 42,
+  subHeight: 38,
   radius: radius.md,
   gap: 4,
   subIndent: 24,
@@ -298,18 +329,22 @@ export const elevation = {
 
 export const breakpoint = { mobile: 0, tablet: 768, laptop: 1024, desktop: 1280 } as const;
 
-/** 10 ขนาดเท่านั้น — ห้ามคิดขนาดใหม่ */
+/**
+ * ขนาดตัวอักษร (D9 — สัดส่วนตาม HIPHR, ฟอนต์ Prompt) ใช้ตามหน้าที่ ห้ามคิดขนาดใหม่:
+ * pageTitle หัวหน้า · sectionTitle หัวการ์ด · body เนื้อหา · small ข้อความรอง/ตาราง
+ * label ชื่อช่อง/หัวตาราง · caption ตัวเล็กสุด · kpi ตัวเลขสรุป
+ */
 export const typeScale = {
-  display32: { fontSize: 32, lineHeight: '44px', fontWeight: 700 },
-  h1_28: { fontSize: 28, lineHeight: '40px', fontWeight: 700 },
-  h2_24: { fontSize: 24, lineHeight: '36px', fontWeight: 600 },
-  h3_20: { fontSize: 20, lineHeight: '32px', fontWeight: 600 },
-  body16: { fontSize: 16, lineHeight: '26px', fontWeight: 400 },
-  bodyStrong16: { fontSize: 16, lineHeight: '26px', fontWeight: 600 },
-  bodySm14: { fontSize: 14, lineHeight: '22px', fontWeight: 400 },
-  caption12: { fontSize: 12, lineHeight: '18px', fontWeight: 400 },
-  button16: { fontSize: 16, lineHeight: '20px', fontWeight: 500 },
-  numeric28: { fontSize: 28, lineHeight: '34px', fontWeight: 600, fontVariantNumeric: 'tabular-nums' as const },
+  display: { fontSize: 26, lineHeight: '36px', fontWeight: 700 },
+  pageTitle: { fontSize: 22, lineHeight: '32px', fontWeight: 700 },
+  sectionTitle: { fontSize: 17, lineHeight: '26px', fontWeight: 700 },
+  body: { fontSize: 14.5, lineHeight: '23px', fontWeight: 400 },
+  bodyStrong: { fontSize: 14.5, lineHeight: '23px', fontWeight: 600 },
+  small: { fontSize: 13, lineHeight: '20px', fontWeight: 400 },
+  label: { fontSize: 12.5, lineHeight: '18px', fontWeight: 600 },
+  caption: { fontSize: 12, lineHeight: '18px', fontWeight: 400 },
+  button: { fontSize: 14, lineHeight: '20px', fontWeight: 600 },
+  kpi: { fontSize: 30, lineHeight: '38px', fontWeight: 700, fontVariantNumeric: 'tabular-nums' as const },
 } as const;
 
 /**

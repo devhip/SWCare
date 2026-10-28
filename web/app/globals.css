@@ -11,6 +11,16 @@ body {
   min-height: 100%;
 }
 
+/* Prompt (same files as HIPHR.Api/wwwroot, D9) — served from public/fonts, Thai and Latin split by unicode-range */
+@font-face { font-family: "Prompt"; font-weight: 400; font-display: swap; src: url("/fonts/prompt-thai-400.woff2") format("woff2"); unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC; }
+@font-face { font-family: "Prompt"; font-weight: 400; font-display: swap; src: url("/fonts/prompt-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Prompt"; font-weight: 500; font-display: swap; src: url("/fonts/prompt-thai-500.woff2") format("woff2"); unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC; }
+@font-face { font-family: "Prompt"; font-weight: 500; font-display: swap; src: url("/fonts/prompt-latin-500.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Prompt"; font-weight: 600; font-display: swap; src: url("/fonts/prompt-thai-600.woff2") format("woff2"); unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC; }
+@font-face { font-family: "Prompt"; font-weight: 600; font-display: swap; src: url("/fonts/prompt-latin-600.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Prompt"; font-weight: 700; font-display: swap; src: url("/fonts/prompt-thai-700.woff2") format("woff2"); unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC; }
+@font-face { font-family: "Prompt"; font-weight: 700; font-display: swap; src: url("/fonts/prompt-latin-700.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
 /* ============ PRIMITIVES (เท่ากันทั้ง 2 โหมด) ============ */
 :root {
   --color-brand-50: #fff3e8;
@@ -96,20 +106,20 @@ body {
   --color-pink-900: #2a1524;
 
   /* Semantic — Light */
-  --color-surface-page: var(--color-neutral-50);
-  --color-surface-card: var(--color-neutral-0);
-  --color-surface-sunken: var(--color-neutral-100);
-  --color-surface-brandSubtle: var(--color-brand-50);
-  --color-border-subtle: var(--color-neutral-200);
-  --color-border-default: var(--color-neutral-300);
-  --color-border-strong: var(--color-neutral-400);
-  --color-text-primary: var(--color-neutral-800);
-  --color-text-secondary: var(--color-neutral-500);
-  --color-text-tertiary: var(--color-neutral-400);
-  --color-text-disabled: var(--color-neutral-350);
+  --color-surface-page: #fff8f1;
+  --color-surface-card: #ffffff;
+  --color-surface-sunken: #fff6ee;
+  --color-surface-brandSubtle: #ffebda;
+  --color-border-subtle: #f6e4d4;
+  --color-border-default: #f3dcc8;
+  --color-border-strong: #d9bca5;
+  --color-text-primary: #2b1a0e;
+  --color-text-secondary: #8a6a55;
+  --color-text-tertiary: #b39a88;
+  --color-text-disabled: #c9b8ab;
   --color-text-onBrand: var(--color-neutral-0);
-  --color-text-onBrandSubtle: var(--color-neutral-900);
-  --color-text-brand: var(--color-brand-700);
+  --color-text-onBrandSubtle: #2b1a0e;
+  --color-text-brand: #f06400;
   --color-semantic-success-bg: var(--color-green-50);
   --color-semantic-success-base: var(--color-green-500);
   --color-semantic-success-text: var(--color-green-600);
@@ -137,7 +147,7 @@ body {
   --color-accent-amber: var(--color-semantic-warning-base);
   --color-accent-amberBg: var(--color-semantic-warning-bg);
   --color-accent-brand: var(--color-brand-500);
-  --color-focus-ring: var(--color-brand-700);
+  --color-focus-ring: #ff9a3c;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -165,7 +175,7 @@ body {
   --size-buttonLg: 56px;
   --size-buttonMd: 48px;
   --size-buttonSm: 40px;
-  --font-family-base: "Noto Sans Thai", system-ui, sans-serif;
+  --font-family-base: "Prompt", "Segoe UI", "Leelawadee UI", Tahoma, sans-serif;
   --elevation-1: 0 1px 2px rgba(28, 25, 23, 0.06), 0 1px 3px rgba(28, 25, 23, 0.1);
   --elevation-2: 0 4px 12px rgba(28, 25, 23, 0.08);
   --elevation-3: 0 8px 24px rgba(28, 25, 23, 0.12);
@@ -277,7 +287,7 @@ body {
   color: var(--color-semantic-error-text);
   border: 1px solid var(--color-semantic-error-border);
   border-radius: 12px;
-  font-family: var(--font-noto-sans-thai), "Noto Sans Thai", sans-serif;
+  font-family: var(--font-family-base);
 }
 
 .sw-api-error-toast .Toastify__toast-icon {
