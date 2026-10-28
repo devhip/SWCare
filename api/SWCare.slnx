@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="SWCare.Api/SWCare.Api.csproj" />
   <Project Path="SWCare.Api.Tests/SWCare.Api.Tests.csproj" />
+  <Project Path="../tools/SheetImport/SheetImport.csproj" />
 </Solution>

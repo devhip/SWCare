@@ -369,7 +369,8 @@ public sealed partial class TicketControl(
                 t.Status,
                 t.RequestedPriority,
                 t.ActualPriority,
-                new UserBriefRes(t.Reporter.Id, t.Reporter.DisplayName),
+                // Imported tickets whose reporter has no account show the name from the sheet (plan 12).
+                new UserBriefRes(t.Reporter.Id, t.LegacyReporterName ?? t.Reporter.DisplayName),
                 t.Requester == null ? null : new UserBriefRes(t.Requester.Id, t.Requester.DisplayName),
                 t.Assignee == null ? null : new UserBriefRes(t.Assignee.Id, t.Assignee.DisplayName),
                 t.Department.Name,

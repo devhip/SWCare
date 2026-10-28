@@ -177,7 +177,7 @@ function TicketView() {
 
           <Card title={t("section.people")}>
             <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
-              <Field label={t("field.reporter")}>{person(ticket.Reporter.DisplayName, ticket.LegacyReporterName)}</Field>
+              <Field label={t("field.reporter")}>{ticket.LegacyReporterName ?? ticket.Reporter.DisplayName}</Field>
               <Field label={t("field.department")}>{ticket.Department.Name}</Field>
               <Field label={t("field.requester")}>{person(ticket.Requester?.DisplayName, ticket.LegacyRequesterName)}</Field>
               <Field label={t("field.approver")}>{person(ticket.Approver?.DisplayName, ticket.LegacyApproverName)}</Field>

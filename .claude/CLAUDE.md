@@ -13,6 +13,7 @@
 | `api/` | ASP.NET Core .NET 10, Controllers, EF Core + SQL Server, FluentValidation, Serilog | `E:\API_Dotnet\HR\HIPHRPlatform\HIPHR.Api` |
 | `web/` | Next.js 16 (static export) + MUI 9 + TanStack Query + zustand + i18next, npm | `E:\API_Dotnet\hip-easy-next\web` |
 | `mobile/` | Flutter (สัปดาห์ที่ 2–4 ยังไม่เริ่ม) | `E:\API_Dotnet\hip-easy-next\mobile\easy-next-app` |
+| `tools/SheetImport` | console .NET 10 ใช้ DbContext ของ API | นำเข้าชีตเดิมครั้งเดียว — วิธีใช้ใน `tools/SheetImport/README.md` |
 | `docs/` | แผนงาน | |
 
 ## API (`api/SWCare.Api`)
@@ -29,7 +30,7 @@
 
 ```bash
 cd api && dotnet build SWCare.slnx
-cd api && dotnet test SWCare.slnx                   # unit test (กฎสถานะของงาน)
+cd api && dotnet test SWCare.slnx                   # unit test (กฎสถานะของงาน, แจ้งเตือน, ตัวนำเข้าชีต) — SWCare.slnx รวม tools/SheetImport ด้วย
 cd api/SWCare.Api && dotnet run                     # http://localhost:5300 — Scalar ที่ /scalar, Swagger ที่ /swagger
 cd api/SWCare.Api && dotnet ef migrations add <Name> -o Data/Migrations   # ครั้งแรกรัน dotnet tool restore
 ```

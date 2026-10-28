@@ -1,0 +1,21 @@
+{
+  // Copy to import-map.json (not committed) and fill in after reading the report of a run without --apply.
+
+  // Name in the sheet -> username in SWCare. Names already matched by username, e-mail, the part before @
+  // or the display name do not need a line here.
+  "People": {
+    "KUNG HIP": "kung",
+    "พี่ป้อม": "pom",
+    "aussadarwut taemtor": "aussadarwut"
+  },
+
+  // Sheet Id -> type, when the guess in the report is wrong: Bug, FeatureRequest, Testing, DataService
+  "Types": {
+    "10": "DataService"
+  },
+
+  // Sheet Id -> product name exactly as in Admin > ข้อมูลหลัก, when the report picked the wrong one
+  "Products": {
+    "12": "HIP TIME 4.0"
+  }
+}

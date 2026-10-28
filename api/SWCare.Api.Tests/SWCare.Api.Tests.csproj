@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SWCare.Api\SWCare.Api.csproj" />
+    <ProjectReference Include="..\..\tools\SheetImport\SheetImport.csproj" />
   </ItemGroup>
 
 </Project>
