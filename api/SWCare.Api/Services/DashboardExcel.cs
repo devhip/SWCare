@@ -33,7 +33,7 @@ public static class DashboardExcel
         summary.Cell(row, 1).Style.Font.SetBold().Font.SetFontSize(16).Font.SetFontColor(XLColor.FromHtml(Orange));
         row += 1;
         summary.Cell(row++, 1).Value = $"{L("ช่วงวันที่", "Range")}: {data.From:dd/MM/yyyy} – {data.To:dd/MM/yyyy}";
-        summary.Cell(row++, 1).Value = $"{L("ฝ่าย", "Department")}: {departmentName ?? L("ทุกฝ่าย", "All departments")}";
+        summary.Cell(row++, 1).Value = $"{L("แผนก", "Department")}: {departmentName ?? L("ทุกแผนก", "All departments")}";
         summary.Cell(row++, 1).Value = $"{L("ระบบ/โปรแกรม", "System / program")}: {productName ?? L("ทุกระบบ", "All systems")}";
         summary.Cell(row++, 1).Value = $"{L("ออกรายงาน", "Exported")}: {createdThai:dd/MM/yyyy HH:mm}";
         row++;
@@ -60,7 +60,7 @@ public static class DashboardExcel
             data.OpenByStatus.Select(s => new XLCellValue[] { StatusName(s.Status, th), s.Count }).ToList());
         row = Breakdown(summary, row, L("แยกตามระบบ/โปรแกรม", "By system / program"), data.ByProduct, th, null);
         row = Breakdown(summary, row, L("แยกตามประเภทงาน", "By type"), data.ByType, th, key => TypeName(Enum.Parse<TicketType>(key), th));
-        row = Breakdown(summary, row, L("แยกตามฝ่ายที่แจ้ง", "By reporting department"), data.ByDepartment, th, null);
+        row = Breakdown(summary, row, L("แยกตามแผนกที่แจ้ง", "By reporting department"), data.ByDepartment, th, null);
         row = Breakdown(summary, row, L("ลูกค้าที่แจ้งมากที่สุด", "Top customers"), data.ByCustomer, th, null);
         row = Table(summary, row, L("ทีมโปรแกรมเมอร์", "Programmers"),
             [L("ชื่อ", "Name"), L("งานในมือ", "Open"), L("กำลังแก้ไข", "In progress"), L("เลยกำหนด", "Overdue"), L("จบงานในช่วง", "Finished in range"), L("เฉลี่ยวันแก้ไข", "Avg. working days"), L("เลื่อนวัน (ครั้ง)", "Reschedules")],
@@ -68,7 +68,7 @@ public static class DashboardExcel
         row = Table(summary, row, L("เวลาเฉลี่ยแต่ละขั้น (งานที่ปิดในช่วง)", "Average days per step (tickets closed in range)"),
             [L("ขั้น", "Step"), L("เฉลี่ย (วัน)", "Average days"), L("จำนวนงาน", "Tickets")],
             data.Stages.Select(s => new XLCellValue[] { StageName(s.Stage, th), s.AvgDays is { } d ? d : "-", s.Count }).ToList());
-        Table(summary, row, L("ไม่ดำเนินการ แยกตามฝ่าย", "Declined by department"), [L("ฝ่าย", "Department"), L("จำนวน", "Count")],
+        Table(summary, row, L("ไม่ดำเนินการ แยกตามแผนก", "Declined by department"), [L("แผนก", "Department"), L("จำนวน", "Count")],
             data.Declines.Select(d => new XLCellValue[] { d.Department, d.Count }).ToList());
         summary.Column(1).Width = 42;
         summary.Columns(2, 7).Width = 16;
@@ -77,7 +77,7 @@ public static class DashboardExcel
         string[] headers =
         [
             L("เลขที่", "No."), L("เลขอ้างอิงเดิม", "Old ref."), L("หัวข้อ", "Title"), L("ประเภท", "Type"), L("ระบบ/โปรแกรม", "System"),
-            L("ลูกค้า/หน้างาน", "Customer"), L("ฝ่าย", "Department"), L("คนแจ้ง", "Reporter"), L("คนทำ", "Assignee"), L("สถานะ", "Status"),
+            L("ลูกค้า/หน้างาน", "Customer"), L("แผนก", "Department"), L("คนแจ้ง", "Reporter"), L("คนทำ", "Assignee"), L("สถานะ", "Status"),
             L("ความเร่งด่วน", "Priority"), L("วันที่แจ้ง", "Reported"), L("วันที่เริ่มแก้ไข", "Started"), L("วันที่แก้ไขเสร็จ", "Finished"),
             L("วันที่ปิดงาน", "Closed"), L("วันคาดว่าจะเสร็จ", "Due"), L("ทันกำหนด", "On time"), L("แจ้ง → ปิด (วัน)", "Report → close (days)"),
             L("เลื่อนวัน (ครั้ง)", "Reschedules"), L("ส่งกลับ (ครั้ง)", "Sent back"), L("ข้อมูลเดิมต้องตรวจ", "Old data to check")
