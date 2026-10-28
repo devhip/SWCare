@@ -68,6 +68,7 @@ builder.Services.AddScoped<ISettingControl, SettingControl>();
 builder.Services.AddScoped<ITicketControl, TicketControl>();
 builder.Services.AddScoped<ITicketActionControl, TicketActionControl>();
 builder.Services.AddScoped<INotificationControl, NotificationControl>();
+builder.Services.AddScoped<IDashboardControl, DashboardControl>();
 builder.Services.AddScoped<TicketNotifier>();
 builder.Services.AddScoped<DailyTicketJob>();
 builder.Services.AddHostedService<DailyTicketJobRunner>();

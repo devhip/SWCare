@@ -72,19 +72,25 @@ public static class TicketWorkflow
 
     public static IReadOnlySet<TicketAction> AllowedActions(TicketState ticket, UserContext user)
     {
-        // Everyone who can see a ticket can comment on it (Q47).
-        var allowed = new HashSet<TicketAction> { TicketAction.Comment };
-        if (IsFinal(ticket.Status))
-        {
-            return allowed;
-        }
-
         var isReporter = ticket.ReporterId == user.Id;
         var isAssignee = ticket.AssigneeId is { } assigneeId && assigneeId == user.Id;
         var isLead = user.IsProgrammerLead;
 
         // Approver: the head of the department the ticket was reported from (Q2), never someone acting for them (Q29).
         var isApprover = user.IsDepartmentHead && user.DepartmentId == ticket.DepartmentId;
+
+        // An executive looking at someone else's ticket only reads it (D10).
+        if (user.IsExecutiveOnly && !isReporter && !isAssignee && !isApprover)
+        {
+            return new HashSet<TicketAction>();
+        }
+
+        // Everyone who can see a ticket can comment on it (Q47).
+        var allowed = new HashSet<TicketAction> { TicketAction.Comment };
+        if (IsFinal(ticket.Status))
+        {
+            return allowed;
+        }
 
         // Closes and sends back: the reporter, or the reporter's department head (Q57).
         var isCloser = isReporter || isApprover;

@@ -9,7 +9,10 @@ public enum AppRole
     DepartmentHead,
     SupportHead,
     Programmer,
-    ProgrammerLead
+    ProgrammerLead,
+
+    /// <summary>ผู้บริหาร (D10).</summary>
+    Executive
 }
 
 /// <summary>The logged-in user as the business rules see it.</summary>
@@ -23,7 +26,8 @@ public sealed record UserContext(
     bool IsAdmin,
     bool IsDepartmentHead,
     bool MustChangePassword,
-    string Language)
+    string Language,
+    bool IsExecutive = false)
 {
     /// <summary>Members of the Software department are the programmers.</summary>
     public bool IsProgrammer => DepartmentKind == DepartmentKind.Software;
@@ -34,6 +38,9 @@ public sealed record UserContext(
     /// <summary>หัวหน้า Support sees every ticket (Q14).</summary>
     public bool IsSupportHead => DepartmentKind == DepartmentKind.Support && IsDepartmentHead;
 
+    /// <summary>Sees every ticket only because of the executive flag: read-only there (D10).</summary>
+    public bool IsExecutiveOnly => IsExecutive && !IsAdmin && !IsSupportHead && !IsProgrammer;
+
     public bool Has(AppRole role) => role switch
     {
         AppRole.Admin => IsAdmin,
@@ -41,6 +48,7 @@ public sealed record UserContext(
         AppRole.SupportHead => IsSupportHead,
         AppRole.Programmer => IsProgrammer,
         AppRole.ProgrammerLead => IsProgrammerLead,
+        AppRole.Executive => IsExecutive,
         _ => false
     };
 }

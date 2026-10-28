@@ -19,6 +19,7 @@ public sealed class CreateUserReq
     public string? Email { get; set; }
     public int DepartmentId { get; set; }
     public bool IsAdmin { get; set; }
+    public bool IsExecutive { get; set; }
     public string Password { get; set; } = "";
 }
 
@@ -29,6 +30,7 @@ public sealed class UpdateUserReq
     public string? Email { get; set; }
     public int DepartmentId { get; set; }
     public bool IsAdmin { get; set; }
+    public bool IsExecutive { get; set; }
 
     /// <summary>false = the account cannot log in any more; its name stays on old tickets (Q41).</summary>
     public bool IsActive { get; set; } = true;

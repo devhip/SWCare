@@ -20,6 +20,7 @@ public sealed class UserControl(SWCareDbContext db, CurrentUser currentUser, Tim
         u.Department.Name,
         u.Department.HeadUserId == u.Id,
         u.IsAdmin,
+        u.IsExecutive,
         u.IsActive,
         u.MustChangePassword,
         u.Language,
@@ -84,6 +85,7 @@ public sealed class UserControl(SWCareDbContext db, CurrentUser currentUser, Tim
             Email = email,
             DepartmentId = request.DepartmentId,
             IsAdmin = request.IsAdmin,
+            IsExecutive = request.IsExecutive,
             PasswordHash = PasswordHasher.Hash(request.Password),
             MustChangePassword = true
         };
@@ -141,6 +143,7 @@ public sealed class UserControl(SWCareDbContext db, CurrentUser currentUser, Tim
         user.Email = email;
         user.DepartmentId = request.DepartmentId;
         user.IsAdmin = request.IsAdmin;
+        user.IsExecutive = request.IsExecutive;
         user.IsActive = request.IsActive;
         await db.SaveChangesAsync(cancellationToken);
 

@@ -171,6 +171,27 @@ public sealed class TicketWorkflowTests
     }
 
     [Fact]
+    public void Executive_only_reads_other_peoples_tickets()
+    {
+        // ผู้บริหาร in the Sale department: not its head, not a programmer (D10)
+        var executive = new UserContext(50, "boss", "Boss", SaleDept, "dept", DepartmentKind.General, false, false, MustChangePassword: false, "th", IsExecutive: true);
+
+        foreach (var status in Enum.GetValues<TicketStatus>())
+        {
+            Assert.Empty(Allowed(Ticket(status, Assignee.Id), executive));
+        }
+
+        // Their own ticket works as for any reporter.
+        var own = new TicketState(TicketStatus.PendingApproval, executive.Id, SaleDept, null, null);
+        Assert.Contains(TicketAction.Comment, Allowed(own, executive));
+        Assert.Contains(TicketAction.Cancel, Allowed(own, executive));
+
+        // An executive who is also Admin keeps commenting.
+        var adminExecutive = executive with { IsAdmin = true };
+        Assert.Contains(TicketAction.Comment, Allowed(Ticket(TicketStatus.Queued, Assignee.Id), adminExecutive));
+    }
+
+    [Fact]
     public void Ensure_throws_action_not_allowed()
     {
         var error = Assert.Throws<ForbiddenException>(() =>

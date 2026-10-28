@@ -20,6 +20,9 @@ public sealed class User : BaseEntity<int>
 
     public bool IsAdmin { get; set; }
 
+    /// <summary>ผู้บริหาร: sees the whole-company Dashboard and every ticket, read-only (D10).</summary>
+    public bool IsExecutive { get; set; }
+
     /// <summary>A disabled account cannot log in and its refresh tokens are revoked (Q41).</summary>
     public bool IsActive { get; set; } = true;
 

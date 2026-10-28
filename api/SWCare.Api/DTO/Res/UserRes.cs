@@ -9,6 +9,7 @@ public sealed record UserRes(
     string DepartmentName,
     bool IsDepartmentHead,
     bool IsAdmin,
+    bool IsExecutive,
     bool IsActive,
     bool MustChangePassword,
     string Language,
