@@ -1,0 +1,22 @@
+{
+  "appName": "SWCare",
+  "appTagline": "ระบบแจ้งงานโปรแกรมเมอร์",
+  "loading": "กำลังโหลด…",
+  "redirectingLogin": "กำลังไปหน้าเข้าสู่ระบบ…",
+  "thai": "ภาษาไทย",
+  "english": "English",
+  "logout": "ออกจากระบบ",
+  "changePassword": "เปลี่ยนรหัสผ่าน",
+  "notifications": "แจ้งเตือน",
+  "openMenu": "เปิดเมนู",
+  "comingSoonTitle": "กำลังพัฒนา",
+  "comingSoonDesc": "หน้านี้จะเปิดใช้ภายในสัปดาห์แรกตามแผน",
+  "accessDeniedTitle": "ไม่มีสิทธิ์เข้าหน้านี้",
+  "accessDeniedDesc": "หน้านี้สำหรับผู้ใช้บางบทบาทเท่านั้น",
+  "backHome": "กลับหน้าหลัก",
+  "notFoundPageTitle": "ไม่พบหน้าที่ต้องการ",
+  "notFoundPageDesc": "ลิงก์อาจผิด หรือหน้านี้ถูกย้ายไปแล้ว",
+  "notFoundPageBack": "ย้อนกลับ",
+  "notFoundPageHome": "ไปหน้าหลัก",
+  "cancel": "ยกเลิก"
+}

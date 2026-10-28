@@ -1,0 +1,27 @@
+import thCommon from "@/locales/th/common.json";
+import thAuth from "@/locales/th/auth.json";
+import thNavigation from "@/locales/th/navigation.json";
+import thValidation from "@/locales/th/validation.json";
+import thErrors from "@/locales/th/errors.json";
+import enCommon from "@/locales/en/common.json";
+import enAuth from "@/locales/en/auth.json";
+import enNavigation from "@/locales/en/navigation.json";
+import enValidation from "@/locales/en/validation.json";
+import enErrors from "@/locales/en/errors.json";
+
+export const i18nResources = {
+  th: {
+    common: thCommon,
+    auth: thAuth,
+    navigation: thNavigation,
+    validation: thValidation,
+    errors: thErrors,
+  },
+  en: {
+    common: enCommon,
+    auth: enAuth,
+    navigation: enNavigation,
+    validation: enValidation,
+    errors: enErrors,
+  },
+};

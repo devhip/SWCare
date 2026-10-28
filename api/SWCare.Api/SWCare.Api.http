@@ -1,0 +1,41 @@
+@api = http://localhost:5300
+# Fill these in locally; never commit real passwords or tokens.
+@username = admin
+@password =
+@accessToken =
+@refreshToken =
+
+### Health
+GET {{api}}/health
+
+### Login
+POST {{api}}/api/Auth/Login
+Content-Type: application/json
+
+{ "Username": "{{username}}", "Password": "{{password}}" }
+
+### New tokens
+POST {{api}}/api/Auth/RefreshToken
+Content-Type: application/json
+
+{ "RefreshToken": "{{refreshToken}}" }
+
+### Me
+GET {{api}}/api/Auth/Me
+Authorization: Bearer {{accessToken}}
+
+### Users (Admin)
+GET {{api}}/api/Users?PageNumber=1&PageLimit=20
+Authorization: Bearer {{accessToken}}
+
+### Departments
+GET {{api}}/api/Departments
+Authorization: Bearer {{accessToken}}
+
+### Products
+GET {{api}}/api/Products
+Authorization: Bearer {{accessToken}}
+
+### Settings
+GET {{api}}/api/Settings
+Authorization: Bearer {{accessToken}}

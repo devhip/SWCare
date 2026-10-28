@@ -1,0 +1,8 @@
+{
+  "required": "This field is required",
+  "passwordMin": "At least {{min}} characters",
+  "passwordMax": "At most {{max}} characters",
+  "passwordSameAsCurrent": "The new password must differ from the current one",
+  "passwordSameAsUsername": "The password cannot be your username",
+  "passwordMismatch": "The passwords do not match"
+}
