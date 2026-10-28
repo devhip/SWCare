@@ -14,6 +14,7 @@
 | `web/` | Next.js 16 (static export) + MUI 9 + TanStack Query + zustand + i18next, npm | `E:\API_Dotnet\hip-easy-next\web` |
 | `mobile/` | Flutter (สัปดาห์ที่ 2–4 ยังไม่เริ่ม) | `E:\API_Dotnet\hip-easy-next\mobile\easy-next-app` |
 | `tools/SheetImport` | console .NET 10 ใช้ DbContext ของ API | นำเข้าชีตเดิมครั้งเดียว — วิธีใช้ใน `tools/SheetImport/README.md` |
+| `scripts/` | PowerShell | `publish.ps1` สร้างแพ็กเกจ, `deploy-iis.ps1` ติดตั้งบน Server, `backup.ps1` — ดู `docs/Deploy.md` |
 | `docs/` | แผนงาน | |
 
 ## API (`api/SWCare.Api`)
@@ -63,3 +64,8 @@ cd web && npx tsc --noEmit && npx eslint . && npm run build   # ผลอยู�
 ## ภาษา
 
 - เอกสารและข้อความถึงผู้ใช้เป็นภาษาไทย · ชื่อในโค้ดและคอมเมนต์เป็นภาษาอังกฤษ
+
+## ติดตั้ง
+
+- ขั้นตอนทั้งหมดอยู่ที่ `docs/Deploy.md` · ค่าตั้งค่าบน Server เป็น environment variables ใน `api\web.config` ของ Server (สคริปต์ไม่ทับไฟล์นี้)
+- สคริปต์ `.ps1` ต้องเป็น ASCII เท่านั้น — Windows PowerShell 5.1 อ่านไฟล์ UTF-8 ที่ไม่มี BOM เป็น ANSI แล้ว `—` กลายเป็นเครื่องหมายคำพูด

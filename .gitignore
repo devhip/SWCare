@@ -28,3 +28,6 @@ Thumbs.db
 # Sheet import (tools/SheetImport): the CSV holds customer data; the map is filled per run
 tools/SheetImport/*.csv
 tools/SheetImport/import-map.json
+
+# Server package (scripts/publish.ps1)
+dist/
