@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
@@ -21,6 +21,9 @@ import FactCheckRounded from "@mui/icons-material/FactCheckRounded";
 import PlaylistAddCheckRounded from "@mui/icons-material/PlaylistAddCheckRounded";
 import ListAltRounded from "@mui/icons-material/ListAltRounded";
 import ViewKanbanRounded from "@mui/icons-material/ViewKanbanRounded";
+import GroupRounded from "@mui/icons-material/GroupRounded";
+import ApartmentRounded from "@mui/icons-material/ApartmentRounded";
+import TuneRounded from "@mui/icons-material/TuneRounded";
 import Chip from "@mui/material/Chip";
 import { useTicketCountsQuery } from "@/queries/ticket.query";
 import AccountCircleRounded from "@mui/icons-material/AccountCircleRounded";
@@ -43,6 +46,9 @@ const ICONS: Record<MenuEntry["icon"], typeof AssignmentIndRounded> = {
   triage: PlaylistAddCheckRounded,
   kanban: ViewKanbanRounded,
   allTickets: ListAltRounded,
+  adminUsers: GroupRounded,
+  adminDepartments: ApartmentRounded,
+  adminMasterData: TuneRounded,
 };
 
 function Brand() {
@@ -63,29 +69,36 @@ function SideMenu({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <Stack spacing={`${nav.gap}px`} sx={{ p: 2 }}>
-      {MENU.filter((entry) => hasAnyRole(user, entry.roles)).map((entry) => {
+      {MENU.filter((entry) => hasAnyRole(user, entry.roles)).map((entry, index, entries) => {
         const Icon = ICONS[entry.icon];
+        const startsAdmin = entry.section === "admin" && entries[index - 1]?.section !== "admin";
         const selected = pathname === entry.route;
         const badge = entry.badge ? (counts.data?.[entry.badge] ?? 0) : 0;
         return (
-          <ListItemButton
-            key={entry.route}
-            component={Link}
-            href={entry.route}
-            selected={selected}
-            onClick={onNavigate}
-            sx={{
-              minHeight: nav.mainHeight,
-              borderRadius: `${nav.radius}px`,
-              "&.Mui-selected": { bgcolor: color.surface.brandSubtle, color: color.text.brand },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 40, color: selected ? color.text.brand : color.text.secondary }}>
-              <Icon />
-            </ListItemIcon>
-            <ListItemText primary={t(entry.labelKey)} slotProps={{ primary: { sx: typeScale.bodyStrong16 } }} />
-            {badge > 0 ? <Chip label={badge} size="small" color="primary" sx={{ height: 22, minWidth: 28 }} /> : null}
-          </ListItemButton>
+          <Fragment key={entry.route}>
+            {startsAdmin ? (
+              <Typography sx={{ ...typeScale.caption12, color: color.text.tertiary, px: 2, pt: 3, pb: 1, textTransform: "uppercase" }}>
+                {t("adminSection")}
+              </Typography>
+            ) : null}
+            <ListItemButton
+              component={Link}
+              href={entry.route}
+              selected={selected}
+              onClick={onNavigate}
+              sx={{
+                minHeight: nav.mainHeight,
+                borderRadius: `${nav.radius}px`,
+                "&.Mui-selected": { bgcolor: color.surface.brandSubtle, color: color.text.brand },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40, color: selected ? color.text.brand : color.text.secondary }}>
+                <Icon />
+              </ListItemIcon>
+              <ListItemText primary={t(entry.labelKey)} slotProps={{ primary: { sx: typeScale.bodyStrong16 } }} />
+              {badge > 0 ? <Chip label={badge} size="small" color="primary" sx={{ height: 22, minWidth: 28 }} /> : null}
+            </ListItemButton>
+          </Fragment>
         );
       })}
     </Stack>

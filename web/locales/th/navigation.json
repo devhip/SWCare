@@ -4,5 +4,9 @@
   "approvals": "รออนุมัติ",
   "triage": "รอจัดคิว",
   "allTickets": "รายการงานทั้งหมด",
-  "kanban": "Kanban"
+  "kanban": "Kanban",
+  "adminUsers": "ผู้ใช้",
+  "adminDepartments": "ฝ่าย",
+  "adminMasterData": "ข้อมูลหลัก",
+  "adminSection": "Admin"
 }
