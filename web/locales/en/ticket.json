@@ -10,7 +10,6 @@
   "edit": "Edit",
   "back": "Back",
   "notFound": "This ticket does not exist, or you cannot see it.",
-
   "field": {
     "title": "Title",
     "type": "Type",
@@ -40,34 +39,29 @@
     "legacyRef": "Old reference",
     "status": "Status"
   },
-
   "hint": {
     "requester": "e.g. the salesperson who asked. Empty = you.",
     "testedRequired": "Required from Customer Support for a Bug or a feature / device request",
     "files": "Up to {{max}} files at a time, 20 MB each · pictures, PDF, Excel, Word, zip, video, txt/log",
     "noHead": "Your department has no head yet, so nobody can approve this ticket."
   },
-
   "validation": {
     "testedRequired": "Please fill in what has been tested",
     "fileTooLarge": "{{name}} is larger than 20 MB",
     "fileType": "{{name}}: this file type is not allowed",
     "tooManyFiles": "At most {{max}} files at a time"
   },
-
   "type": {
     "Bug": "Bug",
     "FeatureRequest": "Feature / device request",
     "Testing": "Testing / R&D",
     "DataService": "Data service"
   },
-
   "priority": {
     "Immediate": "Immediate",
     "Urgent": "Urgent (1–2 days)",
     "Normal": "Normal (queue)"
   },
-
   "status": {
     "open": "Not finished",
     "PendingApproval": "Waiting for approval",
@@ -81,7 +75,6 @@
     "Cancelled": "Cancelled",
     "Declined": "Declined"
   },
-
   "activity": {
     "Created": "Created",
     "Edited": "Edited",
@@ -110,7 +103,6 @@
     "system": "System",
     "changed": "Changed {{fields}}"
   },
-
   "changeField": {
     "Title": "title",
     "Type": "type",
@@ -123,7 +115,6 @@
     "Requester": "requester",
     "DeviceModels": "device models"
   },
-
   "section": {
     "info": "Details",
     "people": "People",
@@ -131,7 +122,6 @@
     "timeline": "Timeline",
     "comments": "Comments"
   },
-
   "comment": {
     "placeholder": "Write a comment…",
     "send": "Send",
@@ -139,7 +129,6 @@
     "empty": "No comments yet",
     "answerHint": "This ticket is waiting for you. Answer in a comment and it goes back to work."
   },
-
   "files": {
     "add": "Attach files",
     "addMore": "Add files",
@@ -147,7 +136,6 @@
     "remove": "Remove",
     "uploaded": "Files attached"
   },
-
   "action": {
     "Approve": "Approve",
     "Reject": "Reject",
@@ -167,7 +155,6 @@
     "confirm": "Confirm",
     "closeConfirm": "Confirm you have checked with the customer and close this ticket"
   },
-
   "dialog": {
     "reason": {
       "Reject": "Why it is rejected",
@@ -182,13 +169,11 @@
     "classification": "Classification",
     "requested": "Requested: {{priority}}"
   },
-
   "watchers": {
     "add": "Add watcher",
     "remove": "Remove",
     "none": "No watchers yet"
   },
-
   "list": {
     "no": "No.",
     "title": "Title",
@@ -205,7 +190,6 @@
     "allProducts": "All systems / programs",
     "total": "{{count}} tickets"
   },
-
   "tab": {
     "ToDo": "To do",
     "ToApprove": "To approve",
@@ -213,13 +197,16 @@
     "Reported": "Reported by me",
     "Following": "Requested / watching"
   },
-
   "page": {
     "approvalsHint": "Tickets from your department, waiting for your approval before they reach the programmers.",
     "triageHint": "Approved tickets waiting for you to queue them. \"Immediate\" requests come first.",
     "allHint": "Every ticket you are allowed to see."
   },
-
   "legacyReview": "Old data to check",
-  "none": "-"
+  "none": "-",
+  "kanban": {
+    "unassigned": "Not triaged",
+    "notAllowed": "This move is not possible, or not yours to make",
+    "hint": "Drag a card to change its status · the programmer lead drags within Queued to order the queue and to another lane to change the assignee"
+  }
 }

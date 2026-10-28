@@ -3,5 +3,6 @@
   "newTicket": "New ticket",
   "approvals": "To approve",
   "triage": "To triage",
-  "allTickets": "All tickets"
+  "allTickets": "All tickets",
+  "kanban": "Kanban"
 }

@@ -3,5 +3,6 @@
   "newTicket": "สร้างงาน",
   "approvals": "รออนุมัติ",
   "triage": "รอจัดคิว",
-  "allTickets": "รายการงานทั้งหมด"
+  "allTickets": "รายการงานทั้งหมด",
+  "kanban": "Kanban"
 }

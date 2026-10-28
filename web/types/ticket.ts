@@ -72,6 +72,24 @@ export type TicketCounts = {
   ToTriage: number;
 };
 
+export type BoardCard = {
+  Id: number;
+  TicketNo: string;
+  Title: string;
+  ProductName: string;
+  CustomerName: string | null;
+  Status: TicketStatus;
+  RequestedPriority: TicketPriority;
+  ActualPriority: TicketPriority | null;
+  AssigneeId: number | null;
+  PlannedDueDate: string | null;
+  IsOverdue: boolean;
+  QueueOrder: number;
+  AllowedActions: TicketAction[];
+};
+
+export type Board = { Programmers: UserBrief[]; Cards: BoardCard[] };
+
 export type TicketListParams = {
   Scope?: TicketScope;
   Statuses?: TicketStatus[];

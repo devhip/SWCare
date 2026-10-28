@@ -1,6 +1,6 @@
 import { apiDelete, apiGet, apiPost, apiPostForm, apiPut, http } from "./http";
 import type { ApiListResponse } from "@/types/api";
-import type { SaveTicket, TicketAction, TicketCounts, TicketDetail, TicketListItem, TicketListParams } from "@/types/ticket";
+import type { Board, SaveTicket, TicketAction, TicketCounts, TicketDetail, TicketListItem, TicketListParams } from "@/types/ticket";
 
 /** Statuses go as repeated query keys (Statuses=A&Statuses=B), as ASP.NET binds lists. */
 export async function listTicketsApi(params: TicketListParams): Promise<ApiListResponse<TicketListItem>> {
@@ -13,6 +13,15 @@ export async function listTicketsApi(params: TicketListParams): Promise<ApiListR
   query.set("PageLimit", String(params.PageLimit ?? 20));
   const res = await http.get<ApiListResponse<TicketListItem>>(`api/Tickets?${query.toString()}`);
   return res.data;
+}
+
+export function boardApi() {
+  return apiGet<Board>("api/Tickets/Board");
+}
+
+/** The lead's new order of one programmer's queue (Q30). */
+export function reorderQueueApi(assigneeId: number, ticketIds: number[]) {
+  return apiPost<boolean>("api/Tickets/Board/Reorder", { AssigneeId: assigneeId, TicketIds: ticketIds });
 }
 
 export function ticketCountsApi() {

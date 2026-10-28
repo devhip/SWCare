@@ -114,7 +114,7 @@ function DialogFrame({ title, busy, onClose, onSubmit, canSubmit, children }: Di
   );
 }
 
-function TextDialog({
+export function TextDialog({
   action,
   label,
   field,
@@ -173,13 +173,19 @@ function ProgrammerSelect({ value, onChange }: { value: number | ""; onChange: (
   );
 }
 
-function TriageDialog({ ticket, busy, onClose, onSubmit }: DialogProps & { ticket: TicketDetail; onSubmit: (body: unknown) => void }) {
+export function TriageDialog({
+  ticket,
+  initialAssigneeId,
+  busy,
+  onClose,
+  onSubmit,
+}: DialogProps & { ticket: TicketDetail; initialAssigneeId?: number; onSubmit: (body: unknown) => void }) {
   const { t } = useTranslation("ticket");
   const formData = useTicketFormDataQuery();
   const today = thaiToday();
   const [priority, setPriority] = useState<TicketPriority>(ticket.RequestedPriority);
   // The product's main programmer is suggested (Q3, Q19).
-  const [assigneeId, setAssigneeId] = useState<number | "">("");
+  const [assigneeId, setAssigneeId] = useState<number | "">(initialAssigneeId ?? "");
   const [start, setStart] = useState(today);
   const [due, setDue] = useState(addDays(today, DUE_DAYS[ticket.RequestedPriority]));
   const [productId, setProductId] = useState(ticket.Product.Id);

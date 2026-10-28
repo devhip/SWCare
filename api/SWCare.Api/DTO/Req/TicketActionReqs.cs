@@ -86,6 +86,25 @@ public sealed class TicketQueryReq : PageReq
     public int? DepartmentId { get; set; }
 }
 
+/// <summary>The lead drags cards up and down in a programmer's "อยู่ในคิว" column (Q30).</summary>
+public sealed class ReorderQueueReq
+{
+    public int AssigneeId { get; set; }
+
+    /// <summary>The queued tickets of that programmer, first to last.</summary>
+    public List<int> TicketIds { get; set; } = [];
+}
+
+public sealed class ReorderQueueReqValidator : AbstractValidator<ReorderQueueReq>
+{
+    public ReorderQueueReqValidator()
+    {
+        RuleFor(x => x.AssigneeId).GreaterThan(0);
+        RuleFor(x => x.TicketIds).NotEmpty().Must(ids => ids.Count <= 500 && ids.Distinct().Count() == ids.Count)
+            .WithMessage("TicketIds must be distinct.");
+    }
+}
+
 public sealed class NotificationQueryReq : PageReq
 {
     public bool UnreadOnly { get; set; }

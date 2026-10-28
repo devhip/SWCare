@@ -26,6 +26,12 @@ public interface ITicketControl
 
     Task<TicketCountsRes> CountsAsync(CancellationToken cancellationToken);
 
+    /// <summary>Open work for the Kanban (Q24, Q30).</summary>
+    Task<BoardRes> BoardAsync(CancellationToken cancellationToken);
+
+    /// <summary>New queue order of one programmer; only queued tickets of that programmer move.</summary>
+    Task ReorderAsync(ReorderQueueReq request, CancellationToken cancellationToken);
+
     /// <summary>Customer names used before, for suggestions (Q42).</summary>
     Task<List<string>> CustomerNamesAsync(string? search, CancellationToken cancellationToken);
 }

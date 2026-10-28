@@ -402,6 +402,78 @@ public sealed partial class TicketControl(
             await Count(TicketScope.ToTriage));
     }
 
+    public async Task<BoardRes> BoardAsync(CancellationToken cancellationToken)
+    {
+        var me = currentUser.User;
+        var today = DateOnly.FromDateTime(ThaiTime.Now(clock));
+
+        var programmers = await db.Users.AsNoTracking()
+            .Where(u => u.IsActive && u.Department.Kind == DepartmentKind.Software)
+            .OrderBy(u => u.DisplayName)
+            .Select(u => new UserBriefRes(u.Id, u.DisplayName))
+            .ToListAsync(cancellationToken);
+
+        var rows = await db.Tickets.AsNoTracking()
+            .VisibleTo(me)
+            .Where(t => t.Status == TicketStatus.PendingTriage
+                        || t.Status == TicketStatus.Queued
+                        || t.Status == TicketStatus.InProgress
+                        || t.Status == TicketStatus.WaitingInfo
+                        || t.Status == TicketStatus.Resolved)
+            .OrderBy(t => t.QueueOrder).ThenBy(t => t.ReportedAt)
+            .Select(t => new
+            {
+                t.Id,
+                t.TicketNo,
+                t.Title,
+                ProductName = t.Product.Name,
+                t.CustomerName,
+                t.Status,
+                t.RequestedPriority,
+                t.ActualPriority,
+                t.AssigneeId,
+                t.PlannedDueDate,
+                t.QueueOrder,
+                t.ReporterId,
+                t.DepartmentId,
+                t.StartedAt
+            })
+            .ToListAsync(cancellationToken);
+
+        var cards = rows.Select(t => new BoardCardRes(
+                t.Id,
+                t.TicketNo,
+                t.Title,
+                t.ProductName,
+                t.CustomerName,
+                t.Status,
+                t.RequestedPriority,
+                t.ActualPriority,
+                t.AssigneeId,
+                t.PlannedDueDate,
+                t.PlannedDueDate < today && t.Status is TicketStatus.Queued or TicketStatus.InProgress or TicketStatus.WaitingInfo,
+                t.QueueOrder,
+                TicketWorkflow.AllowedActions(new TicketState(t.Status, t.ReporterId, t.DepartmentId, t.AssigneeId, t.StartedAt), me)
+                    .Order().ToList()))
+            .ToList();
+
+        return new BoardRes(programmers, cards);
+    }
+
+    public async Task ReorderAsync(ReorderQueueReq request, CancellationToken cancellationToken)
+    {
+        var queued = await db.Tickets
+            .Where(t => t.AssigneeId == request.AssigneeId && t.Status == TicketStatus.Queued && request.TicketIds.Contains(t.Id))
+            .ToListAsync(cancellationToken);
+
+        foreach (var ticket in queued)
+        {
+            ticket.QueueOrder = request.TicketIds.IndexOf(ticket.Id) + 1;
+        }
+
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<List<string>> CustomerNamesAsync(string? search, CancellationToken cancellationToken)
     {
         var query = db.Tickets.AsNoTracking().VisibleTo(currentUser.User).Where(t => t.CustomerName != null);

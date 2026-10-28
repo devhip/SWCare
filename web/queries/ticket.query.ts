@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { listTicketsApi, ticketApi, ticketCountsApi } from "@/lib/ticket.api";
+import { boardApi, listTicketsApi, ticketApi, ticketCountsApi } from "@/lib/ticket.api";
 import { deviceModelsApi, productsApi, programmersApi, settingsApi } from "@/lib/masterData.api";
 import type { TicketListParams } from "@/types/ticket";
 
@@ -21,6 +21,15 @@ export function useTicketListQuery(params: TicketListParams) {
     queryKey: [...TICKET_LISTS_KEY, "list", params],
     queryFn: () => listTicketsApi(params),
     placeholderData: keepPreviousData,
+  });
+}
+
+/** Under TICKET_LISTS_KEY, so every ticket change refreshes the board too. */
+export function useBoardQuery() {
+  return useQuery({
+    queryKey: [...TICKET_LISTS_KEY, "board"],
+    queryFn: async () => (await boardApi()).Result,
+    refetchInterval: 60_000,
   });
 }
 

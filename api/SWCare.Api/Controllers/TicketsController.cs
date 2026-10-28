@@ -24,6 +24,21 @@ public sealed class TicketsController(
     public async Task<ResultsViewModel<TicketListItemRes>> List([FromQuery] TicketQueryReq request, CancellationToken cancellationToken) =>
         ApiResult.OkPage(await control.ListAsync(request, cancellationToken), request);
 
+    /// <summary>The Kanban: open work in lanes per programmer (Q24, Q30).</summary>
+    [HttpGet("Board")]
+    [RequireRoles(AppRole.Programmer)]
+    public async Task<ResultViewModel<BoardRes>> Board(CancellationToken cancellationToken) =>
+        ApiResult.Ok(await control.BoardAsync(cancellationToken));
+
+    /// <summary>Only the programmer lead orders the queues (Q30).</summary>
+    [HttpPost("Board/Reorder")]
+    [RequireRoles(AppRole.ProgrammerLead)]
+    public async Task<ResultViewModel<bool>> Reorder(ReorderQueueReq request, CancellationToken cancellationToken)
+    {
+        await control.ReorderAsync(request, cancellationToken);
+        return ApiResult.Ok(true);
+    }
+
     /// <summary>Open tickets per list, for the badges.</summary>
     [HttpGet("Counts")]
     public async Task<ResultViewModel<TicketCountsRes>> Counts(CancellationToken cancellationToken) =>

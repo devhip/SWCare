@@ -103,6 +103,25 @@ public sealed record TicketCountsRes(
     int ToClose,
     int ToTriage);
 
+/// <summary>One card on the Kanban (Q30). AllowedActions says which drags the caller may make.</summary>
+public sealed record BoardCardRes(
+    int Id,
+    string TicketNo,
+    string Title,
+    string ProductName,
+    string? CustomerName,
+    TicketStatus Status,
+    TicketPriority RequestedPriority,
+    TicketPriority? ActualPriority,
+    int? AssigneeId,
+    DateOnly? PlannedDueDate,
+    bool IsOverdue,
+    int QueueOrder,
+    List<TicketAction> AllowedActions);
+
+/// <summary>Lanes = programmers (plus "not triaged"), columns = statuses.</summary>
+public sealed record BoardRes(List<UserBriefRes> Programmers, List<BoardCardRes> Cards);
+
 /// <summary>One bell item. The client builds the text from Type + Data in the reader's language.</summary>
 public sealed record NotificationRes(
     long Id,
