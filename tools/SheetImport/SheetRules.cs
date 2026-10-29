@@ -82,7 +82,7 @@ public static partial class SheetRules
         _ => TicketPriority.Normal
     };
 
-    /// <summary>dd/MM/yyyy. Null when empty; Invalid when the text is not a date or the year is off (e.g. "226").</summary>
+    /// <summary>dd/MM/yyyy or dd-MM-yyyy (the sheet has both). Null when empty; Invalid when the text is not a date or the year is off (e.g. "226").</summary>
     public static (DateOnly? Date, bool Invalid) Date(string text, int maxYear)
     {
         if (text.Length == 0)
@@ -90,7 +90,7 @@ public static partial class SheetRules
             return (null, false);
         }
 
-        if (DateOnly.TryParseExact(text, ["d/M/yyyy", "d/M/yy", "d/M/yyy"], CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
+        if (DateOnly.TryParseExact(text.Replace('-', '/'), ["d/M/yyyy", "d/M/yy", "d/M/yyy"], CultureInfo.InvariantCulture, DateTimeStyles.None, out var date)
             && date.Year >= 2000 && date.Year <= maxYear)
         {
             return (date, false);

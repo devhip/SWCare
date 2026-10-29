@@ -84,8 +84,11 @@ public sealed class SheetImportTests
     [Theory]
     [InlineData("05/01/2025", "2025-01-05", false)]
     [InlineData("5/1/2025", "2025-01-05", false)]
+    [InlineData("12-05-2026", "2026-05-12", false)] // the sheet also writes dates with dashes
+    [InlineData("3-6-2026", "2026-06-03", false)]
     [InlineData("", null, false)]
     [InlineData("13/03/226", null, true)] // the year typo in the sheet (plan 12)
+    [InlineData("13-03-226", null, true)]
     [InlineData("31/02/2025", null, true)]
     [InlineData("เมื่อวาน", null, true)]
     public void Dates_are_day_month_year(string text, string? expected, bool invalid)
