@@ -16,6 +16,7 @@
     "department": "แผนก",
     "isAdmin": "สิทธิ์ Admin",
     "isExecutive": "ผู้บริหาร (ดู Dashboard และงานทุกงาน)",
+    "canViewAll": "ดูงานทั้งหมด (ค้นหาประวัติงาน อ่านอย่างเดียว)",
     "isActive": "ใช้งานอยู่",
     "password": "รหัสผ่านเริ่มต้น",
     "newPassword": "รหัสผ่านใหม่",
@@ -23,6 +24,7 @@
     "head": "หัวหน้าแผนก",
     "admin": "Admin",
     "executive": "ผู้บริหาร",
+    "viewAll": "ดูงานทั้งหมด",
     "disabled": "ปิดใช้งาน",
     "mustChange": "ยังไม่เปลี่ยนรหัส"
   },

@@ -49,7 +49,8 @@ public sealed class CurrentUserFilter(SWCareDbContext db, CurrentUser currentUse
                     u.Department.HeadUserId == u.Id,
                     u.MustChangePassword,
                     u.Language,
-                    u.IsExecutive)
+                    u.IsExecutive,
+                    u.CanViewAllTickets)
             })
             .SingleOrDefaultAsync(context.HttpContext.RequestAborted);
 

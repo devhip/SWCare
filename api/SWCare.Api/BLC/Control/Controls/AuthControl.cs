@@ -151,6 +151,7 @@ public sealed class AuthControl(
             IsProgrammer: user.Department.Kind == DepartmentKind.Software,
             IsProgrammerLead: isHead && user.Department.Kind == DepartmentKind.Software,
             user.IsExecutive,
+            user.CanViewAllTickets,
             user.MustChangePassword,
             user.Language);
     }

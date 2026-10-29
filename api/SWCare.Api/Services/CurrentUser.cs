@@ -27,7 +27,8 @@ public sealed record UserContext(
     bool IsDepartmentHead,
     bool MustChangePassword,
     string Language,
-    bool IsExecutive = false)
+    bool IsExecutive = false,
+    bool CanViewAllTickets = false)
 {
     /// <summary>Members of the Software department are the programmers.</summary>
     public bool IsProgrammer => DepartmentKind == DepartmentKind.Software;
@@ -38,8 +39,11 @@ public sealed record UserContext(
     /// <summary>หัวหน้า Support sees every ticket (Q14).</summary>
     public bool IsSupportHead => DepartmentKind == DepartmentKind.Support && IsDepartmentHead;
 
-    /// <summary>Sees every ticket only because of the executive flag: read-only there (D10).</summary>
-    public bool IsExecutiveOnly => IsExecutive && !IsAdmin && !IsSupportHead && !IsProgrammer;
+    /// <summary>Sees every ticket (D10, D14).</summary>
+    public bool SeesAllTickets => IsAdmin || IsSupportHead || IsProgrammer || IsExecutive || CanViewAllTickets;
+
+    /// <summary>Sees every ticket only because of the executive or ดูงานทั้งหมด switch: read-only there (D10, D14).</summary>
+    public bool SeesAllReadOnly => (IsExecutive || CanViewAllTickets) && !IsAdmin && !IsSupportHead && !IsProgrammer;
 
     public bool Has(AppRole role) => role switch
     {

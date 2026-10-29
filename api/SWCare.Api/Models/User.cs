@@ -23,6 +23,9 @@ public sealed class User : BaseEntity<int>
     /// <summary>ผู้บริหาร: sees the whole-company Dashboard and every ticket, read-only (D10).</summary>
     public bool IsExecutive { get; set; }
 
+    /// <summary>ดูงานทั้งหมด: searches and reads every ticket, e.g. a salesperson looking up a customer's history (D14).</summary>
+    public bool CanViewAllTickets { get; set; }
+
     /// <summary>A disabled account cannot log in and its refresh tokens are revoked (Q41).</summary>
     public bool IsActive { get; set; } = true;
 

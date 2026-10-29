@@ -31,4 +31,6 @@ public interface ITicketActionControl
 
     Task<TicketDetailRes> AddWatcherAsync(int id, WatcherReq request, CancellationToken cancellationToken);
     Task<TicketDetailRes> RemoveWatcherAsync(int id, int userId, CancellationToken cancellationToken);
+    Task<TicketDetailRes> FollowAsync(int id, CancellationToken cancellationToken);
+    Task<TicketDetailRes> UnfollowAsync(int id, CancellationToken cancellationToken);
 }

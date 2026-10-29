@@ -41,6 +41,14 @@ export function removeWatcherApi(id: number, userId: number) {
   return apiDelete<TicketDetail>(`api/Tickets/${id}/Watchers/${userId}`);
 }
 
+export function followApi(id: number) {
+  return apiPost<TicketDetail>(`api/Tickets/${id}/Follow`);
+}
+
+export function unfollowApi(id: number) {
+  return apiDelete<TicketDetail>(`api/Tickets/${id}/Follow`);
+}
+
 /** Multipart: the ticket as JSON plus its files, in one request. */
 export function createTicketApi(ticket: SaveTicket, files: File[]) {
   const form = new FormData();

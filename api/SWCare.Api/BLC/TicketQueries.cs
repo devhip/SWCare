@@ -9,11 +9,11 @@ public static class TicketQueries
     /// <summary>
     /// Who sees which tickets (plan 3): Admin, the Support head and programmers see all; everyone else sees what they
     /// reported, requested or watch, and a department head also sees what the department reported (Q26, Q51).
-    /// Executives see all, read-only (D10).
+    /// Executives and users with the ดูงานทั้งหมด switch see all, read-only (D10, D14).
     /// </summary>
     public static IQueryable<Ticket> VisibleTo(this IQueryable<Ticket> tickets, UserContext user)
     {
-        if (user.IsAdmin || user.IsSupportHead || user.IsProgrammer || user.IsExecutive)
+        if (user.SeesAllTickets)
         {
             return tickets;
         }

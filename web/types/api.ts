@@ -35,6 +35,8 @@ export type MeResult = {
   IsProgrammerLead: boolean;
   /** ผู้บริหาร: Dashboard + every ticket, read-only (D10) */
   IsExecutive: boolean;
+  /** ดูงานทั้งหมด: every ticket, read-only (D14) */
+  CanViewAllTickets: boolean;
   MustChangePassword: boolean;
   Language: string;
 };

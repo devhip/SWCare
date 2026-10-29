@@ -223,6 +223,23 @@ public sealed class TicketActionControl(
             ticket.Activities.Add(new TicketActivity { Type = TicketActivityType.WatcherRemoved, ActorId = Me.Id, Data = Json(new { User = watcher.User.DisplayName }) });
         }, cancellationToken);
 
+    public Task<TicketDetailRes> FollowAsync(int id, CancellationToken cancellationToken) =>
+        RunAsync(id, TicketAction.Follow, (ticket, _) =>
+        {
+            // No notification: the caller added themselves (D14).
+            db.TicketWatchers.Add(new TicketWatcher { TicketId = id, UserId = Me.Id });
+            ticket.Activities.Add(new TicketActivity { Type = TicketActivityType.WatcherAdded, ActorId = Me.Id, Data = Json(new { User = Me.DisplayName }) });
+            return Task.CompletedTask;
+        }, cancellationToken);
+
+    public Task<TicketDetailRes> UnfollowAsync(int id, CancellationToken cancellationToken) =>
+        RunAsync(id, TicketAction.Unfollow, (ticket, _) =>
+        {
+            db.TicketWatchers.Remove(ticket.Watchers.Single(w => w.UserId == Me.Id));
+            ticket.Activities.Add(new TicketActivity { Type = TicketActivityType.WatcherRemoved, ActorId = Me.Id, Data = Json(new { User = Me.DisplayName }) });
+            return Task.CompletedTask;
+        }, cancellationToken);
+
     /// <summary>Load the ticket the caller can see, check the action, apply, save, answer the new state.</summary>
     private async Task<TicketDetailRes> RunAsync(
         int id,
@@ -232,6 +249,7 @@ public sealed class TicketActionControl(
     {
         var ticket = await db.Tickets.VisibleTo(Me)
                          .Include(t => t.Product)
+                         .Include(t => t.Watchers)
                          .Include(t => t.DeviceModels).ThenInclude(m => m.DeviceModel)
                          .SingleOrDefaultAsync(t => t.Id == id, cancellationToken)
                      ?? throw new NotFoundException("Ticket not found.");

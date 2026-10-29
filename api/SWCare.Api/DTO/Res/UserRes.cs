@@ -10,6 +10,7 @@ public sealed record UserRes(
     bool IsDepartmentHead,
     bool IsAdmin,
     bool IsExecutive,
+    bool CanViewAllTickets,
     bool IsActive,
     bool MustChangePassword,
     string Language,

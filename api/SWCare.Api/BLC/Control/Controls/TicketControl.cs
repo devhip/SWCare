@@ -97,6 +97,7 @@ public sealed partial class TicketControl(
                          .Include(t => t.Department)
                          .Include(t => t.Product)
                          .Include(t => t.Requester)
+                         .Include(t => t.Watchers)
                          .Include(t => t.DeviceModels).ThenInclude(m => m.DeviceModel)
                          .SingleOrDefaultAsync(t => t.Id == id, cancellationToken)
                      ?? throw new NotFoundException("Ticket not found.");
@@ -626,7 +627,7 @@ public sealed partial class TicketControl(
     }
 
     private async Task<Ticket> FindVisibleAsync(int id, CancellationToken cancellationToken) =>
-        await db.Tickets.VisibleTo(currentUser.User).SingleOrDefaultAsync(t => t.Id == id, cancellationToken)
+        await db.Tickets.VisibleTo(currentUser.User).Include(t => t.Watchers).SingleOrDefaultAsync(t => t.Id == id, cancellationToken)
         ?? throw new NotFoundException("Ticket not found.");
 
     private async Task StoreFilesAsync(

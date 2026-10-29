@@ -12,6 +12,7 @@ export type AdminUser = {
   IsDepartmentHead: boolean;
   IsAdmin: boolean;
   IsExecutive: boolean;
+  CanViewAllTickets: boolean;
   IsActive: boolean;
   MustChangePassword: boolean;
   Language: string;
@@ -37,11 +38,11 @@ export async function usersApi(query: UserQuery): Promise<ApiListResponse<AdminU
   return res.data;
 }
 
-export function createUserApi(body: { Username: string; DisplayName: string; Email: string | null; DepartmentId: number; IsAdmin: boolean; IsExecutive: boolean; Password: string }) {
+export function createUserApi(body: { Username: string; DisplayName: string; Email: string | null; DepartmentId: number; IsAdmin: boolean; IsExecutive: boolean; CanViewAllTickets: boolean; Password: string }) {
   return apiPost<AdminUser>("api/Users", body);
 }
 
-export function updateUserApi(id: number, body: { DisplayName: string; Email: string | null; DepartmentId: number; IsAdmin: boolean; IsExecutive: boolean; IsActive: boolean }) {
+export function updateUserApi(id: number, body: { DisplayName: string; Email: string | null; DepartmentId: number; IsAdmin: boolean; IsExecutive: boolean; CanViewAllTickets: boolean; IsActive: boolean }) {
   return apiPut<AdminUser>(`api/Users/${id}`, body);
 }
 

@@ -46,8 +46,14 @@ public enum TicketAction
     /// <summary>Attach files to the ticket itself (comments carry their own files).</summary>
     AddAttachment,
 
-    /// <summary>Add or remove ผู้ติดตาม (Q39).</summary>
-    ManageWatchers
+    /// <summary>Add or remove ผู้ติดตาม (Q39), also after the ticket is over (D14).</summary>
+    ManageWatchers,
+
+    /// <summary>Add yourself as ผู้ติดตาม from the ticket page (D14).</summary>
+    Follow,
+
+    /// <summary>Stop following a ticket you watch (D14).</summary>
+    Unfollow
 }
 
 /// <summary>The fields of a ticket the rules look at.</summary>
@@ -56,7 +62,9 @@ public sealed record TicketState(
     int ReporterId,
     int DepartmentId,
     int? AssigneeId,
-    DateTime? StartedAt);
+    DateTime? StartedAt,
+    int? RequesterId = null,
+    IReadOnlyCollection<int>? WatcherIds = null);
 
 /// <summary>
 /// Every status rule in one place (plan 4.3), so the API and the buttons on the web can never disagree.
@@ -68,7 +76,8 @@ public static class TicketWorkflow
         status is TicketStatus.Closed or TicketStatus.Cancelled or TicketStatus.Declined;
 
     public static TicketState StateOf(Ticket ticket) =>
-        new(ticket.Status, ticket.ReporterId, ticket.DepartmentId, ticket.AssigneeId, ticket.StartedAt);
+        new(ticket.Status, ticket.ReporterId, ticket.DepartmentId, ticket.AssigneeId, ticket.StartedAt,
+            ticket.RequesterId, ticket.Watchers.Select(w => w.UserId).ToList());
 
     public static IReadOnlySet<TicketAction> AllowedActions(TicketState ticket, UserContext user)
     {
@@ -79,14 +88,27 @@ public static class TicketWorkflow
         // Approver: the head of the department the ticket was reported from (Q2), never someone acting for them (Q29).
         var isApprover = user.IsDepartmentHead && user.DepartmentId == ticket.DepartmentId;
 
-        // An executive looking at someone else's ticket only reads it (D10).
-        if (user.IsExecutiveOnly && !isReporter && !isAssignee && !isApprover)
+        var isRequester = ticket.RequesterId is { } requesterId && requesterId == user.Id;
+        var isWatcher = ticket.WatcherIds?.Contains(user.Id) ?? false;
+
+        // Following: anyone who sees the ticket and is not already told about it, in any status (D14).
+        var follow = isWatcher ? TicketAction.Unfollow : TicketAction.Follow;
+        var canFollow = isWatcher || (!isReporter && !isRequester);
+
+        // Someone who sees every ticket only through the executive or ดูงานทั้งหมด switch reads other
+        // people's tickets; following one makes it theirs to comment on (D10, D14).
+        if (user.SeesAllReadOnly && !isReporter && !isAssignee && !isApprover && !isRequester && !isWatcher)
         {
-            return new HashSet<TicketAction>();
+            return new HashSet<TicketAction> { TicketAction.Follow };
         }
 
         // Everyone who can see a ticket can comment on it (Q47).
         var allowed = new HashSet<TicketAction> { TicketAction.Comment };
+        AddIf(allowed, canFollow, follow);
+
+        // The reporter, their department head and the programmer lead add watchers (Q39), even when it is over (D14).
+        AddIf(allowed, isReporter || isApprover || isLead, TicketAction.ManageWatchers);
+
         if (IsFinal(ticket.Status))
         {
             return allowed;
@@ -100,9 +122,6 @@ public static class TicketWorkflow
 
         // Planned dates exist once the lead has triaged it.
         var isTriaged = ticket.AssigneeId is not null;
-
-        // The reporter, their department head and the programmer lead add watchers (Q39).
-        AddIf(allowed, isReporter || isApprover || isLead, TicketAction.ManageWatchers);
 
         switch (ticket.Status)
         {

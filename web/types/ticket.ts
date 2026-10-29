@@ -35,7 +35,9 @@ export type TicketAction =
   | "Reassign"
   | "Comment"
   | "AddAttachment"
-  | "ManageWatchers";
+  | "ManageWatchers"
+  | "Follow"
+  | "Unfollow";
 
 /** Same names as TicketScope in the API. */
 export type TicketScope = "All" | "Reported" | "Following" | "ToDo" | "ToApprove" | "ToClose" | "ToTriage";

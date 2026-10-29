@@ -172,7 +172,10 @@
   "watchers": {
     "add": "Add watcher",
     "remove": "Remove",
-    "none": "No watchers yet"
+    "none": "No watchers yet",
+    "follow": "Follow this ticket",
+    "followHint": "Get notified when it moves, and comment on it",
+    "unfollow": "Unfollow"
   },
   "list": {
     "no": "No.",

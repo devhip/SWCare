@@ -23,8 +23,8 @@ public sealed class TicketWorkflowTests
     private static UserContext User(int id, int departmentId, DepartmentKind kind, bool isHead = false, bool isAdmin = false) =>
         new(id, $"user{id}", $"User {id}", departmentId, "dept", kind, isAdmin, isHead, MustChangePassword: false, "th");
 
-    private static TicketState Ticket(TicketStatus status, int? assigneeId = null, bool started = false) =>
-        new(status, Reporter.Id, SaleDept, assigneeId, started ? DateTime.UtcNow : null);
+    private static TicketState Ticket(TicketStatus status, int? assigneeId = null, bool started = false, int? requesterId = null, int[]? watcherIds = null) =>
+        new(status, Reporter.Id, SaleDept, assigneeId, started ? DateTime.UtcNow : null, requesterId, watcherIds ?? []);
 
     private static IReadOnlySet<TicketAction> Allowed(TicketState ticket, UserContext user) =>
         TicketWorkflow.AllowedActions(ticket, user);
@@ -65,7 +65,7 @@ public sealed class TicketWorkflowTests
         Assert.Contains(TicketAction.Edit, allowed);
         Assert.Contains(TicketAction.Resubmit, allowed);
         Assert.Contains(TicketAction.Cancel, allowed);
-        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers }, Allowed(Ticket(TicketStatus.Rejected), SaleHead).Order());
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers, TicketAction.Follow }, Allowed(Ticket(TicketStatus.Rejected), SaleHead).Order());
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class TicketWorkflowTests
         Assert.Contains(TicketAction.Reassign, lead);
         Assert.Contains(TicketAction.Decline, lead);
 
-        Assert.Equal(new[] { TicketAction.Comment }, Allowed(ticket, OtherProgrammer));
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.Follow }, Allowed(ticket, OtherProgrammer).Order());
     }
 
     [Fact]
@@ -146,20 +146,24 @@ public sealed class TicketWorkflowTests
     [InlineData(TicketStatus.Closed)]
     [InlineData(TicketStatus.Cancelled)]
     [InlineData(TicketStatus.Declined)]
-    public void Final_statuses_allow_only_comments(TicketStatus status)
+    public void Final_statuses_allow_only_comments_and_watchers(TicketStatus status)
     {
         var ticket = Ticket(status, Assignee.Id, started: true);
 
-        foreach (var user in new[] { Reporter, SaleHead, Lead, Assignee, Admin })
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers }, Allowed(ticket, Reporter).Order());
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers, TicketAction.Follow }, Allowed(ticket, SaleHead).Order());
+        Assert.Equal(new[] { TicketAction.Comment, TicketAction.ManageWatchers, TicketAction.Follow }, Allowed(ticket, Lead).Order());
+        foreach (var user in new[] { Assignee, Admin })
         {
-            Assert.Equal(new[] { TicketAction.Comment }, Allowed(ticket, user));
+            Assert.Equal(new[] { TicketAction.Comment, TicketAction.Follow }, Allowed(ticket, user).Order());
         }
     }
 
     [Fact]
     public void Reporter_their_head_and_the_lead_manage_watchers()
     {
-        foreach (var status in new[] { TicketStatus.PendingApproval, TicketStatus.Queued, TicketStatus.Resolved })
+        // Also once the ticket is over, e.g. a salesperson who wants to see how it was fixed (D14).
+        foreach (var status in new[] { TicketStatus.PendingApproval, TicketStatus.Queued, TicketStatus.Resolved, TicketStatus.Closed })
         {
             var ticket = Ticket(status, Assignee.Id);
             Assert.Contains(TicketAction.ManageWatchers, Allowed(ticket, Reporter));
@@ -178,7 +182,7 @@ public sealed class TicketWorkflowTests
 
         foreach (var status in Enum.GetValues<TicketStatus>())
         {
-            Assert.Empty(Allowed(Ticket(status, Assignee.Id), executive));
+            Assert.Equal(new[] { TicketAction.Follow }, Allowed(Ticket(status, Assignee.Id), executive));
         }
 
         // Their own ticket works as for any reporter.
@@ -189,6 +193,48 @@ public sealed class TicketWorkflowTests
         // An executive who is also Admin keeps commenting.
         var adminExecutive = executive with { IsAdmin = true };
         Assert.Contains(TicketAction.Comment, Allowed(Ticket(TicketStatus.Queued, Assignee.Id), adminExecutive));
+    }
+
+    [Fact]
+    public void View_all_user_reads_until_they_follow()
+    {
+        // ดูงานทั้งหมด: a salesperson looking up a customer's history (D14)
+        var sales = OtherSales with { CanViewAllTickets = true };
+        Assert.True(sales.SeesAllTickets);
+
+        foreach (var status in Enum.GetValues<TicketStatus>())
+        {
+            Assert.Equal(new[] { TicketAction.Follow }, Allowed(Ticket(status, Assignee.Id), sales));
+
+            // Following makes them a watcher: comment and unfollow, nothing more.
+            var following = Ticket(status, Assignee.Id, watcherIds: [sales.Id]);
+            Assert.Equal(new[] { TicketAction.Comment, TicketAction.Unfollow }, Allowed(following, sales).Order());
+        }
+
+        // The switch does not take anything away from a programmer.
+        var programmer = OtherProgrammer with { CanViewAllTickets = true };
+        Assert.False(programmer.SeesAllReadOnly);
+        Assert.Contains(TicketAction.Comment, Allowed(Ticket(TicketStatus.Queued, Assignee.Id), programmer));
+    }
+
+    [Fact]
+    public void Anyone_who_sees_a_ticket_follows_it_except_who_is_already_told()
+    {
+        var ticket = Ticket(TicketStatus.Queued, Assignee.Id, requesterId: OtherSales.Id, watcherIds: [SupportHead.Id]);
+
+        Assert.Contains(TicketAction.Follow, Allowed(ticket, Lead));
+        Assert.Contains(TicketAction.Follow, Allowed(ticket, Admin));
+        Assert.DoesNotContain(TicketAction.Follow, Allowed(ticket, Reporter));
+        Assert.DoesNotContain(TicketAction.Follow, Allowed(ticket, OtherSales));
+
+        var watcher = Allowed(ticket, SupportHead);
+        Assert.Contains(TicketAction.Unfollow, watcher);
+        Assert.DoesNotContain(TicketAction.Follow, watcher);
+
+        // Also after it is closed.
+        var closed = ticket with { Status = TicketStatus.Closed };
+        Assert.Contains(TicketAction.Follow, Allowed(closed, Lead));
+        Assert.Contains(TicketAction.Unfollow, Allowed(closed, SupportHead));
     }
 
     [Fact]

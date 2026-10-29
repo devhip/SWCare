@@ -16,6 +16,7 @@
     "department": "Department",
     "isAdmin": "Admin access",
     "isExecutive": "Executive (Dashboard and every ticket)",
+    "canViewAll": "View all tickets (search history, read-only)",
     "isActive": "Active",
     "password": "First password",
     "newPassword": "New password",
@@ -23,6 +24,7 @@
     "head": "Head",
     "admin": "Admin",
     "executive": "Executive",
+    "viewAll": "View all tickets",
     "disabled": "Disabled",
     "mustChange": "Password not changed yet"
   },

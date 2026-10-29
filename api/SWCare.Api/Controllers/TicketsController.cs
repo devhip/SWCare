@@ -160,6 +160,14 @@ public sealed class TicketsController(
     public async Task<ResultViewModel<TicketDetailRes>> RemoveWatcher(int id, int userId, CancellationToken cancellationToken) =>
         ApiResult.Ok(await actions.RemoveWatcherAsync(id, userId, cancellationToken));
 
+    [HttpPost("{id:int}/Follow")]
+    public async Task<ResultViewModel<TicketDetailRes>> Follow(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.FollowAsync(id, cancellationToken));
+
+    [HttpDelete("{id:int}/Follow")]
+    public async Task<ResultViewModel<TicketDetailRes>> Unfollow(int id, CancellationToken cancellationToken) =>
+        ApiResult.Ok(await actions.UnfollowAsync(id, cancellationToken));
+
     /// <summary>Customer names used on tickets the caller can see.</summary>
     [HttpGet("CustomerNames")]
     public async Task<ResultsViewModel<string>> CustomerNames([FromQuery] string? search, CancellationToken cancellationToken) =>

@@ -17,6 +17,7 @@ public sealed record MeRes(
     bool IsProgrammer,
     bool IsProgrammerLead,
     bool IsExecutive,
+    bool CanViewAllTickets,
     bool MustChangePassword,
     string Language);
 
