@@ -13,8 +13,10 @@
 | Flutter SDK 3.47 | `C:\flutter` (ไม่ได้ใส่ PATH — เรียก `C:\flutter\bin\flutter.bat`) |
 | Android SDK | `%LOCALAPPDATA%\Android\Sdk` |
 | JDK 17 | `%LOCALAPPDATA%\Android\jdk17` (ตั้งไว้ใน `flutter config --jdk-dir`) |
+| NDK 28.2 + CMake | ใน Android SDK — sdkmanager ถูกแทนด้วย Android CLI: `cmdline-tools\latest\bin\android.exe sdk install ndk/28.2.13676358` |
 
-iOS ต้อง build บน Mac
+- iOS ต้อง build บน Mac
+- `android/gradle.properties` ปิด `kotlin.incremental` เพราะ pub cache (C:) กับโปรเจกต์ (E:) อยู่คนละไดรฟ์
 
 ## รัน
 
