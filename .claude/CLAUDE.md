@@ -51,7 +51,7 @@ cd api/SWCare.Api && dotnet ef migrations add <Name> -o Data/Migrations   # ค�
 - กราฟใน Dashboard ใช้สีจาก `VIZ` ใน `app/Dashboard/_components/Charts.tsx` (ผ่าน dataviz validator แล้ว) — เพิ่มสีใหม่ต้องรัน validator ก่อน
 - style ใช้ token จาก `theme/tokens.ts` · **theme ตั้ง breakpoint `sm` = 0 และ `spacing` = 4px** — ใช้ `md` เป็นจุดแบ่งมือถือ/จอใหญ่ และอย่าใช้ `Dialog maxWidth="sm"` (จะกว้าง 0)
 - หลังเปลี่ยนสถานะงาน ให้ `invalidateQueries({ queryKey: TICKET_LISTS_KEY })` เพื่อให้รายการและตัวนับอัปเดต
-- ปลายทาง API อ่านจาก `public/config.json` ตอนรัน (build เดียวใช้ได้ทุก server)
+- ปลายทาง API อ่านจาก `public/config.json` ตอนรัน (build เดียวใช้ได้ทุก server) · `{host}` ใน apiUrl = host ที่เปิดหน้าเว็บ (ค่าใน repo คือ `http://{host}:5300` เปิดได้ทั้ง localhost และ IP ในวง LAN) · Development: API ฟังทุก IP (`http://*:5300`) และ CORS รับ origin ที่เป็น localhost / IP ในวง LAN
 
 ```bash
 cd web && npm install

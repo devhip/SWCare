@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using SWCare.Api.BLC;
@@ -96,8 +97,10 @@ builder.Services.AddOpenApi(openApi => openApi
 
 // The web is a static site on another origin (plan 10).
 var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+var allowLan = builder.Environment.IsDevelopment();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
-    .WithOrigins(corsOrigins)
+    // Development also accepts the web opened by a LAN address, e.g. http://192.168.8.85:3020 from another PC or a phone.
+    .SetIsOriginAllowed(origin => corsOrigins.Contains(origin) || (allowLan && IsPrivateNetwork(origin)))
     .AllowAnyHeader()
     .AllowAnyMethod()
     // the web reads the Excel file name (api/Dashboard/Export)
@@ -143,5 +146,27 @@ app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" })).AllowAnonymous().ExcludeFromDescription();
 
 app.Run();
+
+/// <summary>localhost, 10.x, 172.16–31.x or 192.168.x.</summary>
+static bool IsPrivateNetwork(string origin)
+{
+    if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+    {
+        return false;
+    }
+
+    if (uri.IsLoopback)
+    {
+        return true;
+    }
+
+    if (!IPAddress.TryParse(uri.Host, out var ip) || ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
+    {
+        return false;
+    }
+
+    var b = ip.GetAddressBytes();
+    return b[0] == 10 || (b[0] == 172 && b[1] is >= 16 and <= 31) || (b[0] == 192 && b[1] == 168);
+}
 
 public partial class Program;
