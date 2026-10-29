@@ -99,7 +99,11 @@
 ## สัปดาห์ที่ 2–4 — แอปมือถือ
 
 - [ ] subdomain + HTTPS แล้วเปิดให้เข้าจากนอกบริษัท
-- [ ] แอป Flutter (iOS + Android)
+- [~] แอป Flutter (iOS + Android) — `mobile/` (`com.hip.swcare`, Flutter 3.47, Riverpod + go_router + dio) · ติดตั้ง Flutter SDK, Android SDK, JDK 17 บนเครื่อง dev แล้ว (29/10/2026)
+  - [x] ขั้น 1: Login / เปลี่ยนรหัส / ภาษา (จำในบัญชี), ต่อ API + refresh token, ข้อความ th/en ใช้ไฟล์ชุดเดียวกับเว็บ, งานของฉัน (แท็บตามบทบาท + ตัวเลข), รายงานทั้งหมด (ค้นหา + สถานะ), รออนุมัติ, รอจัดคิว, แจ้งเตือน (ตัวเลขทุก 1 นาที), เมนู — flutter analyze ผ่าน, test 6 ข้อ
+  - [ ] ขั้น 2: หน้างาน — ปุ่มทุกขั้นตอน + กล่องโต้ตอบ, คอมเมนต์ + ไฟล์, ผู้ติดตาม, Timeline
+  - [ ] ขั้น 3: สร้าง / แก้ไขงาน (ถ่ายรูป / วิดีโอ), Kanban แบบรายการ, Dashboard ย่อ
+  - [ ] ขั้น 4: Push (Firebase) — ต้องได้ไฟล์ตั้งค่า Firebase ก่อน
 - [ ] Push ผ่าน Firebase `hip-notification-6d592`
 - [ ] แจกแอป: Play closed testing + TestFlight
 

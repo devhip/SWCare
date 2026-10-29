@@ -1,0 +1,8 @@
+{
+  "required": "กรุณากรอกช่องนี้",
+  "passwordMin": "อย่างน้อย {{min}} ตัวอักษร",
+  "passwordMax": "ไม่เกิน {{max}} ตัวอักษร",
+  "passwordSameAsCurrent": "รหัสผ่านใหม่ต้องไม่ซ้ำกับรหัสผ่านปัจจุบัน",
+  "passwordSameAsUsername": "รหัสผ่านต้องไม่ใช่ชื่อผู้ใช้",
+  "passwordMismatch": "รหัสผ่านไม่ตรงกัน"
+}

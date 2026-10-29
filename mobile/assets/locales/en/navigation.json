@@ -1,0 +1,13 @@
+{
+  "dashboard": "Dashboard",
+  "myTasks": "My tasks",
+  "newTicket": "New ticket",
+  "approvals": "To approve",
+  "triage": "To triage",
+  "allTickets": "All tickets",
+  "kanban": "Kanban",
+  "adminUsers": "Users",
+  "adminDepartments": "Departments",
+  "adminMasterData": "Master data",
+  "adminSection": "Admin"
+}

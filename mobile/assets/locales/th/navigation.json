@@ -1,0 +1,13 @@
+{
+  "dashboard": "Dashboard",
+  "myTasks": "งานของฉัน",
+  "newTicket": "สร้างงาน",
+  "approvals": "รออนุมัติ",
+  "triage": "รอจัดคิว",
+  "allTickets": "รายงานทั้งหมด",
+  "kanban": "Kanban",
+  "adminUsers": "ผู้ใช้",
+  "adminDepartments": "แผนก",
+  "adminMasterData": "ข้อมูลหลัก",
+  "adminSection": "Admin"
+}

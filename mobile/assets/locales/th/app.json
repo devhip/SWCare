@@ -1,0 +1,28 @@
+{
+  "retry": "ลองอีกครั้ง",
+  "save": "บันทึก",
+  "menu": "เมนู",
+  "language": "ภาษา",
+  "openOnly": "ยังไม่ปิด",
+  "passwordMismatch": "รหัสผ่านใหม่ไม่ตรงกัน",
+  "reporterShort": "คนแจ้ง {{name}}",
+  "assigneeShort": "คนทำ {{name}}",
+  "dueShort": "คาดว่าเสร็จ {{date}}",
+  "errors": {
+    "network": "ติดต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบอินเทอร์เน็ตหรือที่อยู่เซิร์ฟเวอร์"
+  },
+  "server": {
+    "title": "ตั้งค่าเซิร์ฟเวอร์",
+    "url": "ที่อยู่เซิร์ฟเวอร์ (API)",
+    "hint": "เช่น https://swcare.hipglobal.co.th — ปล่อยว่างเพื่อใช้ค่าเริ่มต้นของแอป"
+  },
+  "roles": {
+    "admin": "Admin",
+    "executive": "ผู้บริหาร",
+    "programmerLead": "หัวหน้าโปรแกรมเมอร์",
+    "programmer": "โปรแกรมเมอร์",
+    "supportHead": "หัวหน้า Support",
+    "departmentHead": "หัวหน้าแผนก",
+    "viewAll": "ดูงานทั้งหมด"
+  }
+}

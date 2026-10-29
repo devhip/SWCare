@@ -1,0 +1,80 @@
+{
+  "title": "Dashboard",
+  "hint": "Overview of the work sent to the programmers. \"Now\" numbers are the current state; the rest count the selected range.",
+  "hintDepartment": "Only tickets reported by {{name}}",
+  "range": {
+    "label": "Range",
+    "3m": "Last 3 months",
+    "6m": "Last 6 months",
+    "12m": "Last 12 months",
+    "thisYear": "This year",
+    "lastYear": "Last year",
+    "custom": "Custom",
+    "from": "From",
+    "to": "To"
+  },
+  "allDepartments": "All departments",
+  "allProducts": "All systems / programs",
+  "export": "Export Excel",
+  "exporting": "Creating the file…",
+  "kpi": {
+    "open": "Open now",
+    "openSub": "Approval {{approval}} · Triage {{triage}}",
+    "overdue": "Overdue now",
+    "overdueSub": "Queued / in progress / waiting for info",
+    "new": "New tickets",
+    "newSub": "In the selected range",
+    "closed": "Closed",
+    "closedSub": "Declined {{declined}} · Cancelled {{cancelled}}",
+    "onTime": "Finished on time",
+    "onTimeSub": "{{count}} of {{base}} tickets with a due date",
+    "avgClose": "Average report → close",
+    "avgCloseSub": "Tickets closed in the range",
+    "days": "{{value}} days",
+    "none": "-"
+  },
+  "months": {
+    "title": "By month",
+    "hint": "New tickets against closed ones — more in than out month after month means the backlog grows",
+    "new": "New",
+    "closed": "Closed",
+    "month": "Month",
+    "showTable": "Show as table",
+    "hideTable": "Hide table"
+  },
+  "openByStatus": "Open by status",
+  "byProduct": "By system / program",
+  "byType": "By type",
+  "byDepartment": "By reporting department",
+  "byCustomer": "Top customers",
+  "breakdownHint": "Tickets reported in the range",
+  "stillOpen": "{{count}} still open",
+  "tooltip": "{{count}} tickets · {{open}} still open",
+  "stages": {
+    "title": "Average time per step",
+    "hint": "Tickets closed in the range (calendar days)",
+    "Approval": "Waiting approval",
+    "Triage": "Waiting triage",
+    "Queue": "In queue",
+    "Work": "Being fixed",
+    "Close": "Waiting to close",
+    "tooltip": "Average {{days}} days over {{count}} tickets"
+  },
+  "team": {
+    "title": "Programmers",
+    "hint": "Work in hand now, and what was done in the range",
+    "name": "Name",
+    "open": "In hand",
+    "inProgress": "In progress",
+    "overdue": "Overdue",
+    "resolved": "Finished in range",
+    "avgWork": "Avg. working days",
+    "reschedules": "Reschedules"
+  },
+  "declines": {
+    "title": "Declined by department",
+    "hint": "Tickets the programmer lead did not take, e.g. not a program problem — shows who should check before reporting",
+    "count": "{{count}} tickets"
+  },
+  "empty": "No data in this range"
+}

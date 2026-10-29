@@ -1,0 +1,28 @@
+{
+  "retry": "Try again",
+  "save": "Save",
+  "menu": "Menu",
+  "language": "Language",
+  "openOnly": "Open",
+  "passwordMismatch": "The new passwords do not match",
+  "reporterShort": "by {{name}}",
+  "assigneeShort": "Assignee {{name}}",
+  "dueShort": "Due {{date}}",
+  "errors": {
+    "network": "Cannot reach the server. Check the internet connection or the server address."
+  },
+  "server": {
+    "title": "Server",
+    "url": "Server address (API)",
+    "hint": "For example https://swcare.hipglobal.co.th. Leave empty for the default of the app."
+  },
+  "roles": {
+    "admin": "Admin",
+    "executive": "Executive",
+    "programmerLead": "Programmer lead",
+    "programmer": "Programmer",
+    "supportHead": "Support head",
+    "departmentHead": "Department head",
+    "viewAll": "View all tickets"
+  }
+}

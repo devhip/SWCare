@@ -1,0 +1,22 @@
+{
+  "appName": "SWCare",
+  "appTagline": "Programmer request system",
+  "loading": "Loading…",
+  "redirectingLogin": "Going to the login page…",
+  "thai": "ภาษาไทย",
+  "english": "English",
+  "logout": "Log out",
+  "changePassword": "Change password",
+  "notifications": "Notifications",
+  "openMenu": "Open menu",
+  "comingSoonTitle": "In progress",
+  "comingSoonDesc": "This page opens during the first week of the plan.",
+  "accessDeniedTitle": "You cannot open this page",
+  "accessDeniedDesc": "This page is for certain roles only.",
+  "backHome": "Back to home",
+  "notFoundPageTitle": "Page not found",
+  "notFoundPageDesc": "The link may be wrong, or the page has moved.",
+  "notFoundPageBack": "Go back",
+  "notFoundPageHome": "Go to home",
+  "cancel": "Cancel"
+}
