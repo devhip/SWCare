@@ -17,7 +17,9 @@ class HomeShell extends ConsumerWidget {
     final texts = ref.watch(textsProvider);
     final unread = ref.watch(unreadCountProvider).value ?? 0;
     final counts = ref.watch(countsProvider).value;
-    final waiting = counts == null ? 0 : counts['ToDo'] + counts['ToApprove'] + counts['ToClose'] + counts['ToTriage'];
+    // งานของฉัน counts its own tabs; รอจัดคิว is a page of the menu, like the web.
+    final waiting = counts == null ? 0 : counts['ToDo'] + counts['ToApprove'] + counts['ToClose'];
+    final toTriage = counts?['ToTriage'] ?? 0;
 
     Widget withBadge(Widget icon, int n) => n > 0 ? Badge(label: Text(n > 99 ? '99+' : '$n'), child: icon) : icon;
 
@@ -27,10 +29,10 @@ class HomeShell extends ConsumerWidget {
         selectedIndex: shell.currentIndex,
         onDestinationSelected: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
         destinations: [
-          NavigationDestination(icon: withBadge(const Icon(Icons.assignment_ind_outlined), waiting), selectedIcon: const Icon(Icons.assignment_ind), label: texts.t('navigation:myTasks')),
+          NavigationDestination(icon: withBadge(const Icon(Icons.assignment_ind_outlined), waiting), selectedIcon: withBadge(const Icon(Icons.assignment_ind), waiting), label: texts.t('navigation:myTasks')),
           NavigationDestination(icon: const Icon(Icons.list_alt_outlined), selectedIcon: const Icon(Icons.list_alt), label: texts.t('navigation:allTickets')),
-          NavigationDestination(icon: withBadge(const Icon(Icons.notifications_none), unread), selectedIcon: const Icon(Icons.notifications), label: texts.t('notification:title')),
-          NavigationDestination(icon: const Icon(Icons.menu), label: texts.t('menu')),
+          NavigationDestination(icon: withBadge(const Icon(Icons.notifications_none), unread), selectedIcon: withBadge(const Icon(Icons.notifications), unread), label: texts.t('notification:title')),
+          NavigationDestination(icon: withBadge(const Icon(Icons.menu), toTriage), label: texts.t('menu')),
         ],
       ),
     );

@@ -7,8 +7,8 @@ import '../core/api_client.dart';
 import '../models/models.dart';
 
 /// A file picked on the phone (camera, gallery or files), sent as multipart.
-class PickedFile {
-  PickedFile({required this.name, required this.bytes});
+class UploadFile {
+  UploadFile({required this.name, required this.bytes});
 
   final String name;
   final List<int> bytes;
@@ -79,7 +79,7 @@ class SwcareApi {
   Future<TicketDetail> unfollow(int id) async => _detail(await _c.delete('api/Tickets/$id/Follow'));
 
   /// Multipart: the ticket as JSON plus its files, in one request.
-  Future<TicketDetail> createTicket(Map<String, dynamic> ticket, List<PickedFile> files) async =>
+  Future<TicketDetail> createTicket(Map<String, dynamic> ticket, List<UploadFile> files) async =>
       _detail(await _c.postForm('api/Tickets', () => FormData.fromMap({
             'Ticket': jsonEncode(ticket),
             'Files': [for (final f in files) f.toMultipart()],
@@ -87,12 +87,12 @@ class SwcareApi {
 
   Future<TicketDetail> updateTicket(int id, Map<String, dynamic> ticket) async => _detail(await _c.put('api/Tickets/$id', ticket));
 
-  Future<TicketDetail> addFiles(int id, List<PickedFile> files) async =>
+  Future<TicketDetail> addFiles(int id, List<UploadFile> files) async =>
       _detail(await _c.postForm('api/Tickets/$id/Attachments', () => FormData.fromMap({
             'Files': [for (final f in files) f.toMultipart()],
           })));
 
-  Future<TicketDetail> addComment(int id, String body, List<PickedFile> files) async =>
+  Future<TicketDetail> addComment(int id, String body, List<UploadFile> files) async =>
       _detail(await _c.postForm('api/Tickets/$id/Comments', () => FormData.fromMap({
             'Body': body,
             'Files': [for (final f in files) f.toMultipart()],

@@ -29,7 +29,7 @@ class MorePage extends ConsumerWidget {
       if (me.isAdmin) texts.t('roles.admin'),
       if (me.isExecutive) texts.t('roles.executive'),
       if (me.isProgrammerLead) texts.t('roles.programmerLead') else if (me.isProgrammer) texts.t('roles.programmer'),
-      if (me.isSupportHead) texts.t('roles.supportHead') else if (me.isDepartmentHead) texts.t('roles.departmentHead'),
+      if (me.isSupportHead) texts.t('roles.supportHead') else if (me.isDepartmentHead && !me.isProgrammerLead) texts.t('roles.departmentHead'),
       if (me.canViewAllTickets) texts.t('roles.viewAll'),
     ];
 

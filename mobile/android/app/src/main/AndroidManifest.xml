@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The app talks to the SWCare API (release builds: HTTPS only, plan 11). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="swcare"
+        android:label="SWCare"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

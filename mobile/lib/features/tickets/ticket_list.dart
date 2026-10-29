@@ -3,14 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/i18n.dart';
+import '../../core/session.dart';
 import '../../data/api.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
 
 /// Bumped after any change to a ticket so every list and counter reloads (TICKET_LISTS_KEY of the web).
+/// A new value too when another user logs in, so nothing of the last user is shown.
 class TicketListsVersion extends Notifier<int> {
   @override
-  int build() => 0;
+  int build() {
+    ref.watch(sessionProvider.select((s) => s.value?.userId));
+    return DateTime.now().microsecondsSinceEpoch;
+  }
 
   void bump() => state++;
 }

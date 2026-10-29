@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Swcare</string>
+	<string>SWCare</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,13 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>swcare</string>
+	<string>SWCare</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ถ่ายรูปหรือวิดีโอแนบในงานที่แจ้ง</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>อัดเสียงในวิดีโอที่แนบในงาน</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>เลือกรูปหรือวิดีโอจากคลังภาพแนบในงาน</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

@@ -24,5 +24,20 @@
     "supportHead": "Support head",
     "departmentHead": "Department head",
     "viewAll": "View all tickets"
-  }
+  },
+  "files": {
+    "camera": "Camera",
+    "video": "Video",
+    "gallery": "Gallery",
+    "file": "File",
+    "pickFailed": "Could not pick the file. Check the app permission for camera / photos.",
+    "openOnPhone": "Files open in the app on a phone",
+    "downloading": "Opening {{name}}…",
+    "noApp": "No app can open this file"
+  },
+  "searchName": "Search by name",
+  "boardHint": "By status, in queue order. Reorder and reassign by dragging on the web.",
+  "everyone": "Everyone",
+  "dashboardRange": "Period {{range}}",
+  "dashboardOnWeb": "Full charts, filters and Excel export are on the Dashboard of the web."
 }

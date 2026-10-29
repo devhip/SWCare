@@ -14,6 +14,7 @@ class Me {
         email = j['Email'] as String?,
         departmentId = j['DepartmentId'] as int,
         departmentName = j['DepartmentName'] as String,
+        departmentKind = j['DepartmentKind'] as String? ?? 'General',
         isAdmin = j['IsAdmin'] as bool,
         isDepartmentHead = j['IsDepartmentHead'] as bool,
         isSupportHead = j['IsSupportHead'] as bool,
@@ -30,6 +31,9 @@ class Me {
   final String? email;
   final int departmentId;
   final String departmentName;
+
+  /// General / Support / Software.
+  final String departmentKind;
   final bool isAdmin;
   final bool isDepartmentHead;
   final bool isSupportHead;

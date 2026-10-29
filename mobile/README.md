@@ -28,7 +28,8 @@ C:\flutter\bin\flutter.bat analyze && C:\flutter\bin\flutter.bat test
 ```
 
 - ที่อยู่ API: ค่าจาก `--dart-define=API_URL` (ไม่ใส่ = `http://10.0.2.2:5300` บน Android emulator, `http://localhost:5300` ที่อื่น) เปลี่ยนได้ที่หน้า Login (ปุ่มที่อยู่เซิร์ฟเวอร์ด้านล่าง)
-- Android / iOS บล็อก HTTP ธรรมดาเมื่อไม่ใช่ debug — ใช้งานจริงต้องเป็น HTTPS (แผนข้อ 11)
+- HTTP ธรรมดาใช้ได้เฉพาะ debug build (`android/app/src/debug/res/xml/network_security_config.xml`) สำหรับลองกับ API ในวง LAN — release build ต้องเป็น HTTPS (แผนข้อ 11)
+- โฟลเดอร์ `web/` มีไว้ทดสอบหน้าจอบน Chrome เท่านั้น (`flutter build web --dart-define=API_URL=...`) ไม่ได้ใช้งานจริง — กล้อง/วิดีโอ และการเปิดไฟล์แนบใช้ได้บนมือถือเท่านั้น
 
 ## ข้อความ (ภาษาไทย / อังกฤษ)
 

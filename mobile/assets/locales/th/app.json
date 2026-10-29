@@ -24,5 +24,20 @@
     "supportHead": "หัวหน้า Support",
     "departmentHead": "หัวหน้าแผนก",
     "viewAll": "ดูงานทั้งหมด"
-  }
+  },
+  "files": {
+    "camera": "ถ่ายรูป",
+    "video": "วิดีโอ",
+    "gallery": "คลังภาพ",
+    "file": "ไฟล์",
+    "pickFailed": "เลือกไฟล์ไม่ได้ ตรวจสิทธิ์กล้อง/คลังภาพของแอป",
+    "openOnPhone": "เปิดไฟล์ได้ในแอปบนมือถือ",
+    "downloading": "กำลังเปิด {{name}}…",
+    "noApp": "ไม่มีแอปที่เปิดไฟล์นี้ได้"
+  },
+  "searchName": "ค้นหาชื่อ",
+  "boardHint": "แยกตามสถานะ เรียงตามคิว — ลากเรียงคิวและเปลี่ยนคนทำทำบนเว็บ",
+  "everyone": "ทุกคน",
+  "dashboardRange": "ช่วง {{range}}",
+  "dashboardOnWeb": "กราฟเต็ม ตัวกรอง และ Export Excel ดูได้ที่หน้า Dashboard บนเว็บ"
 }
