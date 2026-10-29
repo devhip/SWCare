@@ -90,7 +90,7 @@
 
 ## สัปดาห์ที่ 2
 
-- [ ] Google Login (@hipglobal.co.th)
+- [~] Google Login (@hipglobal.co.th) — มีปุ่ม "เข้าสู่ระบบด้วย Google" ในหน้า Login แล้ว (กดแล้วแจ้งว่าจะเปิดใช้เร็วๆ นี้) ยังไม่ได้เชื่อม: รอ OAuth Client ID และโดเมนพร้อม HTTPS (D15)
 - [ ] ไฟล์ภาษาอังกฤษครบทุกหน้า
 - [ ] Dashboard + Export Excel → ย้ายมาทำแล้ว (ดูหัวข้อด้านบน)
 - [ ] @ชื่อในคอมเมนต์
