@@ -9,7 +9,7 @@ import '../../core/theme.dart';
 import '../../widgets/common.dart';
 import '../tickets/ticket_list.dart';
 
-/// เมนู: the pages of each role (no Admin pages in the app, Q44), language, password, logout.
+/// เมนู: who is logged in, the pages of each role (no Admin pages in the app, Q44), ตั้งค่า, logout.
 class MorePage extends ConsumerWidget {
   const MorePage({super.key});
 
@@ -18,7 +18,6 @@ class MorePage extends ConsumerWidget {
     final texts = ref.watch(textsProvider);
     final me = ref.watch(meProvider);
     final counts = ref.watch(countsProvider).value;
-    final lang = ref.watch(langProvider);
 
     Widget badge(String scope) {
       final n = counts?[scope] ?? 0;
@@ -34,21 +33,26 @@ class MorePage extends ConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text(texts.t('menu'))),
-      body: ListView(padding: const EdgeInsets.all(12), children: [
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(texts.t('menu'))),
+      body: ListView(padding: const EdgeInsets.fromLTRB(12, 12, 12, 32), children: [
         AppCard(
           child: Row(children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.orange100,
-              child: Text(me.displayName.characters.first, style: AppText.sectionTitle.copyWith(color: AppColors.orange600)),
+            Container(
+              width: 52,
+              height: 52,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(shape: BoxShape.circle, gradient: headerGradient),
+              child: Text(me.displayName.characters.first, style: AppText.sectionTitle.copyWith(color: Colors.white)),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(me.displayName, style: AppText.bodyStrong),
+                Text(me.displayName, style: AppText.sectionTitle),
                 Text('${me.username} · ${me.departmentName}', style: AppText.small),
-                if (roles.isNotEmpty) Text(roles.join(' · '), style: AppText.caption),
+                if (roles.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Wrap(spacing: 6, runSpacing: 4, children: [for (final r in roles) Pill(r, bg: AppColors.orange50, fg: AppColors.orange600)]),
+                ],
               ]),
             ),
           ]),
@@ -71,26 +75,25 @@ class MorePage extends ConsumerWidget {
         const SizedBox(height: 12),
         AppCard(
           padding: EdgeInsets.zero,
-          child: Column(children: [
-            ListTile(
-              leading: const Icon(Icons.translate),
-              title: Text(texts.t('language')),
-              trailing: SegmentedButton<String>(
-                segments: const [ButtonSegment(value: 'th', label: Text('TH')), ButtonSegment(value: 'en', label: Text('EN'))],
-                selected: {lang},
-                showSelectedIcon: false,
-                onSelectionChanged: (v) => ref.read(sessionProvider.notifier).setLanguage(v.first),
-              ),
-            ),
-            ListTile(leading: const Icon(Icons.key_outlined), title: Text(texts.t('common:changePassword')), trailing: const Icon(Icons.chevron_right), onTap: () => context.push('/change-password')),
-            ListTile(
-              leading: const Icon(Icons.logout, color: AppColors.errorText),
-              title: Text(texts.t('common:logout'), style: AppText.body.copyWith(color: AppColors.errorText)),
-              onTap: () => ref.read(sessionProvider.notifier).logout(),
-            ),
-          ]),
+          child: ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: Text(texts.t('settings')),
+            subtitle: Text(texts.t('settingsHint'), style: AppText.caption),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/settings'),
+          ),
         ),
         const SizedBox(height: 12),
+        // Apart from the rest, so it is not tapped by mistake.
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            leading: const Icon(Icons.logout, color: AppColors.errorText),
+            title: Text(texts.t('common:logout'), style: AppText.body.copyWith(color: AppColors.errorText)),
+            onTap: () => ref.read(sessionProvider.notifier).logout(),
+          ),
+        ),
+        const SizedBox(height: 16),
         Center(child: Text('SWCare · ${ref.watch(serverConfigProvider)}', style: AppText.caption)),
       ]),
     );

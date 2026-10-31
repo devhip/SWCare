@@ -65,6 +65,47 @@ class PriorityChip extends ConsumerWidget {
   }
 }
 
+/// The header of the web (AppShell.tsx): the orange gradient with a soft white circle at the top right.
+/// `AppBar(flexibleSpace: const HeaderBackground())` on every page.
+class HeaderBackground extends StatelessWidget {
+  const HeaderBackground({super.key, this.circle = 240});
+
+  final double circle;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: const BoxDecoration(gradient: headerGradient),
+        child: Stack(children: [
+          Positioned(
+            right: -circle * .27,
+            top: -circle / 2,
+            child: Container(width: circle, height: circle, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0x1AFFFFFF))),
+          ),
+        ]),
+      );
+}
+
+/// The "SW" mark of the web's Brand: white on the header, orange on a light page.
+class BrandMark extends StatelessWidget {
+  const BrandMark({super.key, this.size = 40, this.onHeader = false});
+
+  final double size;
+  final bool onHeader;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: onHeader ? const Color(0x38FFFFFF) : AppColors.orange100,
+          borderRadius: BorderRadius.circular(size * .33),
+          border: onHeader ? Border.all(color: const Color(0x59FFFFFF), width: 2) : null,
+        ),
+        child: Text('SW', style: TextStyle(fontSize: size * .37, fontWeight: FontWeight.w700, letterSpacing: .5, color: onHeader ? Colors.white : AppColors.orange600)),
+      );
+}
+
 /// White rounded card of the HIPHR look.
 class AppCard extends StatelessWidget {
   const AppCard({super.key, required this.child, this.padding = const EdgeInsets.all(16), this.onTap});

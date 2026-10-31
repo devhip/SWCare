@@ -38,7 +38,7 @@ class _MyTasksPageState extends ConsumerState<MyTasksPage> {
     final scope = _chosen ?? firstWithWork;
 
     return Scaffold(
-      appBar: AppBar(title: Text(texts.t('navigation:myTasks'))),
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(texts.t('navigation:myTasks'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/ticket/new'),
         backgroundColor: AppColors.orange600,

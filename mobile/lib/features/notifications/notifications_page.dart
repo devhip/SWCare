@@ -74,7 +74,7 @@ class NotificationsPage extends ConsumerWidget {
     final texts = ref.watch(textsProvider);
     final list = ref.watch(notificationsProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(texts.t('notification:title')), actions: [
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(texts.t('notification:title')), actions: [
         TextButton(
           style: TextButton.styleFrom(foregroundColor: Colors.white),
           onPressed: () async {

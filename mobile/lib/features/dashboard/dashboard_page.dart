@@ -25,6 +25,7 @@ class DashboardPage extends ConsumerWidget {
     final data = ref.watch(dashboardProvider);
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: const HeaderBackground(),
         title: Text(texts.t('dashboard:title')),
         // An executive starts here (homeRoute of the web): the way to the tabs.
         leading: context.canPop()

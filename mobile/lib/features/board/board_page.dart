@@ -40,7 +40,7 @@ class _BoardPageState extends ConsumerState<BoardPage> {
     final lane = _chosen ? _lane : (me.isProgrammerLead ? null : me.userId);
 
     return Scaffold(
-      appBar: AppBar(title: Text(texts.t('navigation:kanban'))),
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(texts.t('navigation:kanban'))),
       body: board.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => ErrorView(e, onRetry: () => ref.invalidate(boardProvider)),

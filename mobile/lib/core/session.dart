@@ -85,4 +85,15 @@ class SessionController extends AsyncNotifier<Me?> {
 final sessionProvider = AsyncNotifierProvider<SessionController, Me?>(SessionController.new);
 
 /// The user of a logged-in page (the router only shows those pages with a user).
-final meProvider = Provider<Me>((ref) => ref.watch(sessionProvider).value!);
+final meProvider = NotifierProvider<_MeHolder, Me>(_MeHolder.new);
+
+/// On logout the pages of the tabs rebuild once before the router takes them down: they keep the last user.
+class _MeHolder extends Notifier<Me> {
+  @override
+  Me build() {
+    final me = ref.watch(sessionProvider).value;
+    if (me != null) return me;
+    if (stateOrNull case final last?) return last;
+    throw StateError('meProvider read before login');
+  }
+}

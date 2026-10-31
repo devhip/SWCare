@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/i18n.dart';
 import '../../models/models.dart';
+import '../../widgets/common.dart';
 import 'ticket_list.dart';
 
 /// รายงานทั้งหมด: every ticket the user may see, with search and a status filter (open by default, like the web).
@@ -42,7 +43,7 @@ class _AllTicketsPageState extends ConsumerState<AllTicketsPage> {
       _ => [_status],
     };
     return Scaffold(
-      appBar: AppBar(title: Text(texts.t('navigation:allTickets'))),
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(texts.t('navigation:allTickets'))),
       body: Column(children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),

@@ -43,6 +43,14 @@ abstract final class AppText {
   static const kpi = TextStyle(fontSize: 30, height: 38 / 30, fontWeight: FontWeight.w700, color: AppColors.ink);
 }
 
+/// The header bars and the top of the login page: hiphr.headerGradient of the web kept darker,
+/// so the white title and status bar icons stay readable across a narrow phone.
+const headerGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [AppColors.orange600, AppColors.orange500],
+);
+
 /// White card with rounded corners and the faint orange shadow of HIPHR.
 const cardDecoration = BoxDecoration(
   color: Colors.white,

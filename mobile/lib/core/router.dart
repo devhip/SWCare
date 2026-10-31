@@ -7,6 +7,7 @@ import '../features/auth/login_page.dart';
 import '../features/board/board_page.dart';
 import '../features/dashboard/dashboard_page.dart';
 import '../features/more/more_page.dart';
+import '../features/more/settings_page.dart';
 import '../features/notifications/notifications_page.dart';
 import '../features/shell/home_shell.dart';
 import '../features/tickets/all_tickets_page.dart';
@@ -62,9 +63,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/ticket/new', builder: (_, _) => const TicketFormPage()),
       GoRoute(
         path: '/ticket/:id',
-        builder: (_, state) => TicketDetailPage(id: int.parse(state.pathParameters['id']!)),
+        // Keyed by id: going from one ticket straight to another must load the new one, not keep the old state.
+        builder: (_, state) => TicketDetailPage(key: ValueKey(state.pathParameters['id']), id: int.parse(state.pathParameters['id']!)),
         routes: [
-          GoRoute(path: 'edit', builder: (_, state) => TicketFormPage(editId: int.parse(state.pathParameters['id']!))),
+          GoRoute(path: 'edit', builder: (_, state) => TicketFormPage(key: ValueKey(state.pathParameters['id']), editId: int.parse(state.pathParameters['id']!))),
         ],
       ),
       GoRoute(
@@ -77,6 +79,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/board', builder: (_, _) => const BoardPage()),
       GoRoute(path: '/dashboard', builder: (_, _) => const DashboardPage()),
+      GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
     ],
   );
 });

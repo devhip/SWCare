@@ -66,6 +66,7 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
     final ticket = _ticket;
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: const HeaderBackground(),
         title: Text(ticket?.ticketNo ?? texts.t('ticket:detailTitle')),
         actions: [
           if (ticket != null && ticket.can('Edit'))

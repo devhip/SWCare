@@ -128,7 +128,7 @@ class _TicketFormPageState extends ConsumerState<TicketFormPage> {
     String? required(String? v) => (v?.trim().isEmpty ?? true) ? texts.t('validation:required') : null;
 
     return Scaffold(
-      appBar: AppBar(title: Text(_editing ? texts.t('ticket:editTitle') : texts.t('ticket:newTitle'))),
+      appBar: AppBar(flexibleSpace: const HeaderBackground(), title: Text(_editing ? texts.t('ticket:editTitle') : texts.t('ticket:newTitle'))),
       body: !_ready
           ? (_error != null ? ErrorView(_error!, onRetry: _start) : const Center(child: CircularProgressIndicator()))
           : Form(

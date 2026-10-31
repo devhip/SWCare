@@ -33,6 +33,17 @@ C:\flutter\bin\flutter.bat analyze && C:\flutter\bin\flutter.bat test
 - HTTP ธรรมดาใช้ได้เฉพาะ debug build (`android/app/src/debug/res/xml/network_security_config.xml`) สำหรับลองกับ API ในวง LAN — release build ต้องเป็น HTTPS (แผนข้อ 11)
 - โฟลเดอร์ `web/` มีไว้ทดสอบหน้าจอบน Chrome เท่านั้น (`flutter build web --dart-define=API_URL=...`) ไม่ได้ใช้งานจริง — กล้อง/วิดีโอ และการเปิดไฟล์แนบใช้ได้บนมือถือเท่านั้น
 
+## ทดสอบทุกบทบาท (บน emulator / มือถือ)
+
+`integration_test/roles_test.dart` เปิดแอปจริง login ผ่านหน้า Login ทีละคน (14 บทบาท) ตรวจเมนู แท็บงานของฉัน หน้าที่เปิดได้ ปุ่มของงานที่ค้างทุกขั้น (13 งาน) แล้วกดปุ่มทุก flow (แจ้งงาน → ตีกลับ → แก้ไข → ส่งใหม่ → อนุมัติ → ขอข้อมูล → ตอบ → จัดคิว → เริ่ม → พัก → เลื่อนวัน → เปลี่ยนคนทำ → จบงาน → ส่งกลับ → ปิดงาน, ไม่ดำเนินการ, ยกเลิก, ผู้ติดตาม, ติดตาม/เลิกติดตาม, ภาษา) แล้วเทียบผลกับ API
+
+- ต้องใช้ API ที่ต่อ**ฐานข้อมูลว่างใหม่** (test สร้างผู้ใช้และงานเอง) — ห้ามชี้ไปที่ฐานข้อมูลจริง
+- รหัสผ่านส่งทาง `--dart-define` ตอนรัน ไม่เก็บในไฟล์
+
+```bash
+C:\flutter\bin\flutter.bat test integration_test/roles_test.dart -d emulator-5554 --dart-define=API_URL=http://10.0.2.2:5399 --dart-define=ADMIN_PW=<รหัส admin ตอนเริ่ม> --dart-define=TEST_PW=<รหัสของผู้ใช้ทดสอบ>
+```
+
 ## ข้อความ (ภาษาไทย / อังกฤษ)
 
 - ข้อความของระบบใช้ไฟล์ชุดเดียวกับเว็บ: `dart run tool/sync_locales.dart` copy `web/locales/{th,en}/*.json` มาไว้ที่ `assets/locales/` — แก้คำที่เว็บแล้ว sync
